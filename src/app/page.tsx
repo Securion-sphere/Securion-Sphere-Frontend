@@ -1,5 +1,12 @@
+"use client"
 
-export default function Home() {
-  return (<h1>Hello World</h1>
-  );
+import React from 'react'
+import withAuth from '@/app/components/auth/withAuth'
+
+const Page = () => {
+  return (
+    <div>Home page</div>
+  )
 }
+
+export default withAuth(Page);

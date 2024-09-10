@@ -2,11 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import config from '@/config'
+import config from '@/config';
 
 interface AuthContextType {
   user: any;
-  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -15,36 +14,37 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
 
-  const login = async (token: string) => {
-    // Save token in local storage or cookie
-    localStorage.setItem('jwt', token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-    // Fetch the user data
+  // Fetch the user data
+  const fetchUser = async () => {
     try {
-      const { data } = await axios.get(`${config.apiBaseUrl}/user/profile`);
+      const { data } = await axios.get(`${config.apiBaseUrl}/user/profile`, {
+        withCredentials: true,
+      });
       setUser(data);
     } catch (error) {
       console.error("Failed to fetch user", error);
+      setUser(null);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('jwt');
-    setUser(null);
-    // Optionally call backend logout endpoint
+  const logout = async () => {
+    try {
+      await axios.post(`${config.apiBaseUrl}/auth/logout`, {}, {
+        withCredentials: true,
+      });
+      setUser(null);
+    } catch (error) {
+      console.error("Failed to logout", error);
+    }
   };
 
-  // Check if user is already logged in when the component mounts
+  // Check if user is logged in when the component mounts
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      login(token);
-    }
+    fetchUser(); // Fetch the user on initial load
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, logout }}>
       {children}
     </AuthContext.Provider>
   );
