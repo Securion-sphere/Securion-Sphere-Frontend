@@ -1,13 +1,21 @@
-"use client"
+// loginpage.tsx
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
-import LoginForm from '@/app/components/auth/login-form';
+import { useAuth } from '@/app/context/AuthContext';
+import config from '@/config';
 
 const LoginPage = () => {
-  const handleGoogleLogin = () => {
-    // Redirect user to Google OAuth authentication
-    window.location.href = "http://localhost:5000/auth/google/login"; // Adjust according to your OAuth flow
+  const { login } = useAuth();
+
+  const handleGoogleLogin = async () => {
+    try {
+      // Redirect to backend for Google login
+      window.location.href = `${config.apiBaseUrl}/auth/google/login`;
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   };
 
   return (
@@ -27,12 +35,11 @@ const LoginPage = () => {
       {/* Right Panel (Login Form) */}
       <div
         className="flex-1 flex justify-center items-center bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/assets/illustrations/blue_sea.jpeg')",
-        }}
+        style={{ backgroundImage: "url('/assets/illustrations/blue_sea.jpeg')" }}
       >
-        {/* Transparent Login Box */}
-        <LoginForm onGoogleLogin={handleGoogleLogin} />
+        <button onClick={handleGoogleLogin} className="bg-blue-500 text-white px-4 py-2">
+          Login with Google
+        </button>
       </div>
     </div>
   );
