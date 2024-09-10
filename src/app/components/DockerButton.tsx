@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
-import { Lab, labs } from "../data/labs";
+import { Lab } from "../data/labs";
 import { LabDocker, labDocker } from "../data/labDocker";
 
 interface DockerButtonProps {
@@ -19,26 +19,32 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   currentStage,
 }) => {
   const [stage, setStage] = useState<string>(currentStage);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const selectedLabDocker = labDocker.find(
+    (dockerLab) => dockerLab.name === lab.name,
+  ) || { name: "Test", ip: "localhost", port: 80 };
 
   useEffect(() => {
     setStage(currentStage); // Reset stage when `currentStage` changes
   }, [currentStage]);
 
   const handleClick = () => {
-    const selectedLabDocker = labDocker.find(
-      (dockerLab) => dockerLab.name === lab.name,
-    ) || { name: "Test", ip: "localhost", port: 80 };
-
     switch (stage) {
       case "Spawn":
         setStage("Playing");
         onSpawn();
         break;
       case "Playing":
-        let content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
-        navigator.clipboard.writeText(content);
-        setStage("Pwned");
-        onPlaying();
+        if (selectedLabDocker) {
+          let content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
+          navigator.clipboard.writeText(content);
+          setStage("Pwned");
+          onPlaying();
+
+          setCopied(true);
+          setTimeout(() => setCopied(false), 4000); // "Copied to clipboard" for 2 seconds
+        }
         break;
       case "Pwned":
         onPwned();
@@ -56,11 +62,11 @@ const DockerButton: React.FC<DockerButtonProps> = ({
             <CircleStop strokeWidth={2} className="w-12 h-full" />
             <div className="flex w-full gap-7 text-sm justify-around">
               <div>
-                <div className="text-base">161.246.5.12</div>
+                <div className="text-base">{selectedLabDocker.ip}</div>
                 <div className="font-light text-gray-400">IP address</div>
               </div>
               <div>
-                <div className="text-base">65432</div>
+                <div className="text-base">{selectedLabDocker.port}</div>
                 <div className="font-light text-gray-400">Ports</div>
               </div>
             </div>
@@ -84,9 +90,16 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   };
 
   return (
-    <button onClick={handleClick} className="w-full inline-flex items-center">
-      {getButtonText()}
-    </button>
+    <div>
+      <button onClick={handleClick} className="w-full inline-flex items-center">
+        {getButtonText()}
+      </button>
+      {copied && (
+        <span className="text-sm text-green-600 ml-2">
+          Copied to clipboard!
+        </span>
+      )}
+    </div>
   );
 };
 

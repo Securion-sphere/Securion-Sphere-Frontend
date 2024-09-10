@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Lab } from "./Labs"; // Adjust path if needed
 import DockerButton from "./DockerButton";
+import { Lab } from "../data/labs";
+import { labDocker } from "../data/labDocker";
 
 interface LabDetailProps {
   selectedLab: Lab;
