@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
 
 export default function NavBar() {
   return (
-    <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-14 w-full shrink-0 items-center px-4 md:px-6 bg-white shadow-md">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden">
@@ -25,7 +25,7 @@ export default function NavBar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
-          <Link href="#" className="mr-6 hidden lg:flex" prefetch={false}>
+          <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
             <MountainIcon className="h-6 w-6" />
             <span className="sr-only">Securion Sphere</span>
           </Link>
@@ -43,7 +43,7 @@ export default function NavBar() {
           </div>
         </SheetContent>
       </Sheet>
-      <Link href="#" className="mr-6 hidden lg:flex" prefetch={false}>
+      <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
         <MountainIcon className="h-6 w-6" />
         <span className="sr-only">Securion Sphere</span>
       </Link>

@@ -28,9 +28,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <title>Securion Sphere</title>
       </head>
-      <body className={inter.className}>
+      <body
+        className={`flex flex-col bg-gray-100 min-h-screen ${inter.className}`}
+      >
         <Navbar />
-        {children}
+        <main className="flex-grow">{children}</main>
         <Footer />
       </body>
     </html>

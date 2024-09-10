@@ -1,107 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Lab } from "./Labs"; // Adjust path if needed
+import DockerButton from "./DockerButton";
 
 interface LabDetailProps {
   selectedLab: Lab;
 }
 
 const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
-  const [stage, setStage] = useState<"initial" | "playing" | "pwned">(
-    "initial",
-  );
   const [flag, setFlag] = useState("");
-  const [isFlagCorrect, setIsFlagCorrect] = useState(false);
+  const [buttonStage, setButtonStage] = useState<string>("Spawn");
 
-  // Dummy flag for demonstration; replace with your validation logic
-  const correctFlag = "correct-flag";
+  useEffect(() => {
+    // Reset the button stage when the lab changes
+    setButtonStage("Spawn");
+  }, [selectedLab]);
 
-  const handleButtonClick = () => {
-    if (stage === "initial") {
-      setStage("playing");
-    } else if (stage === "playing") {
-      setStage("pwned");
-    }
+  const handleSpawn = () => {
+    console.log("Docker Spawn clicked");
   };
 
-  const handleSubmitFlag = () => {
-    if (flag === correctFlag) {
-      setIsFlagCorrect(true);
-    }
+  const handlePlaying = () => {
+    console.log("Playing stage clicked");
+  };
+
+  const handlePwned = () => {
+    console.log("Pwned stage clicked");
   };
 
   return (
-    <div className="bg-white shadow overflow-hidden h-full">
+    <div className="bg-gray-50 shadow overflow-hidden">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {selectedLab.name}
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
       </div>
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-        {stage === "initial" && (
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            onClick={handleButtonClick}
-          >
-            Docker Spawn
-          </button>
-        )}
-        {stage === "playing" && (
-          <div>
-            <p className="text-sm text-gray-500">
-              IP and Port to play: 192.168.1.100:8080
-            </p>
-            <button
-              type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-2"
-              onClick={handleButtonClick}
-            >
-              Proceed to Pwned Stage
-            </button>
+        <DockerButton
+          lab={selectedLab}
+          onSpawn={handleSpawn}
+          onPlaying={handlePlaying}
+          onPwned={handlePwned}
+          currentStage={buttonStage}
+        />
+      </div>
+      <div className="px-4 py-5 sm:p-0">
+        <dl className="sm:divide-y sm:divide-gray-200">
+          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <div className="w-full flex gap-5 border-2 rounded-md">
+                <input
+                  type="text"
+                  className="p-3 shadow-sm w-full sm:text-sm bg-gray-50 rounded-md"
+                  placeholder="Please submit your flag"
+                  value={flag}
+                  onChange={(e) => setFlag(e.target.value)}
+                />
+                <button className="flex items-center px-4 py-2 text-white rounded-md">
+                  <Image
+                    src="/submit.svg"
+                    alt="Submit"
+                    width={25}
+                    height={25}
+                  />
+                </button>
+              </div>
+            </dd>
           </div>
-        )}
-        {stage === "pwned" && (
-          <div>
-            <button
-              type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-2"
-              onClick={handleSubmitFlag}
-            >
-              Submit Flag
-            </button>
-            {isFlagCorrect && (
-              <p className="text-green-500 mt-2">
-                Congratulations, You pwned this lab!
-              </p>
-            )}
-          </div>
-        )}
-        <div className="flex gap-5">
-          <input
-            type="text"
-            className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md mt-2"
-            placeholder="Please submit your flag"
-            value={flag}
-            onChange={(e) => setFlag(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={handleSubmitFlag}
-            className="inline-flex items-center justify-center p-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white"
-          >
-            <Image src="/submit.svg" alt="Submit" width={25} height={25} />
-          </button>
-        </div>
+        </dl>
       </div>
     </div>
   );

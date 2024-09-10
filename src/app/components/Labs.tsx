@@ -1,12 +1,6 @@
 import React from "react";
-
-export interface Lab {
-  name: string;
-  category: string;
-  creator: string;
-  solved: boolean;
-  points: number;
-}
+import Image from "next/image";
+import { Lab, labs } from "../data/labs";
 
 interface LabsProps {
   labs: Lab[];
@@ -15,34 +9,39 @@ interface LabsProps {
 
 const Labs: React.FC<LabsProps> = ({ labs, onLabSelect }) => {
   return (
-    <div className="bg-white shadow overflow-hidden h-full">
-      <div className="px-4 py-5 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          All Available Labs
-        </h3>
+    <div className="bg-gray-50 shadow overflow-hidden h-full">
+      <div className="w-full">
+        <Image
+          src="/all_labs.png"
+          alt="All Labs"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
+        />
       </div>
       <div className="border-t border-gray-200 max-h-full overflow-y-scroll">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <tr className="text-sm font-medium">
+              <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                 Lab&apos;s name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                 Category
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                 Creator
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-center font-medium text-gray-500 uppercase tracking-wider">
                 Solved
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-center font-medium text-gray-500 uppercase tracking-wider">
                 Points
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-gray-50 divide-y divide-gray-200">
             {labs.map((lab, index) => (
               <tr
                 key={index}

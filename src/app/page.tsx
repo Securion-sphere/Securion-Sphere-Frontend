@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const HomePage: React.FC = () => {
   return (
@@ -22,10 +23,10 @@ const HomePage: React.FC = () => {
             Start learning
           </Link>
           <Link
-            href="/challenges"
+            href="/labs"
             className="px-6 py-3 bg-gray-100 text-gray-800 font-semibold rounded-lg border border-gray-300"
           >
-            Go to Challenges
+            Go to Labs
           </Link>
         </div>
       </header>
@@ -39,9 +40,11 @@ const HomePage: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <img
+              <Image
                 src="/path-to-icon1.svg"
                 alt="Fundamentals"
+                width={100}
+                height={100}
                 className="mx-auto mb-4"
               />
               <h3 className="text-xl font-semibold mb-2">
@@ -53,9 +56,11 @@ const HomePage: React.FC = () => {
               </p>
             </div>
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <img
+              <Image
                 src="/path-to-icon2.svg"
                 alt="Path"
+                width={100}
+                height={100}
                 className="mx-auto mb-4"
               />
               <h3 className="text-xl font-semibold mb-2">Forge Your Path</h3>
@@ -65,9 +70,11 @@ const HomePage: React.FC = () => {
               </p>
             </div>
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <img
+              <Image
                 src="/path-to-icon3.svg"
                 alt="Challenges"
+                width={100}
+                height={100}
                 className="mx-auto mb-4"
               />
               <h3 className="text-xl font-semibold mb-2">
@@ -116,9 +123,11 @@ const HomePage: React.FC = () => {
 
       <footer className="bg-blue-600 text-white py-8">
         <div className="container mx-auto text-center">
-          <img
+          <Image
             src="/securion-sphere-logo.svg"
             alt="Securion Sphere"
+            width={100}
+            height={100}
             className="mx-auto mb-4"
           />
           <p className="text-sm">

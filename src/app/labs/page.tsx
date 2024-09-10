@@ -2,61 +2,40 @@
 
 import React, { useState } from "react";
 import LabDetail from "../components/LabDetail";
-import Labs, { Lab } from "../components/Labs";
-
-const labs: Lab[] = [
-  {
-    name: "Web Application for SQL Injection",
-    category: "Injection",
-    creator: "Mr. Injection",
-    solved: true,
-    points: 100,
-  },
-  {
-    name: "XSS is on the way!",
-    category: "Injection",
-    creator: "Mr. Injection",
-    solved: false,
-    points: 100,
-  },
-  {
-    name: "Let's try IDOR",
-    category: "Access Control",
-    creator: "Mr. Injection",
-    solved: false,
-    points: 100,
-  },
-  {
-    name: "Business Logic on alert!",
-    category: "Business Logic",
-    creator: "Mr. Injection",
-    solved: true,
-    points: 100,
-  },
-  {
-    name: "Basic cookie misconfiguration",
-    category: "Misconfiguration",
-    creator: "Mr. Injection",
-    solved: false,
-    points: 100,
-  },
-];
+import Labs from "../components/Labs";
+import { Lab, labs } from "../data/labs";
 
 const LabsPage: React.FC = () => {
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);
+  const [isLabDetailVisible, setLabDetailVisible] = useState<boolean>(false);
+
+  // Function to toggle the visibility of the left panel
+  const toggleLabDetail = () => {
+    setLabDetailVisible(!isLabDetailVisible);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <main className="flex-grow flex">
-        <div className="w-full flex">
+        <div className="flex w-full">
           {/* Left Panel - Lab Details */}
-          <div className="flex-1">
-            <LabDetail selectedLab={selectedLab} />
-          </div>
+          {isLabDetailVisible && (
+            <div className="flex-1 basis-1/3">
+              <LabDetail selectedLab={selectedLab} />
+            </div>
+          )}
 
           {/* Right Panel - All Available Labs */}
-          <div className="flex-1">
-            <Labs labs={labs} onLabSelect={setSelectedLab} />
+          <div
+            className={`flex-1 ${isLabDetailVisible ? "basis-2/3" : "basis-full"} transition-all`}
+          >
+            <Labs
+              labs={labs}
+              onLabSelect={(lab) => {
+                setSelectedLab(lab);
+                if (!isLabDetailVisible) toggleLabDetail(); // Ensure panel visibility is updated
+              }}
+            />
           </div>
         </div>
       </main>
