@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
-import { Lab } from "../data/labs";
-import { LabDocker, labDocker } from "../data/labDocker";
+import { Lab } from "@/app/data/labs";
+import { LabDocker, labDocker } from "@/app/data/labDocker";
 
 interface DockerButtonProps {
   lab: Lab;

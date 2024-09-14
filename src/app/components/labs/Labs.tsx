@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { Lab, labs } from "../data/labs";
+import { Lab } from "@/app/data/labs";
 
 interface LabsProps {
   labs: Lab[];

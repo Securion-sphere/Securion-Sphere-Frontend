@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import LabDetail from "../components/LabDetail";
-import Labs from "../components/Labs";
+import LabDetail from "../components/labs/LabDetail";
+import Labs from "../components/labs/labs";
 import { Lab, labs } from "../data/labs";
 
 const LabsPage: React.FC = () => {
