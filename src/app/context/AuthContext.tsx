@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import config from '@/config';
+import axios from "axios";
+import config from "@/config";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
   user: any;
@@ -13,12 +14,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
-  // Fetch the user data
   const fetchUser = async () => {
     try {
+      const accessToken = localStorage.getItem("AccessToken");
+      if (!accessToken) return;
+
+      // Fetch user profile with access token from localStorage
       const { data } = await axios.get(`${config.apiBaseUrl}/user/profile`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
       setUser(data);
     } catch (error) {
@@ -27,21 +34,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const accessToken = query.get('accessToken');
+    const refreshToken = query.get('refreshToken');
+  
+    if (accessToken && refreshToken) {
+      // Store tokens in localStorage
+      localStorage.setItem('AccessToken', accessToken);
+      localStorage.setItem('RefreshToken', refreshToken);
+  
+      // Remove the query params from the URL
+      router.replace("/");
+  
+      // Fetch the user data now that the tokens are stored
+      fetchUser();
+    } else {
+      // If no tokens found in URL, fetch the user based on existing localStorage tokens
+      fetchUser();
+    }
+  }, []);  
+  
   const logout = async () => {
     try {
-      await axios.post(`${config.apiBaseUrl}/auth/logout`, {}, {
-        withCredentials: true,
-      });
+      // Implement your logout logic
+      localStorage.removeItem("AccessToken");
+      localStorage.removeItem("RefreshToken");
       setUser(null);
     } catch (error) {
       console.error("Failed to logout", error);
     }
   };
-
-  // Check if user is logged in when the component mounts
-  useEffect(() => {
-    fetchUser(); // Fetch the user on initial load
-  }, []);
 
   return (
     <AuthContext.Provider value={{ user, logout }}>
