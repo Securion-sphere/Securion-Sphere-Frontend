@@ -7,7 +7,6 @@ import LoginForm from '@/app/components/auth/login-form';
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {
-    // Redirect user to Google OAuth authentication
     window.location.href = `${config.apiBaseUrl}/auth/google/login`;
   };
 
