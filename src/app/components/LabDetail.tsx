@@ -13,6 +13,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   const [flag, setFlag] = useState("");
   const [buttonStage, setButtonStage] = useState<string>("Spawn");
   const [isFlagCorrect, setIsFlagCorrect] = useState<boolean>(false);
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false); // Track if submitted
 
   useEffect(() => {
     if (selectedLab.solved) {
@@ -20,6 +21,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
     } else {
       setButtonStage("Spawn");
       setIsFlagCorrect(false);
+      setHasSubmitted(false);
     }
   }, [selectedLab]);
 
@@ -36,6 +38,8 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   };
 
   const handleSubmitFlag = () => {
+    setHasSubmitted(true);
+
     const selectedLabDocker = labDocker.find(
       (dockerLab: LabDocker) => dockerLab.name === selectedLab.name,
     );
@@ -75,7 +79,16 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
         <dl className="sm:divide-y sm:divide-gray-200">
           <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <div className="w-full flex gap-5 border-2 rounded-md">
+              <div
+                className={`w-full flex gap-5 border-2 rounded-md
+                  ${
+                    hasSubmitted
+                      ? !isFlagCorrect
+                        ? "border-red-500"
+                        : "border-green-500"
+                      : "border-gray-300"
+                  }`}
+              >
                 <input
                   type="text"
                   className="p-3 shadow-sm w-full sm:text-sm bg-gray-50 rounded-md"

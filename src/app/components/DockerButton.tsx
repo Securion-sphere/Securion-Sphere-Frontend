@@ -69,7 +69,10 @@ const DockerButton: React.FC<DockerButtonProps> = ({
               className="h-full text-white cursor-pointer"
               onClick={handleStopClick}
             >
-              <CircleStop strokeWidth={2} className="w-12 h-full" />
+              <CircleStop
+                strokeWidth={2}
+                className="w-12 h-full hover:text-red-500"
+              />
             </div>
             <div className="flex w-full gap-7 text-sm justify-around">
               <div>
