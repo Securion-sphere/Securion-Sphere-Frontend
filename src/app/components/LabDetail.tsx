@@ -6,17 +6,21 @@ import { labDocker, LabDocker } from "../data/labDocker";
 
 interface LabDetailProps {
   selectedLab: Lab;
+  markAsSolved: (lab: Lab) => void;
 }
 
-const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
+const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   const [flag, setFlag] = useState("");
   const [buttonStage, setButtonStage] = useState<string>("Spawn");
   const [isFlagCorrect, setIsFlagCorrect] = useState<boolean>(false);
 
   useEffect(() => {
-    // Reset the button stage when the lab changes
-    setButtonStage("Spawn");
-    setIsFlagCorrect(false);
+    if (selectedLab.solved) {
+      setButtonStage("Pwned");
+    } else {
+      setButtonStage("Spawn");
+      setIsFlagCorrect(false);
+    }
   }, [selectedLab]);
 
   const handleSpawn = () => {
@@ -39,6 +43,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
     if (selectedLabDocker && flag === selectedLabDocker.flag) {
       setIsFlagCorrect(true);
       setButtonStage("Pwned");
+      markAsSolved(selectedLab);
     } else {
       setIsFlagCorrect(false);
       alert("Incorrect flag, try again!");

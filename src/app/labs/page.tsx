@@ -14,6 +14,11 @@ const LabsPage: React.FC = () => {
     setLabDetailVisible(!isLabDetailVisible);
   };
 
+  const markLabAsSolved = (lab: Lab) => {
+    lab.solved = true;
+    setSelectedLab({ ...lab });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <main className="flex-grow flex">
@@ -21,7 +26,10 @@ const LabsPage: React.FC = () => {
           {/* Left Panel - Lab Details */}
           {isLabDetailVisible && (
             <div className="flex-1 basis-1/3">
-              <LabDetail selectedLab={selectedLab} />
+              <LabDetail
+                selectedLab={selectedLab}
+                markAsSolved={markLabAsSolved}
+              />
             </div>
           )}
 
