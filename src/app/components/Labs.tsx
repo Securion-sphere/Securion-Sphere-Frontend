@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Lab, labs } from "../data/labs";
 
@@ -8,6 +8,12 @@ interface LabsProps {
 }
 
 const Labs: React.FC<LabsProps> = ({ labs, onLabSelect }) => {
+  const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);
+
+  const handleLabSelect = (lab: Lab) => {
+    setSelectedLab(lab);
+  };
+
   return (
     <div className="bg-gray-50 shadow overflow-hidden h-full">
       <div className="w-full">
@@ -61,7 +67,7 @@ const Labs: React.FC<LabsProps> = ({ labs, onLabSelect }) => {
                   {lab.solved ? (
                     <span className="text-green-500">✓</span>
                   ) : (
-                    <span className="text-red-500">✗</span>
+                    <span className="text-gray-500">-</span>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-500">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DockerButton from "./DockerButton";
 import { Lab } from "../data/labs";
-import { labDocker } from "../data/labDocker";
+import { labDocker, LabDocker } from "../data/labDocker";
 
 interface LabDetailProps {
   selectedLab: Lab;
@@ -11,10 +11,12 @@ interface LabDetailProps {
 const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
   const [flag, setFlag] = useState("");
   const [buttonStage, setButtonStage] = useState<string>("Spawn");
+  const [isFlagCorrect, setIsFlagCorrect] = useState<boolean>(false);
 
   useEffect(() => {
     // Reset the button stage when the lab changes
     setButtonStage("Spawn");
+    setIsFlagCorrect(false);
   }, [selectedLab]);
 
   const handleSpawn = () => {
@@ -27,6 +29,20 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
 
   const handlePwned = () => {
     console.log("Pwned stage clicked");
+  };
+
+  const handleSubmitFlag = () => {
+    const selectedLabDocker = labDocker.find(
+      (dockerLab: LabDocker) => dockerLab.name === selectedLab.name,
+    );
+
+    if (selectedLabDocker && flag === selectedLabDocker.flag) {
+      setIsFlagCorrect(true);
+      setButtonStage("Pwned");
+    } else {
+      setIsFlagCorrect(false);
+      alert("Incorrect flag, try again!");
+    }
   };
 
   return (
@@ -43,6 +59,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
         <DockerButton
           lab={selectedLab}
+          setStage={setButtonStage} // Pass the setStage function
           onSpawn={handleSpawn}
           onPlaying={handlePlaying}
           onPwned={handlePwned}
@@ -61,7 +78,10 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab }) => {
                   value={flag}
                   onChange={(e) => setFlag(e.target.value)}
                 />
-                <button className="flex items-center px-4 py-2 text-white rounded-md">
+                <button
+                  className="flex items-center px-4 py-2 text-white rounded-md"
+                  onClick={handleSubmitFlag}
+                >
                   <Image
                     src="/submit.svg"
                     alt="Submit"

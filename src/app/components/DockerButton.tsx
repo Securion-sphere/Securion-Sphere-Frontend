@@ -9,6 +9,7 @@ interface DockerButtonProps {
   onPlaying: () => void;
   onPwned: () => void;
   currentStage: string;
+  setStage: (stage: string) => void; // Prop to externally update stage
 }
 
 const DockerButton: React.FC<DockerButtonProps> = ({
@@ -17,8 +18,9 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   onPlaying,
   onPwned,
   currentStage,
+  setStage,
 }) => {
-  const [stage, setStage] = useState<string>(currentStage);
+  const [stage, setLocalStage] = useState<string>(currentStage); // Use local stage state
   const [copied, setCopied] = useState<boolean>(false);
 
   const selectedLabDocker = labDocker.find(
@@ -26,31 +28,30 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   ) || { name: "Test", ip: "localhost", port: 80 };
 
   useEffect(() => {
-    setStage(currentStage); // Reset stage when `currentStage` changes
+    setLocalStage(currentStage); // Sync internal state with currentStage prop
   }, [currentStage]);
 
   const handleClick = () => {
     switch (stage) {
       case "Spawn":
-        setStage("Playing");
+        setLocalStage("Playing");
+        setStage("Playing"); // Notify parent about the stage change
         onSpawn();
         break;
       case "Playing":
-        if (selectedLabDocker) {
-          let content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
-          navigator.clipboard.writeText(content);
-          setStage("Pwned");
-          onPlaying();
+        let content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
+        navigator.clipboard.writeText(content);
+        onPlaying();
 
-          setCopied(true);
-          setTimeout(() => setCopied(false), 4000); // "Copied to clipboard" for 2 seconds
-        }
+        setCopied(true);
+        setTimeout(() => setCopied(false), 4000); // "Copied to clipboard" notification
         break;
       case "Pwned":
         onPwned();
         break;
       default:
-        setStage("Spawn");
+        setLocalStage("Spawn");
+        setStage("Spawn"); // Notify parent about the stage change
     }
   };
 
