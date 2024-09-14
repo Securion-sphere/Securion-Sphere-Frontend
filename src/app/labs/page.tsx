@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import LabDetail from "../components/labs/LabDetail";
-import Labs from "../components/labs/labs";
+import Labs from "../components/labs/Labs";
 import { Lab, labs } from "../data/labs";
 
 const LabsPage: React.FC = () => {
