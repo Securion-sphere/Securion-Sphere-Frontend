@@ -31,6 +31,11 @@ const DockerButton: React.FC<DockerButtonProps> = ({
     setLocalStage(currentStage); // Sync internal state with currentStage prop
   }, [currentStage]);
 
+  const handleStopClick = () => {
+    setLocalStage("Spawn");
+    setStage("Spawn");
+  };
+
   const handleClick = () => {
     switch (stage) {
       case "Spawn":
@@ -60,7 +65,12 @@ const DockerButton: React.FC<DockerButtonProps> = ({
       case "Playing":
         return (
           <div className="w-full h-full text-white flex gap-5 justify-start items-center px-8 py-4 font-medium rounded-full shadow-sm bg-gray-600 hover:bg-gray-700">
-            <CircleStop strokeWidth={2} className="w-12 h-full" />
+            <div
+              className="h-full text-white cursor-pointer"
+              onClick={handleStopClick}
+            >
+              <CircleStop strokeWidth={2} className="w-12 h-full" />
+            </div>
             <div className="flex w-full gap-7 text-sm justify-around">
               <div>
                 <div className="text-base">{selectedLabDocker.ip}</div>
