@@ -19,18 +19,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUser = async () => {
     try {
       const accessToken = localStorage.getItem("AccessToken");
-      if (!accessToken) return;
-
-      // Fetch user profile with access token from localStorage
-      const { data } = await axios.get(`${config.apiBaseUrl}/user/profile`, {
+      if (!accessToken) {
+        router.push('/auth/login');
+        return;
+      }
+  
+      await axios.get(`${config.apiBaseUrl}/user/profile`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+      }).then(response => {
+        setUser(response.data);
+      }).catch(async (error) => {
+        if (error.response?.status === 401) {
+          await refreshToken();
+          fetchUser();
+        } else {
+          console.error('Failed to fetch user', error);
+          setUser(null);
+          router.push('/auth/login');
+        }
       });
-      setUser(data);
     } catch (error) {
-      console.error("Failed to fetch user", error);
+      console.error('Failed to fetch user', error);
       setUser(null);
+      router.push('/auth/login');
     }
   };
 
@@ -40,29 +53,55 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const refreshToken = query.get('refreshToken');
   
     if (accessToken && refreshToken) {
-      // Store tokens in localStorage
       localStorage.setItem('AccessToken', accessToken);
       localStorage.setItem('RefreshToken', refreshToken);
-  
-      // Remove the query params from the URL
       router.replace("/");
-  
-      // Fetch the user data now that the tokens are stored
       fetchUser();
     } else {
-      // If no tokens found in URL, fetch the user based on existing localStorage tokens
       fetchUser();
     }
-  }, []);  
+  }, []);
+  
+  const refreshToken = async () => {
+    try {
+      const refreshToken = localStorage.getItem('RefreshToken');
+      if (!refreshToken) {
+        throw new Error('No refresh token found');
+      }
+  
+      const response = await axios.post(
+        `${config.apiBaseUrl}/auth/refresh`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      
+      const newAccessToken = response.data.accessToken;
+      const newRefreshToken = response.data.refreshToken;
+      localStorage.setItem('AccessToken', newAccessToken);
+      localStorage.setItem('RefreshToken', newRefreshToken);
+    } catch (error) {
+      console.error('Failed to refresh token', error);
+      logout();
+    }
+  };  
   
   const logout = async () => {
     try {
-      // Implement your logout logic
+      await axios.post(`${config.apiBaseUrl}/auth/logout`, {}, {
+        withCredentials: true,
+      });
       localStorage.removeItem("AccessToken");
       localStorage.removeItem("RefreshToken");
       setUser(null);
+      router.push('/auth/login');
     } catch (error) {
       console.error("Failed to logout", error);
+      // Optionally handle logout failure
     }
   };
 
