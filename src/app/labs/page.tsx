@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import LabDetail from "../components/labs/LabDetail";
 import Labs from "../components/labs/Labs";
 import { Lab, labs } from "../data/labs";
+import withAuth from "../components/auth/withAuth";
 
 const LabsPage: React.FC = () => {
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);
@@ -51,4 +52,4 @@ const LabsPage: React.FC = () => {
   );
 };
 
-export default LabsPage;
+export default withAuth(LabsPage);
