@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import LabDetail from "../components/LabDetail";
-import Labs, { Lab } from "../components/Labs";
 
 const Footer: React.FC = () => {
   return (
