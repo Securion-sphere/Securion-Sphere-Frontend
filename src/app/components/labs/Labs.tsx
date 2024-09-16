@@ -1,17 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Lab } from "@/app/data/labs";
+import axiosInstance from "@/api/axiosInstance";
 
 interface LabsProps {
   labs: Lab[];
   onLabSelect: (lab: Lab) => void;
 }
 
-const Labs: React.FC<LabsProps> = ({ labs, onLabSelect }) => {
+const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
+  const [labs, setLabs] = useState<Lab[]>([]);
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);
+
+  useEffect(() => {
+    const getLabs = async () => {
+      try {
+        const res = await axiosInstance.get("/lab");
+        setLabs(res.data);
+        if (res.data.length > 0) {
+          setSelectedLab(res.data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching labs:", error);
+      }
+    };
+
+    getLabs();
+  }, []);
 
   const handleLabSelect = (lab: Lab) => {
     setSelectedLab(lab);
+    onLabSelect(lab);
   };
 
   return (
@@ -52,7 +71,7 @@ const Labs: React.FC<LabsProps> = ({ labs, onLabSelect }) => {
               <tr
                 key={index}
                 className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => onLabSelect(lab)}
+                onClick={() => handleLabSelect(lab)}
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {lab.name}
@@ -71,7 +90,7 @@ const Labs: React.FC<LabsProps> = ({ labs, onLabSelect }) => {
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-500">
-                  {lab.points}
+                  {lab.point}
                 </td>
               </tr>
             ))}

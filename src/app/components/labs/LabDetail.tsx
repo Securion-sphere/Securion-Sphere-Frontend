@@ -61,8 +61,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
           {selectedLab.name}
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          {selectedLab.description}
         </p>
       </div>
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">

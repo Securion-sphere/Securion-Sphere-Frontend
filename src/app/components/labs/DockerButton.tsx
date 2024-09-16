@@ -28,7 +28,7 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   ) || { name: "Test", ip: "localhost", port: 80 };
 
   useEffect(() => {
-    setLocalStage(currentStage); // Sync internal state with currentStage prop
+    setLocalStage(currentStage);
   }, [currentStage]);
 
   const handleStopClick = () => {
