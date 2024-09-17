@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import "./globals.css";
 import { AuthProvider } from "@/app/context/AuthContext";
 import { Inter } from "next/font/google";
@@ -9,11 +9,6 @@ import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Securion Sphere",
-  description: "Penetration testing learning platform",
-};
-
 export default function RootLayout({
   children,
 }: {
@@ -21,7 +16,7 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
 
-  const hideNavbarAndFooter = pathname === '/auth/login';
+  const hideNavbarAndFooter = pathname === "/auth/login";
 
   return (
     <html lang="en">
