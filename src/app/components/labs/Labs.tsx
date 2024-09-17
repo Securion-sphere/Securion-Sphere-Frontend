@@ -1,7 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Lab } from "@/app/data/labs";
+import { Lab } from "@/app/interface/labs";
 import axiosInstance from "@/api/axiosInstance";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LabsProps {
   labs: Lab[];
@@ -10,23 +20,27 @@ interface LabsProps {
 
 const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
   const [labs, setLabs] = useState<Lab[]>([]);
-  const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedLab, setSelectedLab] = useState<Lab | null>(null);
 
-  useEffect(() => {
-    const getLabs = async () => {
-      try {
-        const res = await axiosInstance.get("/lab");
-        setLabs(res.data);
-        if (res.data.length > 0) {
-          setSelectedLab(res.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching labs:", error);
+  const getLabs = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get("/lab");
+      setLabs(res.data);
+      if (res.data.length > 0) {
+        setSelectedLab(res.data[0]);
       }
-    };
-
-    getLabs();
+    } catch (error) {
+      console.error("Error fetching labs:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  // Call the memoized getLabs function inside useEffect
+  useEffect(() => {
+    getLabs();
+  }, [getLabs]);
 
   const handleLabSelect = (lab: Lab) => {
     setSelectedLab(lab);
@@ -46,56 +60,61 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
         />
       </div>
       <div className="border-t border-gray-200 max-h-full overflow-y-scroll">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr className="text-sm font-medium">
-              <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                Lab&apos;s name
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                Creator
-              </th>
-              <th className="px-6 py-3 text-center font-medium text-gray-500 uppercase tracking-wider">
-                Solved
-              </th>
-              <th className="px-6 py-3 text-center font-medium text-gray-500 uppercase tracking-wider">
-                Points
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-gray-50 divide-y divide-gray-200">
-            {labs.map((lab, index) => (
-              <tr
-                key={index}
-                className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => handleLabSelect(lab)}
-              >
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {lab.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {lab.category}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {lab.creator}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                  {lab.solved ? (
-                    <span className="text-green-500">✓</span>
-                  ) : (
-                    <span className="text-gray-500">-</span>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-500">
-                  {lab.point}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Lab&apos;s Name</TableHead>
+              <TableHead className="text-center">Category</TableHead>
+              <TableHead className="text-center">Creator</TableHead>
+              <TableHead className="text-center">Solved</TableHead>
+              <TableHead className="text-center">Points</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading
+              ? // Show skeleton loaders while the data is being fetched
+                [...Array(5)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="w-[150px] h-[20px] rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="w-[120px] h-[20px] rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="w-[100px] h-[20px] rounded-full" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Skeleton className="w-[50px] h-[20px] rounded-full" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Skeleton className="w-[50px] h-[20px] rounded-full" />
+                    </TableCell>
+                  </TableRow>
+                ))
+              : labs.map((lab, index) => (
+                  <TableRow
+                    key={index}
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleLabSelect(lab)}
+                  >
+                    <TableCell>{lab.name}</TableCell>
+                    <TableCell>{lab.category}</TableCell>
+                    <TableCell>{lab.creatorName}</TableCell>
+                    <TableCell className="text-center">
+                      {lab.solved ? (
+                        <span className="text-green-500">✓</span>
+                      ) : (
+                        <span className="text-gray-500">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center text-blue-500">
+                      {lab.point}
+                    </TableCell>
+                  </TableRow>
+                ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

@@ -1,18 +1,20 @@
 export interface Lab {
+  id: number;
   name: string;
   description: string;
   category: string;
-  creator: string;
+  creatorName: string;
   solved: boolean;
   point: number;
 }
 
 export const labs: Lab[] = [
   {
+    id: 1,
     name: "Web Application for SQL Injection",
     description: "Test",
     category: "Injection",
-    creator: "Mr. Injection",
+    creatorName: "Mr. Injection",
     solved: true,
     point: 100,
   },
