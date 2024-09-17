@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import LabDetail from "../components/labs/LabDetail";
 import Labs from "../components/labs/Labs";
-import { Lab, labs } from "../data/labs";
+import { Lab, labs } from "../interface/labs";
 
 const LabsPage: React.FC = () => {
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Lab } from "@/app/data/labs";
+import { Lab } from "@/app/interface/labs";
 import axiosInstance from "@/api/axiosInstance";
 import {
   Table,
@@ -23,23 +23,24 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedLab, setSelectedLab] = useState<Lab | null>(null);
 
-  useEffect(() => {
-    const getLabs = async () => {
-      try {
-        const res = await axiosInstance.get("/lab");
-        setLabs(res.data);
-        if (res.data.length > 0) {
-          setSelectedLab(res.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching labs:", error);
-      } finally {
-        setIsLoading(false);
+  const getLabs = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get("/lab");
+      setLabs(res.data);
+      if (res.data.length > 0) {
+        setSelectedLab(res.data[0]);
       }
-    };
-
-    getLabs();
+    } catch (error) {
+      console.error("Error fetching labs:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  // Call the memoized getLabs function inside useEffect
+  useEffect(() => {
+    getLabs();
+  }, [getLabs]);
 
   const handleLabSelect = (lab: Lab) => {
     setSelectedLab(lab);
@@ -99,7 +100,7 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
                   >
                     <TableCell>{lab.name}</TableCell>
                     <TableCell>{lab.category}</TableCell>
-                    <TableCell>{lab.creator}</TableCell>
+                    <TableCell>{lab.creatorName}</TableCell>
                     <TableCell className="text-center">
                       {lab.solved ? (
                         <span className="text-green-500">✓</span>
