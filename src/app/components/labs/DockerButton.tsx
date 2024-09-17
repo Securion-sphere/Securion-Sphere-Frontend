@@ -40,6 +40,13 @@ const DockerButton: React.FC<DockerButtonProps> = ({
     setStage("Spawn");
   };
 
+  const handleCopyIpPort = () => {
+    const content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 4000);
+  };
+
   const handleClick = () => {
     switch (stage) {
       case "Spawn":
@@ -48,11 +55,7 @@ const DockerButton: React.FC<DockerButtonProps> = ({
         onSpawn();
         break;
       case "Playing":
-        const content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
-        navigator.clipboard.writeText(content);
         onPlaying();
-        setCopied(true);
-        setTimeout(() => setCopied(false), 4000);
         break;
       case "Pwned":
         onPwned();
@@ -77,7 +80,10 @@ const DockerButton: React.FC<DockerButtonProps> = ({
                 className="w-12 h-full hover:text-red-500"
               />
             </div>
-            <div className="flex w-full gap-7 text-sm justify-around">
+            <div
+              className="flex w-full gap-7 text-sm justify-around"
+              onClick={handleCopyIpPort}
+            >
               <div>
                 <div className="text-base">{selectedLabDocker.ip}</div>
                 <div className="font-light text-gray-400">IP address</div>
