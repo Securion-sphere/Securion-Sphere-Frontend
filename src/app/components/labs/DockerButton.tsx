@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
-import { Lab } from "@/app/data/labs";
-import { LabDocker, labDocker } from "@/app/data/labDocker";
+import { Lab } from "@/app/interface/labs";
 
 interface DockerButtonProps {
   lab: Lab;
+  labDockerData: any; // Add prop for passing the docker data
   onSpawn: () => void;
   onPlaying: () => void;
   onPwned: () => void;
   currentStage: string;
-  setStage: (stage: string) => void; // Prop to externally update stage
+  setStage: (stage: string) => void;
 }
 
 const DockerButton: React.FC<DockerButtonProps> = ({
   lab,
+  labDockerData,
   onSpawn,
   onPlaying,
   onPwned,
   currentStage,
   setStage,
 }) => {
-  const [stage, setLocalStage] = useState<string>(currentStage); // Use local stage state
+  const [stage, setLocalStage] = useState<string>(currentStage);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const selectedLabDocker = labDocker.find(
-    (dockerLab) => dockerLab.name === lab.name,
-  ) || { name: "Test", ip: "localhost", port: 80 };
+  // If labDockerData is provided, use it; else fallback to default values
+  const selectedLabDocker = labDockerData || {
+    id: 1,
+    ip: "localhost",
+    port: 80,
+  };
 
   useEffect(() => {
     setLocalStage(currentStage);
@@ -36,27 +40,29 @@ const DockerButton: React.FC<DockerButtonProps> = ({
     setStage("Spawn");
   };
 
+  const handleCopyIpPort = () => {
+    const content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 4000);
+  };
+
   const handleClick = () => {
     switch (stage) {
       case "Spawn":
         setLocalStage("Playing");
-        setStage("Playing"); // Notify parent about the stage change
+        setStage("Playing");
         onSpawn();
         break;
       case "Playing":
-        let content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
-        navigator.clipboard.writeText(content);
         onPlaying();
-
-        setCopied(true);
-        setTimeout(() => setCopied(false), 4000); // "Copied to clipboard" notification
         break;
       case "Pwned":
         onPwned();
         break;
       default:
         setLocalStage("Spawn");
-        setStage("Spawn"); // Notify parent about the stage change
+        setStage("Spawn");
     }
   };
 
@@ -74,7 +80,10 @@ const DockerButton: React.FC<DockerButtonProps> = ({
                 className="w-12 h-full hover:text-red-500"
               />
             </div>
-            <div className="flex w-full gap-7 text-sm justify-around">
+            <div
+              className="flex w-full gap-7 text-sm justify-around"
+              onClick={handleCopyIpPort}
+            >
               <div>
                 <div className="text-base">{selectedLabDocker.ip}</div>
                 <div className="font-light text-gray-400">IP address</div>

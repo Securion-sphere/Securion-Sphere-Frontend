@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DockerButton from "./DockerButton";
-import { Lab } from "@/app/data/labs";
-import { LabDocker, labDocker } from "@/app/data/labDocker";
+import { Lab } from "@/app/interface/labs";
+import axiosInstance from "@/api/axiosInstance";
+import { UserProfile } from "@/app/interface/userProfile";
+import { LabDocker } from "@/app/interface/labDocker";
 
 interface LabDetailProps {
   selectedLab: Lab;
@@ -13,7 +15,8 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   const [flag, setFlag] = useState("");
   const [buttonStage, setButtonStage] = useState<string>("Spawn");
   const [isFlagCorrect, setIsFlagCorrect] = useState<boolean>(false);
-  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false); // Track if submitted
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+  const [labDockerData, setLabDockerData] = useState<LabDocker | null>(null);
 
   useEffect(() => {
     if (selectedLab.solved) {
@@ -25,32 +28,87 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
     }
   }, [selectedLab]);
 
-  const handleSpawn = () => {
-    console.log("Docker Spawn clicked");
+  const handleSpawn = async () => {
+    try {
+      await axiosInstance
+        .get("/user/profile")
+        .then(async (userProfile) => {
+          await axiosInstance
+            .get("/actived-lab/get-instance")
+            .then(async (userLabResponse) => {
+              console.log("UserLab: ", userLabResponse);
+              const userLab: LabDocker = userLabResponse.data;
+              if (userLab) {
+                await axiosInstance
+                  .delete("/actived-lab", {
+                    data: { userId: userProfile.data.id },
+                  })
+                  .catch(() => {
+                    console.error("Error cannot delete actived lab");
+                  });
+              }
+
+              const spawnLabResponse = await axiosInstance.post(
+                "/actived-lab",
+                {
+                  labId: selectedLab.id,
+                  userId: userProfile.data.id,
+                },
+              );
+              let spawnLab: LabDocker = spawnLabResponse.data;
+
+              setLabDockerData(spawnLab);
+            })
+            .catch(async (err) => {
+              console.error("Error fetching lab instance");
+              const spawnLabResponse = await axiosInstance.post(
+                "/actived-lab",
+                {
+                  labId: selectedLab.id,
+                  userId: userProfile.data.id,
+                },
+              );
+              let spawnLab: LabDocker = spawnLabResponse.data;
+
+              setLabDockerData(spawnLab);
+            });
+        })
+        .catch(() => {
+          console.error("Error fetching user profile");
+        });
+    } catch (err) {
+      console.error("Error spawning lab:", err);
+    }
   };
 
-  const handlePlaying = () => {
-    console.log("Playing stage clicked");
-  };
-
-  const handlePwned = () => {
-    console.log("Pwned stage clicked");
-  };
-
-  const handleSubmitFlag = () => {
+  const handleSubmitFlag = async () => {
     setHasSubmitted(true);
 
-    const selectedLabDocker = labDocker.find(
-      (dockerLab: LabDocker) => dockerLab.name === selectedLab.name,
-    );
+    try {
+      const userResponse = await axiosInstance.get("/user/profile");
+      const userProfile: UserProfile = userResponse.data;
 
-    if (selectedLabDocker && flag === selectedLabDocker.flag) {
-      setIsFlagCorrect(true);
-      setButtonStage("Pwned");
-      markAsSolved(selectedLab);
-    } else {
-      setIsFlagCorrect(false);
-      alert("Incorrect flag, try again!");
+      if (userProfile.id) {
+        const flagResponse = await axiosInstance.post(
+          "/actived-lab/submit-flag",
+          {
+            userId: userProfile.id,
+            flag: flag,
+          },
+        );
+
+        if (flagResponse.data.msg == "Flag is correct") {
+          setIsFlagCorrect(true);
+          setButtonStage("Pwned");
+          markAsSolved(selectedLab); // Notify parent component that the lab is solved
+        } else {
+          setIsFlagCorrect(false);
+          alert("Incorrect flag, try again!");
+        }
+      }
+    } catch (err) {
+      console.error("Error submitting flag:", err);
+      alert("An error occurred while submitting the flag.");
     }
   };
 
@@ -67,10 +125,11 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
         <DockerButton
           lab={selectedLab}
-          setStage={setButtonStage} // Pass the setStage function
+          labDockerData={labDockerData}
+          setStage={setButtonStage}
           onSpawn={handleSpawn}
-          onPlaying={handlePlaying}
-          onPwned={handlePwned}
+          onPlaying={() => {}}
+          onPwned={() => {}}
           currentStage={buttonStage}
         />
       </div>
@@ -79,14 +138,13 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
           <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <div
-                className={`w-full flex gap-5 border-2 rounded-md
-                  ${
-                    hasSubmitted
-                      ? !isFlagCorrect
-                        ? "border-red-500"
-                        : "border-green-500"
-                      : "border-gray-300"
-                  }`}
+                className={`w-full flex gap-5 border-2 rounded-md ${
+                  hasSubmitted
+                    ? !isFlagCorrect
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : "border-gray-300"
+                }`}
               >
                 <input
                   type="text"
