@@ -1,21 +1,28 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+'use client'
+
+import { usePathname } from 'next/navigation';
 import "./globals.css";
+import { AuthProvider } from "@/app/context/AuthContext";
+import { Inter } from "next/font/google";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Securion Sphear",
+  title: "Securion Sphere",
   description: "Penetration testing learning platform",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const pathname = usePathname();
+
+  const hideNavbarAndFooter = pathname === '/auth/login';
+
   return (
     <html lang="en">
       <head>
@@ -31,9 +38,11 @@ export default function RootLayout({
       <body
         className={`flex flex-col bg-gray-100 min-h-screen ${inter.className}`}
       >
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        <AuthProvider>
+          {!hideNavbarAndFooter && <Navbar />}
+          <main className="flex-grow">{children}</main>
+          {!hideNavbarAndFooter && <Footer />}
+        </AuthProvider>
       </body>
     </html>
   );
