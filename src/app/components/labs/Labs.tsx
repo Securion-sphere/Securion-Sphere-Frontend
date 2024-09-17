@@ -25,13 +25,31 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
 
   const getLabs = useCallback(async () => {
     try {
-      const res = await axiosInstance.get("/lab");
-      setLabs(res.data);
-      if (res.data.length > 0) {
-        setSelectedLab(res.data[0]);
+      // Fetch labs data
+      const labResponse = await axiosInstance.get("/lab");
+      const labsData = labResponse.data;
+
+      // Fetch user profile to get solved machines
+      const userProfileResponse = await axiosInstance.get("/user/profile");
+      const solvedMachines = userProfileResponse.data.solved_machine;
+
+      // Mark labs as solved if their id exists in solved_machine
+      const updatedLabs = labsData.map((lab: Lab) => {
+        const isSolved = solvedMachines.some(
+          (solvedLab: Lab) => solvedLab.id === lab.id,
+        );
+        return {
+          ...lab,
+          solved: isSolved, // Add solved property to each lab
+        };
+      });
+
+      setLabs(updatedLabs);
+      if (updatedLabs.length > 0) {
+        setSelectedLab(updatedLabs[0]);
       }
     } catch (error) {
-      console.error("Error fetching labs:", error);
+      console.error("Error fetching labs or user profile:", error);
     } finally {
       setIsLoading(false);
     }
