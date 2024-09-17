@@ -1,8 +1,11 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import withAuth from "./components/auth/withAuth";
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
     <div className="bg-white text-gray-900">
       <header className="container mx-auto py-16 text-center">
@@ -146,4 +149,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default withAuth(HomePage);
