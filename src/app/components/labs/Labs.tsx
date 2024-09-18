@@ -5,7 +5,6 @@ import axiosInstance from "@/api/axiosInstance";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
