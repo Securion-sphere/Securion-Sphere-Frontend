@@ -113,7 +113,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   };
 
   return (
-    <div className="bg-gray-50 shadow overflow-hidden">
+    <div className="bg-gray-50 shadow overflow-hidden h-full">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {selectedLab.name}
