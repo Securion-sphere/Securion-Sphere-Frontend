@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Lab } from "@/app/interface/labs";
+import { Lab } from "@/app/modules/interface/labs";
 import axiosInstance from "@/api/axiosInstance";
 import {
   Table,

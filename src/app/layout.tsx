@@ -2,12 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import "./globals.css";
-import { AuthProvider } from "@/app/context/AuthContext";
+import { AuthProvider } from "@/app/modules/context/AuthContext";
 import { Inter } from "next/font/google";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import NavBar from "./modules/components/Navbar";
+import Footer from "./modules/components/Footer";
 import { Suspense } from "react";
-import LoadingPage from "./components/loading/LoadingPage";
+import LoadingPage from "./modules/components/loading/LoadingPage";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,7 +32,7 @@ export default function RootLayout({
         className={`flex flex-col bg-gray-100 min-h-screen ${inter.className}`}
       >
         <AuthProvider>
-          {!hideNavbarAndFooter && <Navbar />}
+          {!hideNavbarAndFooter && <NavBar />}
           <div className="flex-grow h-full">
             <Suspense fallback={<LoadingPage />}>{children}</Suspense>
           </div>
