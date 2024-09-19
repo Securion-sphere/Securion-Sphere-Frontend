@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/ui/table";
+import { Skeleton } from "@/ui/skeleton";
 
 interface LoadingTableProps {
   header: string[];

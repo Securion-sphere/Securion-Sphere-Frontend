@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import LoadingTable from "@/components/loading/LoadingTable";
 

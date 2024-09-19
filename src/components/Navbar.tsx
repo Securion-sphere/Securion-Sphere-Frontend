@@ -1,5 +1,5 @@
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import Link from "next/link";
 
 type NavItem = {
