@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Lab } from "@/app/modules/interface/labs";
+import { Lab } from "@/interfaces/labs";
 import axiosInstance from "@/api/axiosInstance";
 import {
   Table,
@@ -10,9 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
-import LoadingTable from "../loading/LoadingTable";
+import LoadingTable from "@/components/loading/LoadingTable";
 
 interface LabsProps {
   onLabSelect: (lab: Lab) => void;

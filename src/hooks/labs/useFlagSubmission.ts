@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
-import { Lab } from "@/app/modules/interface/labs";
+import { Lab } from "@/interfaces/labs";
 
 const useFlagSubmission = (
   selectedLab: Lab,

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import withAuth from "@/app/modules/components/auth/withAuth";
+import withAuth from "@/components/auth/withAuth";
 
 const aboutPage = () => {
   return <div>About page</div>;

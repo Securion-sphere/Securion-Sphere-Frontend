@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
-import { Lab, LabDocker } from "@/app/modules/interface/labs";
+import { Lab, LabDocker } from "@/interfaces/labs";
 
 const useLabDocker = (selectedLab: Lab) => {
   const [labDockerData, setLabDockerData] = useState<LabDocker | null>(null);

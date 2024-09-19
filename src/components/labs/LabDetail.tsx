@@ -2,10 +2,10 @@ import React from "react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import DockerButton from "./DockerButton";
-import { Lab, LabDocker } from "@/app/modules/interface/labs";
-import FlagSubmission from "@/app/pages/labs/FlagSubmission";
-import useLabDocker from "@/app/modules/hooks/labs/useLabDocker";
-import useFlagSubmission from "@/app/modules/hooks/labs/useFlagSubmission";
+import { Lab, LabDocker } from "@/interfaces/labs";
+import FlagSubmission from "@/app/labs/FlagSubmission";
+import useLabDocker from "@/hooks/labs/useLabDocker";
+import useFlagSubmission from "@/hooks/labs/useFlagSubmission";
 
 interface LabDetailProps {
   selectedLab: Lab;

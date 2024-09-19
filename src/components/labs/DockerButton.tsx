@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
-import { Lab } from "@/app/modules/interface/labs";
+import { Lab } from "@/interfaces/labs";
 
 interface DockerButtonProps {
   lab: Lab;

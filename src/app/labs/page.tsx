@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import LabDetail from "@/app/modules/components/labs/LabDetail";
-import Labs from "@/app/modules/components/labs/Labs";
-import { Lab, labs } from "@/app/modules/interface/labs";
-import withAuth from "@/app/modules/components/auth/withAuth";
+import LabDetail from "@/components/labs/LabDetail";
+import Labs from "@/components/labs/Labs";
+import { Lab, labs } from "@/interfaces/labs";
+import withAuth from "@/components/auth/withAuth";
 import Providers from "@/app/_app";
 import Image from "next/image";
 

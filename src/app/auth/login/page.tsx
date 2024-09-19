@@ -3,7 +3,7 @@ import config from "@/config";
 
 import React from "react";
 import Image from "next/image";
-import LoginForm from "@/app/modules/components/auth/LoginForm";
+import LoginForm from "@/components/auth/LoginForm";
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {
