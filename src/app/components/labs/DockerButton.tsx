@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
 import { Lab } from "@/app/interface/labs";
+import axiosInstance from "@/api/axiosInstance";
 
 interface DockerButtonProps {
   lab: Lab;
@@ -35,9 +36,18 @@ const DockerButton: React.FC<DockerButtonProps> = ({
     setLocalStage(currentStage);
   }, [currentStage]);
 
-  const handleStopClick = () => {
+  const handleStopClick = async () => {
     setLocalStage("Spawn");
     setStage("Spawn");
+    try {
+      await axiosInstance.get("/user/profile").then(async (userProfile) => {
+        await axiosInstance.delete("/actived-lab", {
+          data: { userId: userProfile.data.id },
+        });
+      });
+    } catch (err) {
+      console.log("Error: Cannot destroy instance");
+    }
   };
 
   const handleCopyIpPort = () => {
