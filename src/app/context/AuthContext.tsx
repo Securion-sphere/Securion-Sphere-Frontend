@@ -92,18 +92,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   
   const logout = async () => {
     try {
-      await axios.post(`${config.apiBaseUrl}/auth/logout`, {}, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${config.apiBaseUrl}/auth/logout`, 
+        {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('AccessToken')}`,
+          },
+          withCredentials: true,  // Ensures cookies are sent if needed
+        }
+      );
+  
+      // Clear tokens and user data on successful logout
       localStorage.removeItem("AccessToken");
       localStorage.removeItem("RefreshToken");
       setUser(null);
+  
+      // Redirect to login page
       router.push('/auth/login');
     } catch (error) {
       console.error("Failed to logout", error);
-      // Optionally handle logout failure
+      // Optionally handle logout failure, e.g., show an alert or fallback behavior
     }
   };
+  
 
   return (
     <AuthContext.Provider value={{ user, logout }}>

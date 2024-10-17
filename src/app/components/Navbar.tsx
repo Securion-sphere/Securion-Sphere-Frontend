@@ -1,6 +1,9 @@
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
+import { useState } from "react";
+import Image from "next/image";
 
 type NavItem = {
   href: string;
@@ -15,8 +18,13 @@ const navItems: NavItem[] = [
 ];
 
 export default function NavBar() {
+  const { user, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
   return (
-    <header className="sticky top-0 z-50 flex h-14 w-full shrink-0 items-center px-4 md:px-6 bg-white shadow-md">
+    <header className="sticky top-0 z-50 flex h-14 w-full items-center px-4 md:px-6 bg-white shadow-md">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden">
@@ -43,21 +51,58 @@ export default function NavBar() {
           </div>
         </SheetContent>
       </Sheet>
+
       <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
         <MountainIcon className="h-6 w-6" />
         <span className="sr-only">Securion Sphere</span>
       </Link>
-      <nav className="ml-auto hidden lg:flex gap-6">
+
+      {/* Navigation Links */}
+      <nav className="ml-auto hidden lg:flex gap-6 items-center">
         {navItems.map((item) => (
           <Link
             key={item.label}
             href={item.href}
-            className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+            className="group inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-100 focus:outline-none dark:hover:bg-gray-800"
             prefetch={false}
           >
             {item.label}
           </Link>
         ))}
+
+        {/* Profile Dropdown */}
+        <div className="relative">
+          <button
+            onClick={toggleDropdown}
+            className="flex items-center space-x-2 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Image
+              src={user?.profilePicture || "/assets/icons/default_profile.png"}
+              alt="Profile"
+              className="h-8 w-8 rounded-full"
+              width={280}
+              height={280}
+            />
+            <span>{user?.name || "Anonymous"}</span>
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md">
+              <Link
+                href="/profile"
+                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                View Profile
+              </Link>
+              <button
+                onClick={logout}
+                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </nav>
     </header>
   );
