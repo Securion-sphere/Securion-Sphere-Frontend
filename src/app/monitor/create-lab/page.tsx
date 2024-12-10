@@ -6,25 +6,7 @@ import withAuth from "@/app/components/auth/withAuth";
 const CreateLabPage = () => {
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="flex">
-        <aside className="w-1/4 h-screen bg-white shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-6">Monitor & Control</h2>
-          <ul className="space-y-4">
-            <li className="text-blue-600 font-medium">Dashboard</li>
-            <li>Labs</li>
-            <li>Learning Modules</li>
-            <li>Users Management</li>
-          </ul>
-          <hr className="my-6" />
-          <h3 className="text-lg font-bold mb-2">Account Pages</h3>
-          <ul className="space-y-4">
-            <li>My Profile</li>
-            <li>Inbox</li>
-          </ul>
-        </aside>
-
-        {/* Main content */}
+        {/* Create lab page */}
         <main className="w-3/4 p-8">
           <div className="text-gray-700">
             {/* Basic Configuration */}
@@ -113,7 +95,6 @@ const CreateLabPage = () => {
           </div>
         </main>
       </div>
-    </div>
   );
 };
 
