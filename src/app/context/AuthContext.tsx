@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import axios from "axios";
 import config from "@/config";
 import { useRouter } from "next/navigation";
@@ -16,7 +18,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
+  // Add development bypass flag
+  const isDevelopmentBypass = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
+
   const fetchUser = async () => {
+    // If development bypass is enabled, skip user fetching
+    if (isDevelopmentBypass) {
+      setUser({ isDeveloper: true });
+      return;
+    }
+
     try {
       const accessToken = localStorage.getItem("AccessToken");
       if (!accessToken) {

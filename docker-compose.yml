@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /app
-    container_name: frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -15,4 +14,14 @@ services:
       - NEXTAUTH_SECRET
       - NEXTAUTH_URL
       - NEXT_PUBLIC_BACKEND
-    env_file: .env.local
+    env_file:
+      - .env.development.local
+      - .env.local
+    networks:
+      - securion-frontend
+
+networks:
+  securion-frontend:
+    driver: bridge
+    name: securion-frontend
+    external: true

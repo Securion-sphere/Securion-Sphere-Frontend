@@ -100,6 +100,13 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
         if (flagResponse.data.msg == "Flag is correct") {
           setIsFlagCorrect(true);
           setButtonStage("Pwned");
+          await axiosInstance
+            .delete("/actived-lab", {
+              data: { userId: userProfile.id },
+            })
+            .catch(() => {
+              console.error("Error cannot delete actived lab");
+            });
           markAsSolved(selectedLab); // Notify parent component that the lab is solved
         } else {
           setIsFlagCorrect(false);

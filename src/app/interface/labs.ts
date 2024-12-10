@@ -8,6 +8,12 @@ export interface Lab {
   point: number;
 }
 
+export interface SolvedLab {
+  studentId: number;
+  labId: number;
+  date: Date;
+}
+
 export const labs: Lab[] = [
   {
     id: 1,

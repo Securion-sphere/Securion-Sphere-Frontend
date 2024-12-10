@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Lab } from "@/app/interface/labs";
+import { Lab, SolvedLab } from "@/app/interface/labs";
 import axiosInstance from "@/api/axiosInstance";
 import {
   Table,
@@ -28,15 +28,15 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
       // Fetch labs data
       const labResponse = await axiosInstance.get("/lab");
       const labsData = labResponse.data;
-
+      // console.log(labsData);
       // Fetch user profile to get solved machines
       const userProfileResponse = await axiosInstance.get("/user/profile");
-      const solvedMachines = userProfileResponse.data.solved_machine;
-
+      const solvedMachines = userProfileResponse.data.student.solved_lab;
+      // console.log(solvedMachines);
       // Mark labs as solved if their id exists in solved_machine
       const updatedLabs = labsData.map((lab: Lab) => {
         const isSolved = solvedMachines.some(
-          (solvedLab: Lab) => solvedLab.id === lab.id,
+          (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
         );
         return {
           ...lab,
