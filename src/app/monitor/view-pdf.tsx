@@ -10,6 +10,7 @@ const ViewPdfPage = () => {
   const pdfUrl = searchParams.get('pdfUrl'); // Get the PDF URL from the query params
 
   if (!pdfUrl) {
+    console.log("No pdf url found");
     return <p>No PDF URL provided.</p>;
   }
 

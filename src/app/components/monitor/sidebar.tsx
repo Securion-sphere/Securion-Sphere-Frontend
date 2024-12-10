@@ -8,7 +8,8 @@ const Sidebar = () => {
   
     return (
       <aside className="w-1/4 h-screen bg-white shadow-lg p-6">
-        <h2 className="text-xl font-bold mb-6">Monitor & Control</h2>
+        <h1 className="text-xl font-bold mb-6">Monitor & Control</h1>
+        <div></div>
         <ul className="space-y-4">
           <li>
             <button

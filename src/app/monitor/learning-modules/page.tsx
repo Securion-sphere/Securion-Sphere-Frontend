@@ -1,15 +1,16 @@
 'use client'
+
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import withAuth from '@/app/components/auth/withAuth'
 
 interface Module {
-    id: number;
-    title: string;
-    description: string;
-    content: string;
-    pdfUrl: string;
-  }
+  id: number;
+  title: string;
+  description: string;
+  content: string;
+  pdfUrl: string;
+}
 
 const LearningModules = () => {
   const router = useRouter(); // Correct way to get the router instance
@@ -21,7 +22,7 @@ const LearningModules = () => {
       title: 'Introduction to Penetration Testing', 
       description: 'Learn the basics of penetration testing and ethical hacking.',
       content: 'This module covers the fundamental concepts of penetration testing, including...',
-      pdfUrl: '/path/to/intro-to-penetration-testing.pdf', // PDF URL
+      pdfUrl: 'https://eledu.ssru.ac.th/thanatyod_ja/pluginfile.php/1761/block_html/content/PrintMath2560%20-Edit.pdf', // PDF URL
     },
     { 
       id: 2, 
@@ -58,6 +59,11 @@ const LearningModules = () => {
       // Redirect to the PDF viewing page, passing the PDF URL as a query param
       router.push(`/monitor/view-pdf?pdfUrl=${encodeURIComponent(learning_module.pdfUrl)}`);
     }
+  };
+
+  const handleUploadNewMaterial = () => {
+    // Redirect to the upload new material page
+    router.push('/monitor/learning-modules/upload');
   };
 
   return (
@@ -105,6 +111,16 @@ const LearningModules = () => {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* Upload New Material Button */}
+      <div className="mt-8 text-center">
+        <button
+          onClick={handleUploadNewMaterial}
+          className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          + Upload New Material
+        </button>
       </div>
     </div>
   );
