@@ -58,11 +58,29 @@ const LearningModules = () => {
             className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col"
           >
             {/* Card Header */}
-            <div className="p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
+            <div
+              className={`p-6 relative ${
+                module.image ? "bg-cover bg-center" : ""
+              }`}
+              style={
+                module.image ? { backgroundImage: `url(${module.image})` } : {}
+              }
+            >
+              {module.image && (
+                <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl" />
+              )}
+              <h2
+                className={`text-xl font-semibold mb-2 line-clamp-2 ${
+                  module.image ? "text-white relative z-10" : "text-gray-800"
+                }`}
+              >
                 {module.title}
               </h2>
-              <p className="text-gray-600 mb-4 line-clamp-3">
+              <p
+                className={`text-gray-600 mb-4 line-clamp-3 ${
+                  module.image ? "text-white relative z-10" : "text-gray-600"
+                }`}
+              >
                 {module.description}
               </p>
             </div>
