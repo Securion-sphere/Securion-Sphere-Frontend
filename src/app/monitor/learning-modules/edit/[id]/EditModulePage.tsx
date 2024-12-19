@@ -210,7 +210,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full">
             <h3 className="text-xl font-bold mb-4">Delete Module</h3>
             <p className="mb-6">Are you sure you want to delete this module? This action cannot be undone.</p>
             <div className="flex space-x-4">
