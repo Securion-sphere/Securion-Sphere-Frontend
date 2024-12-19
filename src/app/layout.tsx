@@ -6,6 +6,7 @@ import { AuthProvider } from "@/app/context/AuthContext";
 import { Inter } from "next/font/google";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Sidebar from "./components/monitor/sidebar";  // Import Sidebar here
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,8 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
 
-  const hideNavbarAndFooter = pathname === "/auth/login";
+  // Check if the current path starts with '/monitor'
+  const isMonitorPage = pathname.startsWith("/monitor");
 
   return (
     <html lang="en">
@@ -34,9 +36,13 @@ export default function RootLayout({
         className={`flex flex-col bg-gray-100 min-h-screen ${inter.className}`}
       >
         <AuthProvider>
-          {!hideNavbarAndFooter && <Navbar />}
-          <main className="flex-grow">{children}</main>
-          {!hideNavbarAndFooter && <Footer />}
+          {!pathname.includes("/auth") && <Navbar />}
+          <div className="flex flex-1">
+            {/* Conditionally render Sidebar only on /monitor path */}
+            {isMonitorPage && <Sidebar />}
+            <main className="flex-grow p-8">{children}</main>
+          </div>
+          {!pathname.includes("/auth") && <Footer />}
         </AuthProvider>
       </body>
     </html>
