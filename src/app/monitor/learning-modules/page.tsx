@@ -4,14 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { mockModules } from "@/app/data/mockModules";
 import withAuth from "@/app/components/auth/withAuth";
-
-interface Module {
-  id: number;
-  title: string;
-  description: string;
-  content: string;
-  pdfUrl: string;
-}
+import { Module } from "@/app/types/module";
 
 const LearningModules = () => {
   const router = useRouter();
@@ -51,7 +44,7 @@ const LearningModules = () => {
         </div>
         <button
           onClick={handleUploadNewMaterial}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+          className="px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-colors duration-200 flex items-center"
         >
           <span className="mr-2">+</span> Upload New Material
         </button>
@@ -62,7 +55,7 @@ const LearningModules = () => {
           <div
             key={module.id}
             onClick={() => handleModuleClick(module.id)}
-            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer"
+            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col"
           >
             {/* Card Header */}
             <div className="p-6">
@@ -75,22 +68,14 @@ const LearningModules = () => {
             </div>
 
             {/* Card Footer with Actions */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end mt-auto">
               <button
                 onClick={(e) => handleEdit(module.id, e)}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+                className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200"
               >
                 Edit Module
               </button>
             </div>
-
-            {/* Expandable Content (Optional) */}
-            {selectedModule === module.id && (
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                <h3 className="text-lg font-semibold mb-2">Module Content</h3>
-                <p className="text-gray-600">{module.content}</p>
-              </div>
-            )}
           </div>
         ))}
       </div>

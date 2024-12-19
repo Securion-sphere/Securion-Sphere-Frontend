@@ -3,16 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import withAuth from '@/app/components/auth/withAuth';
 import { getMockModuleById } from "@/app/data/mockModules";
-
-interface Module {
-  id: number;
-  title: string;
-  description: string;
-  content: string;
-  pdfUrl: string;
-}
+import { Module } from '@/app/types/module';
 
 const EditModulePage = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
@@ -23,8 +15,8 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   // Form states
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [content, setContent] = useState('');
   const [currentFile, setCurrentFile] = useState<string>('');
+  const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [newFile, setNewFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,8 +27,8 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       if (learning_module) {
         setTitle(learning_module.title);
         setDescription(learning_module.description);
-        setContent(learning_module.content);
         setCurrentFile(learning_module.pdfUrl);
+        setBackgroundImage(learning_module.image)
       } else {
         setError("Module not found");
       }
@@ -57,8 +49,8 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
       setTitle(moduleData.title);
       setDescription(moduleData.description);
-      setContent(moduleData.content);
       setCurrentFile(moduleData.pdfUrl);
+      setBackgroundImage(moduleData.image)
     } catch (err) {
       setError("Failed to load module data");
     } finally {
@@ -88,7 +80,6 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('description', description);
-      formData.append('content', content);
       if (newFile) {
         formData.append('file', newFile);
       }
@@ -163,21 +154,6 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
             rows={4}
-            required
-          />
-        </div>
-
-        {/* Content */}
-        <div>
-          <label className="block text-gray-700 mb-2" htmlFor="content">
-            Content
-          </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            rows={6}
             required
           />
         </div>
