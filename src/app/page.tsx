@@ -21,13 +21,13 @@ const HomePage = () => {
         <div className="space-x-4">
           <Link
             href="/start-learning"
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg"
+            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl"
           >
             Start learning
           </Link>
           <Link
             href="/labs"
-            className="px-6 py-3 bg-gray-100 text-gray-800 font-semibold rounded-lg border border-gray-300"
+            className="px-6 py-3 bg-gray-100 text-gray-800 font-semibold rounded-xl border border-gray-300"
           >
             Go to Labs
           </Link>
@@ -42,7 +42,7 @@ const HomePage = () => {
             Here’s How We Empower You
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 bg-white shadow-md rounded-lg">
+            <div className="p-6 bg-white shadow-md rounded-xl">
               <Image
                 src="/path-to-icon1.svg"
                 alt="Fundamentals"
@@ -58,7 +58,7 @@ const HomePage = () => {
                 from beginner-friendly to advanced topics.
               </p>
             </div>
-            <div className="p-6 bg-white shadow-md rounded-lg">
+            <div className="p-6 bg-white shadow-md rounded-xl">
               <Image
                 src="/path-to-icon2.svg"
                 alt="Path"
@@ -72,7 +72,7 @@ const HomePage = () => {
                 whether it’s web application testing or network security.
               </p>
             </div>
-            <div className="p-6 bg-white shadow-md rounded-lg">
+            <div className="p-6 bg-white shadow-md rounded-xl">
               <Image
                 src="/path-to-icon3.svg"
                 alt="Challenges"
@@ -95,7 +95,7 @@ const HomePage = () => {
       <section className="container mx-auto py-16">
         <h2 className="text-2xl font-bold mb-8">Learn</h2>
         <div className="flex justify-center">
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full max-w-lg">
+          <div className="bg-gray-100 p-6 rounded-xl shadow-md w-full max-w-lg">
             <p className="text-gray-700 mb-4">
               Learn key concepts from our training materials, available in text
               and video formats.
