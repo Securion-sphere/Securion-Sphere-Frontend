@@ -1,19 +1,75 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import withAuth from "@/app/components/auth/withAuth";
 
 const CreateLabPage = () => {
+  const [labName, setLabName] = useState('');
+  const [labDescription, setLabDescription] = useState('');
+
+  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Validate the form fields
+    if (!labName || !labDescription) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    // Prepare the data for submission
+    const labData = {
+      labName,
+      labDescription,
+    };
+
+    console.log("Lab data submitted:", labData);
+
+    // Simulate a save operation
+    alert("Lab created successfully!");
+
+    // Optionally reset the form
+    setLabName('');
+    setLabDescription('');
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
-        {/* Create lab page */}
-        <main className="w-3/4 p-8">
-          <div className="text-gray-700">
-            {/* Basic Configuration */}
-            <h1 className="text-2xl font-bold mb-4">Basic Configuration</h1>
-            <p className="mb-4">
-              Create the lab with a customized environment from your preferred choices.
-            </p>
+    <div className="flex flex-col h-full bg-gray-100">
+      <main className="p-8">
+        <div className="text-gray-700">
+          <h1 className="text-2xl font-bold mb-4">Basic Configuration</h1>
+          <p className="mb-4">
+            Create the lab with a customized environment from your preferred choices.
+          </p>
+          <form onSubmit={handleSave} className="space-y-6">
+            {/* Lab Name */}
+            <div>
+              <label className="block text-gray-700" htmlFor="labName">
+                Lab Name
+              </label>
+              <input
+                type="text"
+                id="labName"
+                value={labName}
+                onChange={(e) => setLabName(e.target.value)}
+                className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            {/* Lab Description */}
+            <div>
+              <label className="block text-gray-700" htmlFor="labDescription">
+                Lab Description
+              </label>
+              <textarea
+                id="labDescription"
+                value={labDescription}
+                onChange={(e) => setLabDescription(e.target.value)}
+                className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+                rows={4}
+                required
+              />
+            </div>
 
             {/* Lab's Template */}
             <div className="mt-8">
@@ -85,16 +141,24 @@ const CreateLabPage = () => {
 
             {/* Buttons */}
             <div className="mt-8 flex justify-end space-x-4">
-              <button className="px-6 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-100">
+              <button
+                type="button"
+                onClick={() => console.log("Cancel clicked")}
+                className="px-6 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-100"
+              >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                Save Module
+              <button
+                type="submit"
+                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Create Lab
               </button>
             </div>
-          </div>
-        </main>
-      </div>
+          </form>
+        </div>
+      </main>
+    </div>
   );
 };
 

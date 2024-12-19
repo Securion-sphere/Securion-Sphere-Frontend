@@ -7,7 +7,7 @@ const Sidebar = () => {
     const router = useRouter();
   
     return (
-      <aside className="w-1/4 h-screen bg-white shadow-lg p-6">
+      <aside className="w-1/4 self-stretch bg-white shadow-lg p-6">
         <h1 className="text-xl font-bold mb-6">Monitor & Control</h1>
         <div></div>
         <ul className="space-y-4">
