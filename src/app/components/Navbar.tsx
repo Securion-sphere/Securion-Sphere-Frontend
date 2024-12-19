@@ -13,7 +13,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/labs", label: "Labs" },
-  { href: "#", label: "Learning Modules" },
+  { href: "/learning-modules", label: "Learning Modules" },
   { href: "#", label: "Contact" },
 ];
 
@@ -69,6 +69,14 @@ export default function NavBar() {
             {item.label}
           </Link>
         ))}
+
+        {/* Admin Panel Button */}
+        <Link
+          href="/monitor/dashboard"
+          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 focus:outline-none"
+        >
+          Admin Panel
+        </Link>
 
         {/* Profile Dropdown */}
         <div className="relative">
