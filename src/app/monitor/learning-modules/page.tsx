@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import withAuth from '@/app/components/auth/withAuth'
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { mockModules } from "@/app/data/mockModules";
+import withAuth from "@/app/components/auth/withAuth";
 
 interface Module {
   id: number;
@@ -13,117 +14,88 @@ interface Module {
 }
 
 const LearningModules = () => {
-  const router = useRouter(); // Correct way to get the router instance
-
-  // Mocked learning modules data with content
-  const [modules, setModules] = useState<Module[]>([
-    { 
-      id: 1, 
-      title: 'Introduction to Penetration Testing', 
-      description: 'Learn the basics of penetration testing and ethical hacking.',
-      content: 'This module covers the fundamental concepts of penetration testing, including...',
-      pdfUrl: 'https://eledu.ssru.ac.th/thanatyod_ja/pluginfile.php/1761/block_html/content/PrintMath2560%20-Edit.pdf', // PDF URL
-    },
-    { 
-      id: 2, 
-      title: 'Web Application Security', 
-      description: 'Deep dive into web application security vulnerabilities and exploits.',
-      content: 'In this module, we explore common web application vulnerabilities...',
-      pdfUrl: '/path/to/web-application-security.pdf', // PDF URL
-    },
-    { 
-      id: 3, 
-      title: 'Advanced Exploitation Techniques', 
-      description: 'Master advanced techniques for exploiting systems and applications.',
-      content: 'This advanced module covers exploit development, privilege escalation...',
-      pdfUrl: '/path/to/advanced-exploitation-techniques.pdf', // PDF URL
-    },
-  ]);
-
+  const router = useRouter();
+  const [modules, setModules] = useState<Module[]>(mockModules);
   const [selectedModule, setSelectedModule] = useState<number | null>(null);
 
-  const handleEdit = (moduleId: number) => {
-    // Logic to handle editing a module (e.g., navigate to an edit page)
-    alert(`Edit module with ID: ${moduleId}`);
+  const handleEdit = (moduleId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click event
+    router.push(`/monitor/learning-modules/edit/${moduleId}`);
   };
 
-  const handleDelete = (moduleId: number) => {
-    // Logic to handle deleting a module
-    setModules(modules.filter(module => module.id !== moduleId));
+  const handleDelete = (moduleId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click event
+    setModules(modules.filter((module) => module.id !== moduleId));
     alert(`Deleted module with ID: ${moduleId}`);
   };
 
   const handleModuleClick = (moduleId: number) => {
-    const learning_module = modules.find(mod => mod.id === moduleId);
-    if (learning_module) {
-      // Redirect to the PDF viewing page, passing the PDF URL as a query param
-      router.push(`/monitor/view-pdf?pdfUrl=${encodeURIComponent(learning_module.pdfUrl)}`);
+    const learningModule = modules.find((mod) => mod.id === moduleId);
+    if (learningModule) {
+      router.push(
+        `/monitor/view-pdf?pdfUrl=${encodeURIComponent(learningModule.pdfUrl)}`,
+      );
     }
   };
 
   const handleUploadNewMaterial = () => {
-    // Redirect to the upload new material page
-    router.push('/monitor/learning-modules/upload');
+    router.push("/monitor/learning-modules/upload");
   };
 
   return (
-    <div className="text-gray-700">
-      <h1 className="text-2xl font-bold mb-4">Learning Modules</h1>
-      <p>Welcome to the Learning Modules</p>
-
-      <div className="mt-8">
-        <ul className="space-y-4">
-          {modules.map((module) => (
-            <li key={module.id} className="border-b border-gray-300 pb-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2
-                    className="text-xl font-semibold cursor-pointer hover:text-blue-600"
-                    onClick={() => handleModuleClick(module.id)} // Handle click to toggle content
-                  >
-                    {module.title}
-                  </h2>
-                  <p className="text-sm text-gray-600">{module.description}</p>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => handleEdit(module.id)}
-                    className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(module.id)}
-                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-
-              {/* Toggleable content for the module */}
-              {selectedModule === module.id && (
-                <div className="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-md">
-                  <h3 className="text-lg font-semibold">Module Content</h3>
-                  <p>{module.content}</p>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Upload New Material Button */}
-      <div className="mt-8 text-center">
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-700">Learning Modules</h1>
+          <p className="text-gray-600 mt-2">Welcome to the Learning Modules</p>
+        </div>
         <button
           onClick={handleUploadNewMaterial}
-          className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
         >
-          + Upload New Material
+          <span className="mr-2">+</span> Upload New Material
         </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {modules.map((module) => (
+          <div
+            key={module.id}
+            onClick={() => handleModuleClick(module.id)}
+            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer"
+          >
+            {/* Card Header */}
+            <div className="p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
+                {module.title}
+              </h2>
+              <p className="text-gray-600 mb-4 line-clamp-3">
+                {module.description}
+              </p>
+            </div>
+
+            {/* Card Footer with Actions */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={(e) => handleEdit(module.id, e)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+              >
+                Edit Module
+              </button>
+            </div>
+
+            {/* Expandable Content (Optional) */}
+            {selectedModule === module.id && (
+              <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                <h3 className="text-lg font-semibold mb-2">Module Content</h3>
+                <p className="text-gray-600">{module.content}</p>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
 
 export default withAuth(LearningModules);
