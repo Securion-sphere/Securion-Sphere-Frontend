@@ -1,82 +1,97 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Lab, SolvedLab } from "@/app/interface/labs";
+import { useQuery } from "@tanstack/react-query";
+import { useLabsStore } from "@/hooks/useLabsStore";
 import axiosInstance from "@/api/axiosInstance";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import TableSkeleton from "@/components/utils/tableSkeleton";
+import ErrorPage from "@/components/utils/ErrorPage";
 
 interface LabsProps {
-  labs: Lab[];
   onLabSelect: (lab: Lab) => void;
 }
 
+const fetchLabsData = async (): Promise<Lab[]> => {
+  const [labResponse, userProfileResponse] = await Promise.all([
+    axiosInstance.get<Lab[]>("/lab"),
+    axiosInstance.get<{ student: { solved_lab: SolvedLab[] } }>(
+      "/user/profile",
+    ),
+  ]);
+
+  const labsData = labResponse.data;
+  const solvedMachines = userProfileResponse.data.student.solved_lab;
+
+  return labsData.map((lab: Lab) => ({
+    ...lab,
+    solved: solvedMachines.some(
+      (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
+    ),
+  }));
+};
+
 const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
-  const [labs, setLabs] = useState<Lab[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedLab, setSelectedLab] = useState<Lab | null>(null);
+  const { labs, setLabs, selectedLab, setSelectedLab } = useLabsStore();
 
-  const getLabs = useCallback(async () => {
-    try {
-      // Fetch labs data
-      const labResponse = await axiosInstance.get("/lab");
-      const labsData = labResponse.data;
-      // console.log(labsData);
-      // Fetch user profile to get solved machines
-      const userProfileResponse = await axiosInstance.get("/user/profile");
-      const solvedMachines = userProfileResponse.data.student.solved_lab;
-      // console.log(solvedMachines);
-      // Mark labs as solved if their id exists in solved_machine
-      const updatedLabs = labsData.map((lab: Lab) => {
-        const isSolved = solvedMachines.some(
-          (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
-        );
-        return {
-          ...lab,
-          solved: isSolved, // Add solved property to each lab
-        };
-      });
+  const { data, isLoading, isError, refetch } = useQuery<Lab[]>({
+    queryKey: ["labs"],
+    queryFn: fetchLabsData,
+  });
 
-      setLabs(updatedLabs);
-      if (updatedLabs.length > 0) {
-        setSelectedLab(updatedLabs[0]);
-      }
-    } catch (error) {
-      console.error("Error fetching labs or user profile:", error);
-    } finally {
-      setIsLoading(false);
-    }
+  const [isTimeout, setIsTimeout] = useState(false); // Track timeout state
+
+  // Set a timeout of 5 seconds
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsTimeout(true);
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
-  // Call the memoized getLabs function inside useEffect
   useEffect(() => {
-    getLabs();
-  }, [getLabs]);
+    if (labs.length > 0 && !selectedLab) {
+      setSelectedLab(labs[0]);
+    }
+  }, [labs, selectedLab, setSelectedLab]);
 
   const handleLabSelect = (lab: Lab) => {
     setSelectedLab(lab);
     onLabSelect(lab);
   };
 
-  return (
-    <div className="bg-gray-50 shadow overflow-hidden h-full">
-      <div className="w-full">
-        <Image
-          src="/all_labs.png"
-          alt="All Labs"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
+  if (isError && isTimeout) {
+    return (
+      <div className="flex-grow">
+        <ErrorPage
+          message="We couldn't load the labs."
+          heightMode="500px"
+          onRetry={refetch}
         />
       </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <TableSkeleton
+        columns={["Lab's Name", "Category", "Creator", "Solved", "Points"]}
+        rows={5}
+      />
+    );
+  }
+
+  return (
+    <div className="bg-gray-50 shadow overflow-hidden h-full">
       <div className="border-t border-gray-200 max-h-full overflow-y-scroll">
         <Table>
           <TableHeader>
@@ -89,48 +104,27 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading
-              ? // Show skeleton loaders while the data is being fetched
-                [...Array(5)].map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Skeleton className="w-[150px] h-[20px] rounded-full" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="w-[120px] h-[20px] rounded-full" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="w-[100px] h-[20px] rounded-full" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Skeleton className="w-[50px] h-[20px] rounded-full" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Skeleton className="w-[50px] h-[20px] rounded-full" />
-                    </TableCell>
-                  </TableRow>
-                ))
-              : labs.map((lab, index) => (
-                  <TableRow
-                    key={index}
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleLabSelect(lab)}
-                  >
-                    <TableCell>{lab.name}</TableCell>
-                    <TableCell>{lab.category}</TableCell>
-                    <TableCell>{lab.creatorName}</TableCell>
-                    <TableCell className="text-center">
-                      {lab.solved ? (
-                        <span className="text-green-500">✓</span>
-                      ) : (
-                        <span className="text-gray-500">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-center text-blue-500">
-                      {lab.point}
-                    </TableCell>
-                  </TableRow>
-                ))}
+            {data?.map((lab: Lab, index: number) => (
+              <TableRow
+                key={index}
+                className="cursor-pointer hover:bg-gray-50"
+                onClick={() => handleLabSelect(lab)}
+              >
+                <TableCell>{lab.name}</TableCell>
+                <TableCell>{lab.category}</TableCell>
+                <TableCell>{lab.creatorName}</TableCell>
+                <TableCell className="text-center">
+                  {lab.solved ? (
+                    <span className="text-green-500">✓</span>
+                  ) : (
+                    <span className="text-gray-500">-</span>
+                  )}
+                </TableCell>
+                <TableCell className="text-center text-blue-500">
+                  {lab.point}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
