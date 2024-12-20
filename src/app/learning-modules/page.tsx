@@ -42,7 +42,7 @@ const LearningModules = () => {
           >
             {/* Card Header */}
             <div
-              className={`p-6 relative ${
+              className={`p-6 relative flex-grow ${
                 module.image ? "bg-cover bg-center" : ""
               }`}
               style={
