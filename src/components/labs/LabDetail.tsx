@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DockerButton from "./DockerButton";
-import { Lab } from "@/app/interface/labs";
 import axiosInstance from "@/api/axiosInstance";
-import { UserProfile } from "@/app/interface/userProfile";
-import { LabDocker } from "@/app/interface/labDocker";
+import { Lab } from "@/interfaces/labs";
+import { UserProfile } from "@/interfaces/userProfile";
+import { LabDocker } from "@/interfaces/labDocker";
 
 interface LabDetailProps {
   selectedLab: Lab;

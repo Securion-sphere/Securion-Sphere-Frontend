@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Lab, SolvedLab } from "@/app/interface/labs";
+import { Lab, SolvedLab } from "@/interfaces/labs";
 import { useQuery } from "@tanstack/react-query";
 import { useLabsStore } from "@/hooks/useLabsStore";
 import axiosInstance from "@/api/axiosInstance";

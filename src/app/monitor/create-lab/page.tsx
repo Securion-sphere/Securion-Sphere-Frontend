@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import withAuth from "@/app/components/auth/withAuth";
+import withAuth from "@/components/auth/withAuth";
 
 const CreateLabPage = () => {
-  const [labName, setLabName] = useState('');
-  const [labDescription, setLabDescription] = useState('');
+  const [labName, setLabName] = useState("");
+  const [labDescription, setLabDescription] = useState("");
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,8 +28,8 @@ const CreateLabPage = () => {
     alert("Lab created successfully!");
 
     // Optionally reset the form
-    setLabName('');
-    setLabDescription('');
+    setLabName("");
+    setLabDescription("");
   };
 
   return (
@@ -38,7 +38,8 @@ const CreateLabPage = () => {
         <div className="text-gray-700">
           <h1 className="text-2xl font-bold mb-4">Basic Configuration</h1>
           <p className="mb-4">
-            Create the lab with a customized environment from your preferred choices.
+            Create the lab with a customized environment from your preferred
+            choices.
           </p>
           <form onSubmit={handleSave} className="space-y-6">
             {/* Lab Name */}
@@ -73,7 +74,9 @@ const CreateLabPage = () => {
 
             {/* Lab's Template */}
             <div className="mt-8">
-              <h2 className="text-xl font-bold mb-2">Choose your lab’s template</h2>
+              <h2 className="text-xl font-bold mb-2">
+                Choose your lab’s template
+              </h2>
               <p className="text-sm text-gray-600 mb-4">
                 Choose the template of your choice to generate the playground.
               </p>
@@ -111,23 +114,32 @@ const CreateLabPage = () => {
 
             {/* Advanced Setting */}
             <div className="mt-8">
-              <h2 className="text-xl font-bold mb-2">Advance Setting (Optional)</h2>
+              <h2 className="text-xl font-bold mb-2">
+                Advance Setting (Optional)
+              </h2>
               <p className="text-sm text-gray-600 mb-4">
                 Customize your challenge’s environment by yourself.
               </p>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Category</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Category
+                  </label>
                   <select className="w-full border border-gray-300 rounded-md p-2">
                     <option>
-                      Choose a web application category to generate your template
+                      Choose a web application category to generate your
+                      template
                     </option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Language</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Language
+                  </label>
                   <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>Specify a programming language for your challenge</option>
+                    <option>
+                      Specify a programming language for your challenge
+                    </option>
                   </select>
                 </div>
                 <div>

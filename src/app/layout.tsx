@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { AuthProvider } from "@/app/context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Sidebar from "./components/monitor/sidebar"; // Import Sidebar here
-import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Sidebar from "@/components/monitor/sidebar"; // Import Sidebar here
+import "@/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();

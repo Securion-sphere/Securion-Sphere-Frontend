@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Lab, SolvedLab } from "@/app/interface/labs";
+import { Lab, SolvedLab } from "@/interfaces/labs";
 import axiosInstance from "@/api/axiosInstance";
 
 interface LabsStore {

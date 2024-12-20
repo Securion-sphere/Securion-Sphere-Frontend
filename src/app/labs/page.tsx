@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import LabDetail from "../components/labs/LabDetail";
-import Labs from "../components/labs/Labs";
-import withAuth from "../components/auth/withAuth";
+import LabDetail from "@/components/labs/LabDetail";
+import Labs from "@/components/labs/Labs";
+import withAuth from "@/components/auth/withAuth";
 import { useLabsStore } from "@/hooks/useLabsStore";
-import { Lab } from "@/app/interface/labs";
+import { Lab } from "@/interfaces/labs";
 
 const LabsPage: React.FC = () => {
   const { selectedLab, setSelectedLab, fetchLabs } = useLabsStore();

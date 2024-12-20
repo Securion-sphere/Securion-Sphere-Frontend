@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import withAuth from "./components/auth/withAuth";
+import withAuth from "@/components/auth/withAuth";
 
 const HomePage = () => {
   return (

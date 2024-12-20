@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import withAuth from '@/app/components/auth/withAuth'
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import withAuth from "@/components/auth/withAuth";
 
 interface Module {
   id: number;
@@ -17,26 +17,33 @@ const LearningModules = () => {
 
   // Mocked learning modules data with content
   const [modules, setModules] = useState<Module[]>([
-    { 
-      id: 1, 
-      title: 'Introduction to Penetration Testing', 
-      description: 'Learn the basics of penetration testing and ethical hacking.',
-      content: 'This module covers the fundamental concepts of penetration testing, including...',
-      pdfUrl: 'https://eledu.ssru.ac.th/thanatyod_ja/pluginfile.php/1761/block_html/content/PrintMath2560%20-Edit.pdf', // PDF URL
+    {
+      id: 1,
+      title: "Introduction to Penetration Testing",
+      description:
+        "Learn the basics of penetration testing and ethical hacking.",
+      content:
+        "This module covers the fundamental concepts of penetration testing, including...",
+      pdfUrl:
+        "https://eledu.ssru.ac.th/thanatyod_ja/pluginfile.php/1761/block_html/content/PrintMath2560%20-Edit.pdf", // PDF URL
     },
-    { 
-      id: 2, 
-      title: 'Web Application Security', 
-      description: 'Deep dive into web application security vulnerabilities and exploits.',
-      content: 'In this module, we explore common web application vulnerabilities...',
-      pdfUrl: '/path/to/web-application-security.pdf', // PDF URL
+    {
+      id: 2,
+      title: "Web Application Security",
+      description:
+        "Deep dive into web application security vulnerabilities and exploits.",
+      content:
+        "In this module, we explore common web application vulnerabilities...",
+      pdfUrl: "/path/to/web-application-security.pdf", // PDF URL
     },
-    { 
-      id: 3, 
-      title: 'Advanced Exploitation Techniques', 
-      description: 'Master advanced techniques for exploiting systems and applications.',
-      content: 'This advanced module covers exploit development, privilege escalation...',
-      pdfUrl: '/path/to/advanced-exploitation-techniques.pdf', // PDF URL
+    {
+      id: 3,
+      title: "Advanced Exploitation Techniques",
+      description:
+        "Master advanced techniques for exploiting systems and applications.",
+      content:
+        "This advanced module covers exploit development, privilege escalation...",
+      pdfUrl: "/path/to/advanced-exploitation-techniques.pdf", // PDF URL
     },
   ]);
 
@@ -49,21 +56,23 @@ const LearningModules = () => {
 
   const handleDelete = (moduleId: number) => {
     // Logic to handle deleting a module
-    setModules(modules.filter(module => module.id !== moduleId));
+    setModules(modules.filter((module) => module.id !== moduleId));
     alert(`Deleted module with ID: ${moduleId}`);
   };
 
   const handleModuleClick = (moduleId: number) => {
-    const learning_module = modules.find(mod => mod.id === moduleId);
+    const learning_module = modules.find((mod) => mod.id === moduleId);
     if (learning_module) {
       // Redirect to the PDF viewing page, passing the PDF URL as a query param
-      router.push(`/monitor/view-pdf?pdfUrl=${encodeURIComponent(learning_module.pdfUrl)}`);
+      router.push(
+        `/monitor/view-pdf?pdfUrl=${encodeURIComponent(learning_module.pdfUrl)}`,
+      );
     }
   };
 
   const handleUploadNewMaterial = () => {
     // Redirect to the upload new material page
-    router.push('/monitor/learning-modules/upload');
+    router.push("/monitor/learning-modules/upload");
   };
 
   return (
@@ -124,6 +133,6 @@ const LearningModules = () => {
       </div>
     </div>
   );
-}
+};
 
 export default withAuth(LearningModules);

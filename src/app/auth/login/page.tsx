@@ -1,9 +1,9 @@
-"use client"
-import config from '@/config'
+"use client";
+import config from "@/config";
 
-import React from 'react';
-import Image from 'next/image';
-import LoginForm from '@/app/components/auth/LoginForm';
+import React from "react";
+import Image from "next/image";
+import LoginForm from "@/components/auth/LoginForm";
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {
