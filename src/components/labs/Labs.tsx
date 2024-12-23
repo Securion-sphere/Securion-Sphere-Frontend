@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
 import TableSkeleton from "@/components/utils/tableSkeleton";
 import ErrorPage from "@/components/utils/ErrorPage";
 

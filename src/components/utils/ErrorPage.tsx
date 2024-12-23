@@ -16,10 +16,12 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
       ? "h-auto"
       : heightMode === "fullscreen"
         ? "min-h-screen"
-        : "";
+        : heightMode === "full"
+          ? "h-full"
+          : "";
 
   const customHeightStyle =
-    heightMode !== "fit" && heightMode !== "fullscreen"
+    heightMode !== "fit" && heightMode !== "fullscreen" && heightMode !== "full"
       ? { height: heightMode } // Apply custom height if specified
       : {};
 

@@ -1,10 +1,16 @@
 import React from "react";
 import { Spinner } from "@/components/ui/spinner";
 
-const LoadingScreen: React.FC = () => {
+type SpinnerSize = "small" | "medium" | "large" | "page" | null | undefined;
+
+interface LoadingScreenProps {
+  size?: SpinnerSize;
+}
+
+const LoadingScreen: React.FC<LoadingScreenProps> = ({ size = "page" }) => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <Spinner size="page" />
+    <div className="flex items-center justify-center h-full bg-gray-50">
+      <Spinner size={size} />
     </div>
   );
 };
