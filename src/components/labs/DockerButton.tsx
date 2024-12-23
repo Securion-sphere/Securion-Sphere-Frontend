@@ -1,83 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
-import { Lab } from "@/app/interface/labs";
+import { useDockerStore } from "@/hooks/useDockerStore";
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
+import { UserProfile } from "@/interfaces/userProfile";
 
 interface DockerButtonProps {
-  lab: Lab;
-  labDockerData: any; // Add prop for passing the docker data
-  onSpawn: () => void;
-  onPlaying: () => void;
-  onPwned: () => void;
+  labId: number;
   currentStage: string;
   setStage: (stage: string) => void;
 }
 
 const DockerButton: React.FC<DockerButtonProps> = ({
-  lab,
-  labDockerData,
-  onSpawn,
-  onPlaying,
-  onPwned,
+  labId,
   currentStage,
   setStage,
 }) => {
-  const [stage, setLocalStage] = useState<string>(currentStage);
-  const [copied, setCopied] = useState<boolean>(false);
+  const { labDockerData, setLabDockerData, stopLabInstance } = useDockerStore();
+  const [copied, setCopied] = useState(false);
 
-  // If labDockerData is provided, use it; else fallback to default values
-  const selectedLabDocker = labDockerData || {
-    id: 1,
-    ip: "localhost",
-    port: 80,
+  const fetchUserProfile = async (): Promise<UserProfile> => {
+    const response = await axiosInstance.get("/user/profile");
+    return response.data;
   };
 
-  useEffect(() => {
-    setLocalStage(currentStage);
-  }, [currentStage]);
+  const {
+    data: userProfile,
+    isError,
+    isLoading,
+  } = useQuery<UserProfile, Error>({
+    queryKey: ["userProfile"],
+    queryFn: fetchUserProfile,
+  });
+
+  const handleSpawn = async () => {
+    if (!userProfile) return;
+    try {
+      const response = await axiosInstance.post("/actived-lab", {
+        labId,
+        userId: userProfile.id,
+      });
+      setLabDockerData(response.data);
+      setStage("Playing");
+    } catch (error) {
+      console.error("Error spawning lab:", error);
+    }
+  };
 
   const handleStopClick = async () => {
-    setLocalStage("Spawn");
-    setStage("Spawn");
-    try {
-      await axiosInstance.get("/user/profile").then(async (userProfile) => {
-        await axiosInstance.delete("/actived-lab", {
-          data: { userId: userProfile.data.id },
-        });
-      });
-    } catch (err) {
-      console.log("Error: Cannot destroy instance");
+    if (!userProfile) return;
+    if (userProfile.id) {
+      await stopLabInstance(userProfile.id.toString());
+      setStage("Spawn");
     }
   };
 
   const handleCopyIpPort = () => {
-    const content = `${selectedLabDocker.ip}:${selectedLabDocker.port}`;
-    navigator.clipboard.writeText(content);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 4000);
-  };
-
-  const handleClick = () => {
-    switch (stage) {
-      case "Spawn":
-        setLocalStage("Playing");
-        setStage("Playing");
-        onSpawn();
-        break;
-      case "Playing":
-        onPlaying();
-        break;
-      case "Pwned":
-        onPwned();
-        break;
-      default:
-        setLocalStage("Spawn");
-        setStage("Spawn");
+    if (labDockerData) {
+      const content = `${labDockerData.ip}:${labDockerData.port}`;
+      navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 4000);
     }
   };
 
   const getButtonText = () => {
-    switch (stage) {
+    switch (currentStage) {
       case "Playing":
         return (
           <div className="w-full h-full text-white flex gap-5 justify-start items-center px-8 py-4 font-medium rounded-full shadow-sm bg-gray-600 hover:bg-gray-700">
@@ -95,11 +83,11 @@ const DockerButton: React.FC<DockerButtonProps> = ({
               onClick={handleCopyIpPort}
             >
               <div>
-                <div className="text-base">{selectedLabDocker.ip}</div>
+                <div className="text-base">{labDockerData?.ip}</div>
                 <div className="font-light text-gray-400">IP address</div>
               </div>
               <div>
-                <div className="text-base">{selectedLabDocker.port}</div>
+                <div className="text-base">{labDockerData?.port}</div>
                 <div className="font-light text-gray-400">Ports</div>
               </div>
             </div>
@@ -124,7 +112,7 @@ const DockerButton: React.FC<DockerButtonProps> = ({
 
   return (
     <div>
-      <button onClick={handleClick} className="w-full inline-flex items-center">
+      <button onClick={handleSpawn} className="w-full inline-flex items-center">
         {getButtonText()}
       </button>
       {copied && (
