@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { mockModules } from "@/app/data/mockModules";
-import withAuth from "@/app/components/auth/withAuth";
-import { Module } from "@/app/types/module";
+import withAuth from "@/components/auth/withAuth";
+import { Module } from "@/app/interface/module";
 
 const LearningModules = () => {
   const router = useRouter();
@@ -14,14 +14,8 @@ const LearningModules = () => {
   const handleModuleClick = (moduleId: number) => {
     const learningModule = modules.find((mod) => mod.id === moduleId);
     if (learningModule) {
-      router.push(
-        `/monitor/view-pdf?pdfUrl=${encodeURIComponent(learningModule.pdfUrl)}`,
-      );
+      router.push(`/learning-modules/viewer/${moduleId}`);
     }
-  };
-
-  const handleUploadNewMaterial = () => {
-    router.push("/monitor/learning-modules/upload");
   };
 
   return (
@@ -38,11 +32,11 @@ const LearningModules = () => {
           <div
             key={module.id}
             onClick={() => handleModuleClick(module.id)}
-            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col"
+            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col group"
           >
             {/* Card Header */}
             <div
-              className={`p-6 relative ${
+              className={`p-6 relative flex-grow ${
                 module.image ? "bg-cover bg-center" : ""
               }`}
               style={
@@ -50,7 +44,7 @@ const LearningModules = () => {
               }
             >
               {module.image && (
-                <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl" />
+                <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl transition-all duration-300 group-hover:bg-opacity-75" />
               )}
               <h2
                 className={`text-xl font-semibold mb-2 line-clamp-2 ${
@@ -59,8 +53,9 @@ const LearningModules = () => {
               >
                 {module.title}
               </h2>
+              {/* Card Description (hidden initially) */}
               <p
-                className={`text-gray-600 mb-4 line-clamp-3 ${
+                className={`text-gray-600 mb-4 line-clamp-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
                   module.image ? "text-white relative z-10" : "text-gray-600"
                 }`}
               >

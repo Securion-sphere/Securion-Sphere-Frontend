@@ -24,7 +24,7 @@ export default function NavBar() {
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   return (
-    <header className="sticky top-0 z-50 flex h-14 w-full items-center px-4 md:px-6 bg-white shadow-md">
+    <header className="sticky top-0 z-50 flex h-20 w-full items-center px-4 md:px-6 bg-white shadow-md">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden">
@@ -34,7 +34,13 @@ export default function NavBar() {
         </SheetTrigger>
         <SheetContent side="left">
           <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
-            <MountainIcon className="h-6 w-6" />
+          <Image
+            src={"/securion-sphere_icon.svg"}
+            alt="Securion Sphere"
+            width={5}
+            height={5}
+            className="mx-auto mb-4"
+          />
             <span className="sr-only">Securion Sphere</span>
           </Link>
           <div className="grid gap-2 py-6">
@@ -53,7 +59,13 @@ export default function NavBar() {
       </Sheet>
 
       <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
-        <MountainIcon className="h-6 w-6" />
+      <Image
+            src={"/securion-sphere_icon.svg"}
+            alt="Securion Sphere"
+            width={50}
+            height={50}
+            className="mx-auto my-auto"
+          />
         <span className="sr-only">Securion Sphere</span>
       </Link>
 
@@ -137,21 +149,3 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-    </svg>
-  );
-}

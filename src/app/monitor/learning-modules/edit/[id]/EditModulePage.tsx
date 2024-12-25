@@ -1,34 +1,34 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import { getMockModuleById } from "@/app/data/mockModules";
-import { Module } from '@/app/types/module';
+import { Module } from "@/app/interface/module";
 
 const EditModulePage = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
+
   // Form states
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [currentFile, setCurrentFile] = useState<string>('');
-  const [backgroundImage, setBackgroundImage] = useState<string>('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [currentFile, setCurrentFile] = useState<string>("");
+  const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [newFile, setNewFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       // Use mock data in development
       const learning_module = getMockModuleById(Number(params.id));
       if (learning_module) {
         setTitle(learning_module.title);
         setDescription(learning_module.description);
-        setCurrentFile(learning_module.pdfUrl);
-        setBackgroundImage(learning_module.image)
+        setCurrentFile(learning_module.fileUrl);
+        setBackgroundImage(learning_module.image);
       } else {
         setError("Module not found");
       }
@@ -43,14 +43,14 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`
+        `${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`,
       );
       const moduleData: Module = response.data;
 
       setTitle(moduleData.title);
       setDescription(moduleData.description);
-      setCurrentFile(moduleData.pdfUrl);
-      setBackgroundImage(moduleData.image)
+      setCurrentFile(moduleData.fileUrl);
+      setBackgroundImage(moduleData.image);
     } catch (err) {
       setError("Failed to load module data");
     } finally {
@@ -61,8 +61,11 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.type !== 'application/pdf' && selectedFile.type !== 'text/markdown') {
-        setError('Only .pdf and .md files are allowed.');
+      if (
+        selectedFile.type !== "application/pdf" &&
+        selectedFile.type !== "text/markdown"
+      ) {
+        setError("Only .pdf and .md files are allowed.");
         setNewFile(null);
       } else {
         setError(null);
@@ -78,10 +81,10 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
     try {
       const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
+      formData.append("title", title);
+      formData.append("description", description);
       if (newFile) {
-        formData.append('file', newFile);
+        formData.append("file", newFile);
       }
 
       await axios.put(
@@ -89,14 +92,14 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
-      router.push('/monitor/learning-modules');
+      router.push("/monitor/learning-modules");
     } catch (err) {
-      setError('Failed to update module');
+      setError("Failed to update module");
     } finally {
       setIsSubmitting(false);
     }
@@ -104,15 +107,21 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`);
-      router.push('/monitor/learning-modules');
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`,
+      );
+      router.push("/monitor/learning-modules");
     } catch (err) {
-      setError('Failed to delete module');
+      setError("Failed to delete module");
     }
   };
 
   if (isLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -121,16 +130,51 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         <h1 className="text-2xl font-bold">Edit Learning Module</h1>
         <button
           onClick={() => setShowDeleteConfirm(true)}
-          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          className="px-4 py-2 bg-red-500 text-white rounded-2xl hover:bg-red-600"
         >
           Delete Module
         </button>
       </div>
 
+      {/* Card Header */}
+      <div className="bg-white mb-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col">
+        <div
+          className={`p-6 relative ${
+            backgroundImage ? "bg-cover bg-center" : ""
+          }`}
+          style={
+            backgroundImage
+              ? { backgroundImage: `url(${backgroundImage})` }
+              : {}
+          }
+        >
+          {backgroundImage && (
+            <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl" />
+          )}
+          <h2
+            className={`text-xl font-semibold mb-2 line-clamp-2 ${
+              backgroundImage ? "text-white relative z-10" : "text-gray-800"
+            }`}
+          >
+            {title}
+          </h2>
+          <p
+            className={`text-gray-600 mb-4 line-clamp-3 ${
+              backgroundImage ? "text-white relative z-10" : "text-gray-600"
+            }`}
+          >
+            {description}
+          </p>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Title */}
         <div>
-          <label className="block text-gray-700 mb-2" htmlFor="title">
+          <label
+            className="block text-gray-700 mb-2 font-bold text-xl"
+            htmlFor="title"
+          >
             Module Title
           </label>
           <input
@@ -145,7 +189,10 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
         {/* Description */}
         <div>
-          <label className="block text-gray-700 mb-2" htmlFor="description">
+          <label
+            className="block text-gray-700 mb-2 font-bold text-xl"
+            htmlFor="description"
+          >
             Description
           </label>
           <textarea
@@ -162,7 +209,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         {currentFile && (
           <div className="p-4 bg-gray-50 rounded-md">
             <p className="font-medium">Current File:</p>
-            <a 
+            <a
               href={currentFile}
               target="_blank"
               rel="noopener noreferrer"
@@ -175,7 +222,10 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
         {/* New File Upload */}
         <div>
-          <label className="block text-gray-700 mb-2" htmlFor="file">
+          <label
+            className="block text-gray-700 mb-2 font-bold text-xl"
+            htmlFor="file"
+          >
             Upload New File (Optional)
           </label>
           <input
@@ -193,14 +243,14 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50"
           >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
+            {isSubmitting ? "Saving..." : "Save Changes"}
           </button>
           <button
             type="button"
-            onClick={() => router.push('/monitor/learning-modules')}
-            className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+            onClick={() => router.push("/monitor/learning-modules")}
+            className="px-6 py-2 bg-gray-500 text-white rounded-xl hover:bg-gray-600"
           >
             Cancel
           </button>
@@ -212,7 +262,10 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full">
             <h3 className="text-xl font-bold mb-4">Delete Module</h3>
-            <p className="mb-6">Are you sure you want to delete this module? This action cannot be undone.</p>
+            <p className="mb-6">
+              Are you sure you want to delete this module? This action cannot be
+              undone.
+            </p>
             <div className="flex space-x-4">
               <button
                 onClick={handleDelete}

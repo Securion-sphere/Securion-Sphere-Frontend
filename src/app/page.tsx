@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import withAuth from "./components/auth/withAuth";
+import withAuth from "../components/auth/withAuth";
 
 const HomePage = () => {
   return (
@@ -44,7 +44,7 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 bg-white shadow-md rounded-xl">
               <Image
-                src="/path-to-icon1.svg"
+                src="/securion-sphere-logo.svg"
                 alt="Fundamentals"
                 width={100}
                 height={100}
@@ -60,7 +60,7 @@ const HomePage = () => {
             </div>
             <div className="p-6 bg-white shadow-md rounded-xl">
               <Image
-                src="/path-to-icon2.svg"
+                src="/securion-sphere-logo.svg"
                 alt="Path"
                 width={100}
                 height={100}
@@ -74,7 +74,7 @@ const HomePage = () => {
             </div>
             <div className="p-6 bg-white shadow-md rounded-xl">
               <Image
-                src="/path-to-icon3.svg"
+                src="/securion-sphere-logo.svg"
                 alt="Challenges"
                 width={100}
                 height={100}

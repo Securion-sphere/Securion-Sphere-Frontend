@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { mockModules } from "@/app/data/mockModules";
-import withAuth from "@/app/components/auth/withAuth";
-import { Module } from "@/app/types/module";
+import withAuth from "@/components/auth/withAuth";
+import { Module } from "@/app/interface/module";
 
 const LearningModules = () => {
   const router = useRouter();
@@ -26,7 +26,9 @@ const LearningModules = () => {
     const learningModule = modules.find((mod) => mod.id === moduleId);
     if (learningModule) {
       router.push(
-        `/monitor/view-pdf?pdfUrl=${encodeURIComponent(learningModule.pdfUrl)}`,
+        `/monitor/view-pdf?fileUrl=${encodeURIComponent(
+          learningModule.fileUrl,
+        )}`,
       );
     }
   };
@@ -59,7 +61,7 @@ const LearningModules = () => {
           >
             {/* Card Header */}
             <div
-              className={`p-6 relative ${
+              className={`p-6 relative flex-grow ${
                 module.image ? "bg-cover bg-center" : ""
               }`}
               style={
