@@ -40,7 +40,7 @@ export default function RootLayout({
           <div className="flex flex-1">
             {/* Conditionally render Sidebar only on /monitor path */}
             {isMonitorPage && <Sidebar />}
-            <main className="flex-grow p-8">{children}</main>
+            <main className="flex-grow">{children}</main>
           </div>
           {!pathname.includes("/auth") && <Footer />}
         </AuthProvider>

@@ -5,7 +5,7 @@ export const mockModules = [
     description:
       "Penetration testing and ethical hacking are essential skills in cybersecurity that involve assessing the security of systems, networks, and applications to identify vulnerabilities before malicious hackers can exploit them. These practices help organizations improve their defenses and mitigate risks.",
     pdfUrl:
-      "https://eledu.ssru.ac.th/thanatyod_ja/pluginfile.php/1761/block_html/content/PrintMath2560%20-Edit.pdf",
+      "http://10.22.4.62:9090/browser/main/learning-material%2F0.%202567_PE_lec00.pdf",
     image:
       "https://img.freepik.com/free-vector/futuristic-technological-wallpaper_79603-1093.jpg",
   },
