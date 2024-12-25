@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { getMockModuleById } from "@/app/data/mockModules";
-import { Module } from "@/app/types/module";
+import { Module } from "@/app/interface/module";
 
 const EditModulePage = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       if (learning_module) {
         setTitle(learning_module.title);
         setDescription(learning_module.description);
-        setCurrentFile(learning_module.pdfUrl);
+        setCurrentFile(learning_module.fileUrl);
         setBackgroundImage(learning_module.image);
       } else {
         setError("Module not found");
@@ -49,7 +49,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
       setTitle(moduleData.title);
       setDescription(moduleData.description);
-      setCurrentFile(moduleData.pdfUrl);
+      setCurrentFile(moduleData.fileUrl);
       setBackgroundImage(moduleData.image);
     } catch (err) {
       setError("Failed to load module data");
@@ -137,13 +137,15 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       </div>
 
       {/* Card Header */}
-      <div
-        className="bg-white mb-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col"
-      >
+      <div className="bg-white mb-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col">
         <div
-          className={`p-6 relative ${backgroundImage ? "bg-cover bg-center" : ""}`}
+          className={`p-6 relative ${
+            backgroundImage ? "bg-cover bg-center" : ""
+          }`}
           style={
-            backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : {}
+            backgroundImage
+              ? { backgroundImage: `url(${backgroundImage})` }
+              : {}
           }
         >
           {backgroundImage && (

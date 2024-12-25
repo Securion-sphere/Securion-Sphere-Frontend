@@ -35,7 +35,7 @@ export default function NavBar() {
         <SheetContent side="left">
           <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
           <Image
-            src="/securion-sphere_icon.svg"
+            src={"/securion-sphere_icon.svg"}
             alt="Securion Sphere"
             width={5}
             height={5}

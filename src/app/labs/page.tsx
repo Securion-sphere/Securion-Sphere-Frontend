@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import LabDetail from "../components/labs/LabDetail";
-import Labs from "../components/labs/Labs";
+import LabDetail from "../../components/labs/LabDetail";
+import Labs from "../../components/labs/Labs";
 import { Lab, labs } from "../interface/labs";
-import withAuth from "../components/auth/withAuth";
+import withAuth from "../../components/auth/withAuth";
 
 const LabsPage: React.FC = () => {
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);

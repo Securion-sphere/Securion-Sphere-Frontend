@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { mockModules } from "@/app/data/mockModules";
-import withAuth from "@/app/components/auth/withAuth";
-import { Module } from "@/app/types/module";
+import withAuth from "@/components/auth/withAuth";
+import { Module } from "@/app/interface/module";
 
 const LearningModules = () => {
   const router = useRouter();
@@ -28,50 +28,53 @@ const LearningModules = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {modules.map((module) => (
-    <div
-      key={module.id}
-      onClick={() => handleModuleClick(module.id)}
-      className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col group"
-    >
-      {/* Card Header */}
-      <div
-        className={`p-6 relative flex-grow ${module.image ? "bg-cover bg-center" : ""}`}
-        style={module.image ? { backgroundImage: `url(${module.image})` } : {}}
-      >
-        {module.image && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl transition-all duration-300 group-hover:bg-opacity-75" />
-        )}
-        <h2
-          className={`text-xl font-semibold mb-2 line-clamp-2 ${
-            module.image ? "text-white relative z-10" : "text-gray-800"
-          }`}
-        >
-          {module.title}
-        </h2>
-        {/* Card Description (hidden initially) */}
-        <p
-          className={`text-gray-600 mb-4 line-clamp-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
-            module.image ? "text-white relative z-10" : "text-gray-600"
-          }`}
-        >
-          {module.description}
-        </p>
-      </div>
+        {modules.map((module) => (
+          <div
+            key={module.id}
+            onClick={() => handleModuleClick(module.id)}
+            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer flex flex-col group"
+          >
+            {/* Card Header */}
+            <div
+              className={`p-6 relative flex-grow ${
+                module.image ? "bg-cover bg-center" : ""
+              }`}
+              style={
+                module.image ? { backgroundImage: `url(${module.image})` } : {}
+              }
+            >
+              {module.image && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl transition-all duration-300 group-hover:bg-opacity-75" />
+              )}
+              <h2
+                className={`text-xl font-semibold mb-2 line-clamp-2 ${
+                  module.image ? "text-white relative z-10" : "text-gray-800"
+                }`}
+              >
+                {module.title}
+              </h2>
+              {/* Card Description (hidden initially) */}
+              <p
+                className={`text-gray-600 mb-4 line-clamp-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
+                  module.image ? "text-white relative z-10" : "text-gray-600"
+                }`}
+              >
+                {module.description}
+              </p>
+            </div>
 
-      {/* Card Footer with Actions */}
-      <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end mt-auto">
-        <button
-          onClick={() => handleModuleClick(module.id)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200"
-        >
-          Learn
-        </button>
+            {/* Card Footer with Actions */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end mt-auto">
+              <button
+                onClick={() => handleModuleClick(module.id)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200"
+              >
+                Learn
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
-
     </div>
   );
 };

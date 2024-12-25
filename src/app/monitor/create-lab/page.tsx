@@ -1,25 +1,31 @@
 "use client";
 
 import React, { useState } from "react";
-import withAuth from "@/app/components/auth/withAuth";
+import withAuth from "@/components/auth/withAuth";
 
 const CreateLabPage = () => {
-  const [labName, setLabName] = useState<string>('');
-  const [labDescription, setLabDescription] = useState<string>('');
+  const [labName, setLabName] = useState<string>("");
+  const [labDescription, setLabDescription] = useState<string>("");
   const [labPoint, setLabPoint] = useState<number>(0);
-  const [assignee, setAssignee] = useState<string>('');
-  const [availableFrom, setAvailableFrom] = useState<string>('');
-  const [closeOn, setCloseOn] = useState<string>('');
+  const [assignee, setAssignee] = useState<string>("");
+  const [availableFrom, setAvailableFrom] = useState<string>("");
+  const [closeOn, setCloseOn] = useState<string>("");
 
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/^0+/, '');
-    setLabPoint(value === '' ? 0 : parseInt(value, 10));
+    const value = e.target.value.replace(/^0+/, "");
+    setLabPoint(value === "" ? 0 : parseInt(value, 10));
   };
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!labName || !labDescription || !assignee || !availableFrom || !closeOn) {
+    if (
+      !labName ||
+      !labDescription ||
+      !assignee ||
+      !availableFrom ||
+      !closeOn
+    ) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -37,26 +43,32 @@ const CreateLabPage = () => {
     alert("Lab created successfully!");
 
     // Reset form
-    setLabName('');
-    setLabDescription('');
+    setLabName("");
+    setLabDescription("");
     setLabPoint(0);
-    setAssignee('');
-    setAvailableFrom('');
-    setCloseOn('');
+    setAssignee("");
+    setAvailableFrom("");
+    setCloseOn("");
   };
 
   return (
     <div className="flex flex-col h-full bg-gray-100">
       <main className="py-8">
         <div className="text-gray-700 max-w-5xl mx-auto p-6">
-          <h1 className="text-2xl font-bold mb-4 text-center">Basic Configuration</h1>
+          <h1 className="text-2xl font-bold mb-4 text-center">
+            Basic Configuration
+          </h1>
           <p className="mb-4 text-center text-xl">
-            Create the lab with a customized environment from your preferred choices.
+            Create the lab with a customized environment from your preferred
+            choices.
           </p>
           <form onSubmit={handleSave} className="space-y-6">
             {/* Lab Name */}
             <div>
-              <label className="block text-gray-700 text-xl font-bold" htmlFor="labName">
+              <label
+                className="block text-gray-700 text-xl font-bold"
+                htmlFor="labName"
+              >
                 Lab Name
               </label>
               <input
@@ -72,7 +84,10 @@ const CreateLabPage = () => {
 
             {/* Lab Description */}
             <div>
-              <label className="block text-gray-700 text-xl font-bold" htmlFor="labDescription">
+              <label
+                className="block text-gray-700 text-xl font-bold"
+                htmlFor="labDescription"
+              >
                 Lab Description
               </label>
               <textarea
@@ -88,7 +103,10 @@ const CreateLabPage = () => {
 
             {/* Lab Points */}
             <div>
-              <label className="block text-gray-700 text-xl font-bold" htmlFor="labPoint">
+              <label
+                className="block text-gray-700 text-xl font-bold"
+                htmlFor="labPoint"
+              >
                 Lab Points
               </label>
               <input
@@ -97,7 +115,7 @@ const CreateLabPage = () => {
                 placeholder="0"
                 pattern="[0-9]*"
                 id="labPoint"
-                value={labPoint || ''}
+                value={labPoint || ""}
                 onChange={handlePointChange}
                 min="0"
                 className="mt-2 p-2 w-full border border-gray-300 rounded-md"
@@ -107,11 +125,16 @@ const CreateLabPage = () => {
 
             {/* Assignee */}
             <div>
-              <label className="block text-gray-700 text-xl font-bold" htmlFor="assignee">
+              <label
+                className="block text-gray-700 text-xl font-bold"
+                htmlFor="assignee"
+              >
                 Assignee <span className="text-red-500">*</span>
               </label>
               <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>Which your student&apos;s group are you going to assign?</option>
+                <option>
+                  Which your student&apos;s group are you going to assign?
+                </option>
               </select>
             </div>
 
@@ -119,7 +142,10 @@ const CreateLabPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Available From */}
               <div>
-                <label className="block text-gray-700 text-xl font-bold" htmlFor="availableFrom">
+                <label
+                  className="block text-gray-700 text-xl font-bold"
+                  htmlFor="availableFrom"
+                >
                   Available From
                 </label>
                 <input
@@ -134,7 +160,10 @@ const CreateLabPage = () => {
 
               {/* Close on */}
               <div>
-                <label className="block text-gray-700 text-xl font-bold" htmlFor="closeOn">
+                <label
+                  className="block text-gray-700 text-xl font-bold"
+                  htmlFor="closeOn"
+                >
                   Close on
                 </label>
                 <input
@@ -150,7 +179,9 @@ const CreateLabPage = () => {
 
             {/* Lab's Template */}
             <div className="mt-8 pt-6">
-              <h2 className="text-2xl font-bold mb-2 text-center">Choose your lab’s template</h2>
+              <h2 className="text-2xl font-bold mb-2 text-center">
+                Choose your lab’s template
+              </h2>
               <p className="text-xl text-gray-600 mb-4 text-center">
                 Choose the template of your choice to generate the playground.
               </p>
@@ -188,23 +219,32 @@ const CreateLabPage = () => {
 
             {/* Advanced Setting */}
             <div className="mt-8 pt-6">
-              <h2 className="text-2xl font-bold mb-2 text-center">Advance Setting (Optional)</h2>
+              <h2 className="text-2xl font-bold mb-2 text-center">
+                Advance Setting (Optional)
+              </h2>
               <p className="text-xl text-gray-600 mb-4 text-center">
                 Customize your challenge’s environment by yourself.
               </p>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xl font-bold mb-1">Category</label>
+                  <label className="block text-xl font-bold mb-1">
+                    Category
+                  </label>
                   <select className="w-full border border-gray-300 rounded-md p-2">
                     <option>
-                      Choose a web application category to generate your template
+                      Choose a web application category to generate your
+                      template
                     </option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xl font-bold mb-1">Language</label>
+                  <label className="block text-xl font-bold mb-1">
+                    Language
+                  </label>
                   <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>Specify a programming language for your challenge</option>
+                    <option>
+                      Specify a programming language for your challenge
+                    </option>
                   </select>
                 </div>
                 <div>
