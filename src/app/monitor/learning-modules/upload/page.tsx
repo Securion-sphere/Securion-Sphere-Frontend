@@ -81,12 +81,13 @@ const UploadPage = () => {
       <form onSubmit={handleSave} className="space-y-6">
         {/* Module Name */}
         <div>
-          <label className="block text-gray-700" htmlFor="moduleName">
+          <label className="block text-gray-700 font-bold text-xl" htmlFor="moduleName">
             Module Name
           </label>
           <input
             type="text"
             id="moduleName"
+            placeholder="Enter your module's name"
             value={moduleName}
             onChange={(e) => setModuleName(e.target.value)}
             className="mt-2 p-2 w-full border border-gray-300 rounded-md"
@@ -96,11 +97,12 @@ const UploadPage = () => {
 
         {/* Module Description */}
         <div>
-          <label className="block text-gray-700" htmlFor="moduleDescription">
+          <label className="block text-gray-700 font-bold text-xl" htmlFor="moduleDescription">
             Module Description
           </label>
           <textarea
             id="moduleDescription"
+            placeholder="Describe about this module"
             value={moduleDescription}
             onChange={(e) => setModuleDescription(e.target.value)}
             className="mt-2 p-2 w-full border border-gray-300 rounded-md"
@@ -111,7 +113,7 @@ const UploadPage = () => {
 
         {/* File Input */}
         <div>
-          <label className="block text-gray-700" htmlFor="file">
+          <label className="block text-gray-700 font-bold text-xl" htmlFor="file">
             Choose a file (.pdf or .md only)
           </label>
           <input
@@ -129,14 +131,14 @@ const UploadPage = () => {
           <button
             type="submit"
             disabled={isUploading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-blue-600 text-white text-xl font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50"
           >
             {isUploading ? 'Uploading...' : 'Save'}
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+            className="px-4 py-2 bg-gray-500 text-white rounded-xl text-xl font-bold hover:bg-gray-600"
           >
             Cancel
           </button>

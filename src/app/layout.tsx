@@ -4,9 +4,9 @@ import { usePathname } from "next/navigation";
 import "./globals.css";
 import { AuthProvider } from "@/app/context/AuthContext";
 import { Inter } from "next/font/google";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Sidebar from "./components/monitor/sidebar";  // Import Sidebar here
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import Sidebar from "../components/monitor/sidebar";  // Import Sidebar here
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,7 +40,7 @@ export default function RootLayout({
           <div className="flex flex-1">
             {/* Conditionally render Sidebar only on /monitor path */}
             {isMonitorPage && <Sidebar />}
-            <main className="flex-grow p-8">{children}</main>
+            <main className="flex-grow">{children}</main>
           </div>
           {!pathname.includes("/auth") && <Footer />}
         </AuthProvider>
