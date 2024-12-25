@@ -14,14 +14,8 @@ const LearningModules = () => {
   const handleModuleClick = (moduleId: number) => {
     const learningModule = modules.find((mod) => mod.id === moduleId);
     if (learningModule) {
-      router.push(
-        `/monitor/view-pdf?pdfUrl=${encodeURIComponent(learningModule.pdfUrl)}`,
-      );
+      router.push(`/learning-modules/viewer/${moduleId}`);
     }
-  };
-
-  const handleUploadNewMaterial = () => {
-    router.push("/monitor/learning-modules/upload");
   };
 
   return (
