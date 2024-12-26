@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { Prism as SyntaxHighlighter, SyntaxHighlighterProps } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface MarkdownViewerProps {
@@ -14,6 +14,10 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
 
   useEffect(() => {
     const fetchContent = async () => {
+      if (!fileUrl) {
+        setError('No file URL provided.');
+        return;
+      }
       try {
         const response = await fetch(fileUrl);
         if (!response.ok) throw new Error('Failed to fetch content');
@@ -68,7 +72,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
                 PreTag="div"
                 className="rounded-md my-4"
                 showLineNumbers
-                {...props}
+                {...(props as SyntaxHighlighterProps)} // Typecasting the props
               >
                 {String(children).replace(/\n$/, '')}
               </SyntaxHighlighter>
