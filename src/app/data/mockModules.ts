@@ -23,20 +23,20 @@ export const mockModules: Module[] = [
     title: "Web Application Security",
     description:
       "Deep dive into web application security vulnerabilities and exploits.",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    fileUrl: "http://10.22.4.62:9000/public/Network%20Enumeration%20with%20NMAP.md",
     image:
       "https://www.shutterstock.com/image-illustration/web-application-security-concept-measures-600nw-2480010371.jpg",
-      fileType: "pdf",
+      fileType: "markdown",
     },
   {
     id: 3,
     title: "Advanced Exploitation Techniques",
     description:
       "Master advanced techniques for exploiting systems and applications.",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    fileUrl: "http://10.22.4.62:9000/public/README.md",
     image:
       "https://c4.wallpaperflare.com/wallpaper/371/264/21/itzmauuuroo-hackers-anonymous-hd-wallpaper-preview.jpg",
-      fileType: "pdf",
+      fileType: "markdown",
   },
   {
     id: 4,
