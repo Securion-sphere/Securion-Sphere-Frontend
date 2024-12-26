@@ -23,10 +23,10 @@ export const mockModules: Module[] = [
     title: "Web Application Security",
     description:
       "Deep dive into web application security vulnerabilities and exploits.",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    fileUrl: "http://10.22.4.62:9000/public/README.md",
     image:
       "https://www.shutterstock.com/image-illustration/web-application-security-concept-measures-600nw-2480010371.jpg",
-      fileType: "pdf",
+      fileType: "markdown",
     },
   {
     id: 3,
