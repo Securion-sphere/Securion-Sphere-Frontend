@@ -26,9 +26,7 @@ const LearningModules = () => {
     const learningModule = modules.find((mod) => mod.id === moduleId);
     if (learningModule) {
       router.push(
-        `/monitor/view-pdf?fileUrl=${encodeURIComponent(
-          learningModule.fileUrl,
-        )}`,
+        `/learning-modules/viewer/${learningModule.id}`,
       );
     }
   };
