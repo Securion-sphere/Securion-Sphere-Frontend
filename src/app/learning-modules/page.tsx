@@ -1,15 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { mockModules } from "@/app/data/mockModules";
 import withAuth from "@/components/auth/withAuth";
 import { Module } from "@/app/interface/module";
+import { fetchData } from "@/api/axiosInstance";
 
 const LearningModules = () => {
   const router = useRouter();
-  const [modules, setModules] = useState<Module[]>(mockModules);
+  const [modules, setModules] = useState<Module[]>([]);
   const [selectedModule, setSelectedModule] = useState<number | null>(null);
+
+  // Fetch modules data from API on component mount
+  useEffect(() => {
+    const getModules = async () => {
+      try {
+        const fetchedModules = await fetchData<Module[]>("/learning-material"); // Update the endpoint to your backend API
+        setModules(fetchedModules); // Set the fetched modules into state
+      } catch (error) {
+        console.error("Error fetching modules:", error);
+      }
+    };
+
+    getModules();
+  }, []);
 
   const handleModuleClick = (moduleId: number) => {
     const learningModule = modules.find((mod) => mod.id === moduleId);
@@ -37,18 +51,22 @@ const LearningModules = () => {
             {/* Card Header */}
             <div
               className={`p-6 relative flex-grow ${
-                module.image ? "bg-cover bg-center" : ""
+                module.imagePresignedUrl ? "bg-cover bg-center" : ""
               }`}
               style={
-                module.image ? { backgroundImage: `url(${module.image})` } : {}
+                module.imagePresignedUrl
+                  ? { backgroundImage: `url(${module.imagePresignedUrl})` }
+                  : {}
               }
             >
-              {module.image && (
+              {module.imagePresignedUrl && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl transition-all duration-300 group-hover:bg-opacity-75" />
               )}
               <h2
                 className={`text-xl font-semibold mb-2 line-clamp-2 ${
-                  module.image ? "text-white relative z-10" : "text-gray-800"
+                  module.imagePresignedUrl
+                    ? "text-white relative z-10"
+                    : "text-gray-800"
                 }`}
               >
                 {module.title}
@@ -56,7 +74,9 @@ const LearningModules = () => {
               {/* Card Description (hidden initially) */}
               <p
                 className={`text-gray-600 mb-4 line-clamp-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
-                  module.image ? "text-white relative z-10" : "text-gray-600"
+                  module.imagePresignedUrl
+                    ? "text-white relative z-10"
+                    : "text-gray-600"
                 }`}
               >
                 {module.description}
