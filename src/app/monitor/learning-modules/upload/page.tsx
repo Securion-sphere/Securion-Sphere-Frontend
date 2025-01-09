@@ -16,16 +16,29 @@ const UploadPage = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
+    
     if (selectedFile) {
+      // Array of accepted MIME types and file extensions for Markdown
+      const acceptedMarkdownTypes = [
+        "text/markdown",
+        "text/x-markdown",
+        "text/md",
+        "text/plain"  // Some systems may upload .md files as text/plain
+      ];
+      
+      // Check file extension as backup validation
+      const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
+      
       if (
-        selectedFile.type !== "application/pdf" &&
-        selectedFile.type !== "text/markdown"
+        selectedFile.type === "application/pdf" || 
+        acceptedMarkdownTypes.includes(selectedFile.type) ||
+        isMarkdownExtension
       ) {
-        setError("Only .pdf and .md files are allowed.");
-        setFile(null);
-      } else {
         setError(null);
         setFile(selectedFile);
+      } else {
+        setError("Only .pdf and .md files are allowed.");
+        setFile(null);
       }
     }
   };
