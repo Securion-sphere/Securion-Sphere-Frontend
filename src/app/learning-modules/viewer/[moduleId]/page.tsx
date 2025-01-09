@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { mockModules } from "@/app/data/mockModules";
 import withAuth from "@/components/auth/withAuth";
+import config from '@/config';
 
 // Dynamically import PDF viewer to avoid SSR issues
 const PDFViewer = dynamic(() => import("@/components/viewer/PDFViewer"), {
@@ -36,15 +36,26 @@ const ModuleViewer = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const moduleId = Number(params.moduleId);
-    const currentModule = mockModules.find((mod) => mod.id === moduleId);
+    const fetchModule = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `${config.apiBaseUrl}/learning-material/${params.moduleId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch module data");
+        }
 
-    if (currentModule) {
-      setModule(currentModule);
-    } else {
-      setError("Module not found");
-    }
-    setLoading(false);
+        const data = await response.json();
+        setModule(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModule();
   }, [params.moduleId]);
 
   if (loading) {
@@ -72,10 +83,10 @@ const ModuleViewer = () => {
       </div>
 
       <div className="bg-white rounded-2xl shadow-md p-6">
-        {module.fileUrl?.endsWith(".pdf") ? (
-          <PDFViewer fileUrl={module.fileUrl} />
-        ) : module.fileUrl?.endsWith(".md") ? (
-          <MarkdownViewer fileUrl={module.fileUrl} />
+        {module.fileType === "pdf" ? (
+          <PDFViewer fileUrl={module.filePresignedUrl} />
+        ) : module.fileType === "md" ? (
+          <MarkdownViewer fileUrl={module.filePresignedUrl} />
         ) : (
           <div className="text-center text-gray-600">
             Unsupported file format

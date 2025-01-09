@@ -7,6 +7,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
 interface PDFViewerProps {
   fileUrl: string;
 }
@@ -28,7 +29,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
           disabled={pageNumber <= 1}
           className="px-4 py-2 bg-blue-500 text-white rounded-xl disabled:bg-gray-300"
         >
-          Previous
+          Prev
         </button>
         <span>
           Page {pageNumber} of {numPages}
@@ -53,7 +54,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
         </select>
       </div>
 
-      <div className="border rounded-lg p-4 bg-gray-50">
+      <div className="border rounded-lg p-4 bg-gray-50 mb-4">
         <Document
           file={fileUrl}
           onLoadSuccess={onDocumentLoadSuccess}
@@ -68,6 +69,15 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
           />
         </Document>
       </div>
+
+      {/* Download Button */}
+      <a
+        href={fileUrl}
+        download
+        className="px-4 py-2 bg-green-500 text-white rounded-xl text-2xl"
+      >
+        Download PDF
+      </a>
     </div>
   );
 };

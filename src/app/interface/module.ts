@@ -2,10 +2,11 @@ export interface Module {
     id: number;
     title: string;
     description: string;
-    image: string;
-    fileUrl: string;
-    fileType: 'pdf' | 'markdown';
-  }
+    fileName: string;
+    fileType: 'pdf' | 'md';
+    filePresignedUrl: string;
+    imagePresignedUrl: string;
+}
 
 export interface ModuleData {
   title: string;
