@@ -51,16 +51,27 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
+    
     if (selectedFile) {
+      const acceptedMarkdownTypes = [
+        "text/markdown",
+        "text/x-markdown",
+        "text/md",
+        "text/plain"  // Some systems may upload .md files as text/plain
+      ];
+      
+      const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
+      
       if (
-        selectedFile.type !== "application/pdf" &&
-        selectedFile.type !== "text/markdown"
+        selectedFile.type === "application/pdf" || 
+        acceptedMarkdownTypes.includes(selectedFile.type) ||
+        isMarkdownExtension
       ) {
-        setError("Only .pdf and .md files are allowed.");
-        setNewFile(null);
-      } else {
         setError(null);
         setNewFile(selectedFile);
+      } else {
+        setError("Only .pdf and .md files are allowed.");
+        setNewFile(null);
       }
     }
   };
