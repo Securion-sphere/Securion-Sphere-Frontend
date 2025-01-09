@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { getMockModuleById } from "@/app/data/mockModules";
 import { Module } from "@/app/interface/module";
+import { fetchData } from "@/api/axiosInstance";
+import config from "@/config";
 
 const EditModulePage = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
@@ -13,64 +14,75 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Form states
+  const [learning_module, setLearning_module] = useState<Module>();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [currentFile, setCurrentFile] = useState<string>("");
   const [backgroundImage, setBackgroundImage] = useState<string>("");
+  const [backgroundOption, setBackgroundOption] = useState("default");
+  const [newBackgroundImage, setNewBackgroundImage] = useState<File | null>(
+    null,
+  );
   const [newFile, setNewFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      // Use mock data in development
-      const learning_module = getMockModuleById(Number(params.id));
-      if (learning_module) {
-        setTitle(learning_module.title);
-        setDescription(learning_module.description);
-        setCurrentFile(learning_module.fileUrl);
-        setBackgroundImage(learning_module.image);
-      } else {
+    const fetchModuleData = async () => {
+      try {
+        const response = await fetchData<Module>(
+          `${config.apiBaseUrl}/learning-material/${params.id}`,
+        );
+        const module_data = response;
+        setLearning_module(module_data);
+        setTitle(module_data.title);
+        setDescription(module_data.description);
+        setCurrentFile(module_data.filePresignedUrl);
+        setBackgroundImage(module_data.imagePresignedUrl);
+      } catch (error) {
+        console.error("Error fetching module:", error);
         setError("Module not found");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    } else {
-      // Use real API in production
-      fetchModuleData();
-    }
+    };
+
+    fetchModuleData();
   }, [params.id]);
-
-  const fetchModuleData = async () => {
-    try {
-      setIsLoading(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`,
-      );
-      const moduleData: Module = response.data;
-
-      setTitle(moduleData.title);
-      setDescription(moduleData.description);
-      setCurrentFile(moduleData.fileUrl);
-      setBackgroundImage(moduleData.image);
-    } catch (err) {
-      setError("Failed to load module data");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
+    
     if (selectedFile) {
+      const acceptedMarkdownTypes = [
+        "text/markdown",
+        "text/x-markdown",
+        "text/md",
+        "text/plain"  // Some systems may upload .md files as text/plain
+      ];
+      
+      const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
+      
       if (
-        selectedFile.type !== "application/pdf" &&
-        selectedFile.type !== "text/markdown"
+        selectedFile.type === "application/pdf" || 
+        acceptedMarkdownTypes.includes(selectedFile.type) ||
+        isMarkdownExtension
       ) {
-        setError("Only .pdf and .md files are allowed.");
-        setNewFile(null);
-      } else {
         setError(null);
         setNewFile(selectedFile);
+      } else {
+        setError("Only .pdf and .md files are allowed.");
+        setNewFile(null);
       }
+    }
+  };
+
+  const handleBackgroundChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setNewBackgroundImage(selectedFile);
+      setError(null);
     }
   };
 
@@ -86,9 +98,12 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       if (newFile) {
         formData.append("file", newFile);
       }
+      if (backgroundOption === "custom" && newBackgroundImage) {
+        formData.append("backgroundImage", newBackgroundImage);
+      }
 
       await axios.put(
-        `${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`,
+        `${config.apiBaseUrl}/learning-material/${params.id}`,
         formData,
         {
           headers: {
@@ -108,7 +123,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_NESTJS_API}/modules/${params.id}`,
+        `${config.apiBaseUrl}/learning-material/${params.id}`,
       );
       router.push("/monitor/learning-modules");
     } catch (err) {
@@ -168,7 +183,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-6">
         {/* Title */}
         <div>
           <label
@@ -203,6 +218,32 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             rows={4}
             required
           />
+        </div>
+
+        {/* Background Options */}
+        <div>
+          <label className="block text-gray-700 font-bold text-xl">
+            Background Image
+          </label>
+          <div className="flex flex-col mt-2">
+            <select
+              value={backgroundOption}
+              onChange={(e) => setBackgroundOption(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md"
+            >
+              <option value="default">Use Default Background</option>
+              <option value="custom">Upload Custom Background</option>
+            </select>
+
+            {backgroundOption === "custom" && (
+              <input
+                type="file"
+                onChange={handleBackgroundChange}
+                accept="image/*"
+                className="mt-2"
+              />
+            )}
+          </div>
         </div>
 
         {/* Current File */}

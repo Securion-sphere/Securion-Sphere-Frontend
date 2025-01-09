@@ -1,27 +1,59 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import config from "@/config";
 
 const UploadPage = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [moduleName, setModuleName] = useState('');
-  const [moduleDescription, setModuleDescription] = useState('');
+  const [moduleName, setModuleName] = useState("");
+  const [moduleDescription, setModuleDescription] = useState("");
+  const [customBackground, setCustomBackground] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
+    
     if (selectedFile) {
-      // Check file type
-      if (selectedFile.type !== 'application/pdf' && selectedFile.type !== 'text/markdown') {
-        setError('Only .pdf and .md files are allowed.');
-        setFile(null);
-      } else {
+      // Array of accepted MIME types and file extensions for Markdown
+      const acceptedMarkdownTypes = [
+        "text/markdown",
+        "text/x-markdown",
+        "text/md",
+        "text/plain"  // Some systems may upload .md files as text/plain
+      ];
+      
+      // Check file extension as backup validation
+      const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
+      
+      if (
+        selectedFile.type === "application/pdf" || 
+        acceptedMarkdownTypes.includes(selectedFile.type) ||
+        isMarkdownExtension
+      ) {
         setError(null);
         setFile(selectedFile);
+      } else {
+        setError("Only .pdf and .md files are allowed.");
+        setFile(null);
+      }
+    }
+  };
+
+  const handleBackgroundChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      if (!selectedFile.type.startsWith("image/")) {
+        setError("Only image files are allowed for background.");
+        setCustomBackground(null);
+      } else {
+        setError(null);
+        setCustomBackground(selectedFile);
       }
     }
   };
@@ -30,48 +62,55 @@ const UploadPage = () => {
     event.preventDefault();
 
     if (!file) {
-      setError('Please select a file to upload.');
+      setError("Please select a file to upload.");
       return;
     }
 
     if (!moduleName || !moduleDescription) {
-      setError('Please provide a name and description for the module.');
+      setError("Please provide a name and description for the module.");
       return;
     }
 
     setIsUploading(true);
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('moduleName', moduleName);
-    formData.append('moduleDescription', moduleDescription);
+    formData.append("title", moduleName);
+    formData.append("description", moduleDescription);
+    formData.append("file", file);
+
+    if (customBackground) {
+      formData.append("image", customBackground);
+    }
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_NESTJS_API}/upload`,
+        `${config.apiBaseUrl}/learning-material`,
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
-      if (response.status === 200) {
-        // Redirect to the learning modules page on success
-        router.push('/monitor/learning-modules');
+      if (response.status === 201) {
+        router.push("/monitor/learning-modules");
       } else {
-        setError('File upload failed. Please try again.');
+        setError("File upload failed. Please try again.");
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred while uploading. Please try again.');
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while uploading. Please try again.",
+      );
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleCancel = () => {
-    router.push('/monitor/learning-modules');
+    router.push("/monitor/learning-modules");
   };
 
   return (
@@ -81,7 +120,10 @@ const UploadPage = () => {
       <form onSubmit={handleSave} className="space-y-6">
         {/* Module Name */}
         <div>
-          <label className="block text-gray-700 font-bold text-xl" htmlFor="moduleName">
+          <label
+            className="block text-gray-700 font-bold text-xl"
+            htmlFor="moduleName"
+          >
             Module Name
           </label>
           <input
@@ -97,7 +139,10 @@ const UploadPage = () => {
 
         {/* Module Description */}
         <div>
-          <label className="block text-gray-700 font-bold text-xl" htmlFor="moduleDescription">
+          <label
+            className="block text-gray-700 font-bold text-xl"
+            htmlFor="moduleDescription"
+          >
             Module Description
           </label>
           <textarea
@@ -111,9 +156,29 @@ const UploadPage = () => {
           />
         </div>
 
+        {/* Background Image */}
+        <div>
+          <label
+            className="block text-gray-700 font-bold text-xl"
+            htmlFor="customBackground"
+          >
+            Custom Background (Optional)
+          </label>
+          <input
+            type="file"
+            id="customBackground"
+            onChange={handleBackgroundChange}
+            accept="image/*"
+            className="mt-2"
+          />
+        </div>
+
         {/* File Input */}
         <div>
-          <label className="block text-gray-700 font-bold text-xl" htmlFor="file">
+          <label
+            className="block text-gray-700 font-bold text-xl"
+            htmlFor="file"
+          >
             Choose a file (.pdf or .md only)
           </label>
           <input
@@ -133,7 +198,7 @@ const UploadPage = () => {
             disabled={isUploading}
             className="px-6 py-2 bg-blue-600 text-white text-xl font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50"
           >
-            {isUploading ? 'Uploading...' : 'Save'}
+            {isUploading ? "Uploading..." : "Save"}
           </button>
           <button
             type="button"
