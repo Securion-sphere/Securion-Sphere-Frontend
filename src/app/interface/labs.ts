@@ -1,3 +1,5 @@
+import { Student } from "./student";
+
 export interface Lab {
   id: number;
   name: string;
@@ -12,6 +14,23 @@ export interface SolvedLab {
   studentId: number;
   labId: number;
   date: Date;
+}
+
+export interface AdminLab {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  creatorName: string;
+  point: number;
+  solvedBy?: SolvedBy[];
+}
+
+interface SolvedBy {
+  studentId: number;
+  labId: number;
+  dateSolved: string;
+  student: Student;
 }
 
 export const labs: Lab[] = [
