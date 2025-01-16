@@ -45,7 +45,7 @@ const StudentsTable: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="rounded-md border">
+      <div className="rounded-md">
         <Table>
           <TableHeader className="bg-gray-200">
             <TableRow>

@@ -1,13 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -49,15 +48,17 @@ export default function RootLayout({
         <body
           className={`flex flex-col bg-gray-100 min-h-screen ${inter.className}`}
         >
-          <AuthProvider>
-            {!pathname.includes("/auth") && <Navbar />}
-            <div className="flex flex-1">
-              {/* Conditionally render Sidebar only on /monitor path */}
-              {isMonitorPage && <Sidebar />}
-              <main className="flex-grow p-8">{children}</main>
-            </div>
-            {!pathname.includes("/auth") && <Footer />}
-          </AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            <AuthProvider>
+              {!pathname.includes("/auth") && !isMonitorPage && <Navbar />}
+              <div className="flex flex-1">
+                {/* Conditionally render Sidebar only on /monitor path */}
+                {isMonitorPage && <Sidebar />}
+                <main className="flex-grow p-8">{children}</main>
+              </div>
+              {!pathname.includes("/auth") && <Footer />}
+            </AuthProvider>
+          </ThemeProvider>
         </body>
       </html>
       {/* {isClient && <ReactQueryDevtools initialIsOpen={false} />} */}
