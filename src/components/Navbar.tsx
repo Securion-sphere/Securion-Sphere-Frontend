@@ -97,22 +97,28 @@ export default function NavBar() {
             className="flex items-center space-x-2 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Image
-              src={user?.profilePicture || "/assets/icons/default_profile.png"}
+              src={user?.profile_img || "/assets/icons/default_profile.png"}
               alt="Profile"
               className="h-8 w-8 rounded-full"
               width={280}
               height={280}
             />
-            <span>{user?.name || "Anonymous"}</span>
+            <span>{user?.firstName || "Anonymous"}</span>
           </button>
 
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md">
               <Link
-                href="/profile"
+                href="/user"
                 className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 View Profile
+              </Link>
+              <Link
+                href="/user/edit-profile"
+                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Edit Profile
               </Link>
               <button
                 onClick={logout}
