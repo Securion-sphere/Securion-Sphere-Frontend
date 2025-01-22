@@ -34,13 +34,13 @@ export default function NavBar() {
         </SheetTrigger>
         <SheetContent side="left">
           <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
-          <Image
-            src={"/securion-sphere_icon.svg"}
-            alt="Securion Sphere"
-            width={5}
-            height={5}
-            className="mx-auto mb-4"
-          />
+            <Image
+              src={"/securion-sphere_icon.svg"}
+              alt="Securion Sphere"
+              width={5}
+              height={5}
+              className="mx-auto mb-4"
+            />
             <span className="sr-only">Securion Sphere</span>
           </Link>
           <div className="grid gap-2 py-6">
@@ -59,13 +59,13 @@ export default function NavBar() {
       </Sheet>
 
       <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
-      <Image
-            src={"/securion-sphere_icon.svg"}
-            alt="Securion Sphere"
-            width={50}
-            height={50}
-            className="mx-auto my-auto"
-          />
+        <Image
+          src={"/securion-sphere_icon.svg"}
+          alt="Securion Sphere"
+          width={50}
+          height={50}
+          className="mx-auto my-auto"
+        />
         <span className="sr-only">Securion Sphere</span>
       </Link>
 
@@ -82,13 +82,15 @@ export default function NavBar() {
           </Link>
         ))}
 
-        {/* Admin Panel Button */}
-        <Link
-          href="/monitor/dashboard"
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 focus:outline-none"
-        >
-          Admin Panel
-        </Link>
+        {/* Admin Panel Button (only visible to users with a supervisor) */}
+        {user?.supervisor && (
+          <Link
+            href="/monitor/dashboard"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 focus:outline-none"
+          >
+            Admin Panel
+          </Link>
+        )}
 
         {/* Profile Dropdown */}
         <div className="relative">
@@ -154,4 +156,3 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
