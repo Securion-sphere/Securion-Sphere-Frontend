@@ -21,6 +21,14 @@ const Sidebar = () => {
           </li>
           <li>
             <button
+              onClick={() => router.push("/monitor/labs")}
+              className="text-blue-600 font-medium"
+            >
+              Labs
+            </button>
+          </li>
+          <li>
+            <button
               onClick={() => router.push("/monitor/create-lab")}
               className="text-blue-600 font-medium"
             >
@@ -45,25 +53,6 @@ const Sidebar = () => {
           </li>
         </ul>
         <hr className="my-6" />
-        <h3 className="text-lg font-bold mb-2">Account Pages</h3>
-        <ul className="space-y-4">
-          <li>
-            <button
-              onClick={() => router.push("/monitor/my-profile")}
-              className="text-blue-600 font-medium"
-            >
-              My Profile
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => router.push("/monitor/inbox")}
-              className="text-blue-600 font-medium"
-            >
-              Inbox
-            </button>
-          </li>
-        </ul>
       </aside>
     );
   };
