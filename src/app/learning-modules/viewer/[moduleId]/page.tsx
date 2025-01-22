@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import withAuth from "@/components/auth/withAuth";
+import axiosInstance from "@/api/axiosInstance"; // Assuming axiosInstance is already set up
 import config from '@/config';
 
 // Dynamically import PDF viewer to avoid SSR issues
@@ -17,17 +18,14 @@ const PDFViewer = dynamic(() => import("@/components/viewer/PDFViewer"), {
 });
 
 // Dynamically import Markdown viewer
-const MarkdownViewer = dynamic(
-  () => import("@/components/viewer/MarkdownViewer"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-96 flex items-center justify-center">
-        Loading Markdown viewer...
-      </div>
-    ),
-  },
-);
+const MarkdownViewer = dynamic(() => import("@/components/viewer/MarkdownViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 flex items-center justify-center">
+      Loading Markdown viewer...
+    </div>
+  ),
+});
 
 const ModuleViewer = () => {
   const params = useParams();
@@ -39,15 +37,10 @@ const ModuleViewer = () => {
     const fetchModule = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
+        const response = await axiosInstance.get(
           `${config.apiBaseUrl}/learning-material/${params.moduleId}`
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch module data");
-        }
-
-        const data = await response.json();
-        setModule(data);
+        setModule(response.data);
       } catch (err: any) {
         setError(err.message);
       } finally {

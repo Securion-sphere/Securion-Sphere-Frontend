@@ -4,30 +4,23 @@ import axios from "axios";
 import config from "@/config";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useRef } from "react";
+import { UserProfile } from "@/app/interface/userProfile";
 
 interface AuthContextType {
-  user: any;
+  user: UserProfile | null;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserProfile | null>(null); // Use the UserProfile interface here
   const router = useRouter();
   const isRefreshing = useRef(false);
   const refreshAttempts = useRef(0);
   const MAX_REFRESH_ATTEMPTS = 3;
 
-  // Add development bypass flag
-  const isDevelopmentBypass = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
-
   const fetchUser = async (skipRefresh: boolean = false) => {
-    // If development bypass is enabled, skip user fetching
-    if (isDevelopmentBypass) {
-      setUser({ isDeveloper: true });
-      return;
-    }
 
     try {
       const accessToken = localStorage.getItem("AccessToken");
@@ -41,22 +34,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      
-      setUser(response.data);
-      // Reset refresh attempts on successful fetch
+
+      setUser(response.data); // This should match the structure of the UserProfile interface
+
       refreshAttempts.current = 0;
       
     } catch (error: any) {
       if (error.response?.status === 401 && !skipRefresh) {
-        // Only attempt refresh if we haven't exceeded max attempts
         if (refreshAttempts.current < MAX_REFRESH_ATTEMPTS) {
           const refreshSuccess = await refreshToken();
           if (refreshSuccess) {
-            // Retry fetch with skipRefresh=true to prevent infinite loop
             return fetchUser(true);
           }
         }
-        // If we get here, either refresh failed or we exceeded max attempts
         await logout();
       } else {
         console.error('Failed to fetch user', error);
