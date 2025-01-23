@@ -2,19 +2,21 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
 
 const MonitorPage = () => {
   const router = useRouter();
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (window.location.pathname === "/monitor") {
+    if (!user?.supervisor) {
+      router.push("/");
+    } else if (window.location.pathname === "/monitor") {
       router.push("/monitor/dashboard");
     }
-  }, [router]);
+  }, [router, user]);
 
-  return (
-    <div></div>
-  );
+  return <div></div>;
 };
 
 export default MonitorPage;

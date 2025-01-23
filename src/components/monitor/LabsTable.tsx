@@ -55,7 +55,7 @@ const LabsTable: React.FC = () => {
               <TableRow key={lab.id}>
                 <TableCell>
                   <Link
-                    href={`/edit-lab/${lab.id}`}
+                    href={`/monitor/labs/edit-lab/${lab.id}`}
                     className="hover:text-blue-600"
                   >
                     {lab.name}

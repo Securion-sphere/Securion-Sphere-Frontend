@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 import { Module } from "@/app/interface/module";
 import { fetchData } from "@/api/axiosInstance";
 import config from "@/config";
@@ -99,10 +99,10 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         formData.append("file", newFile);
       }
       if (backgroundOption === "custom" && newBackgroundImage) {
-        formData.append("backgroundImage", newBackgroundImage);
+        formData.append("image", newBackgroundImage);
       }
 
-      await axios.put(
+      await axiosInstance.patch(
         `${config.apiBaseUrl}/learning-material/${params.id}`,
         formData,
         {
@@ -122,7 +122,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
+      await axiosInstance.delete(
         `${config.apiBaseUrl}/learning-material/${params.id}`,
       );
       router.push("/monitor/learning-modules");
@@ -231,8 +231,8 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
               onChange={(e) => setBackgroundOption(e.target.value)}
               className="p-2 border border-gray-300 rounded-md"
             >
-              <option value="default">Use Default Background</option>
-              <option value="custom">Upload Custom Background</option>
+              <option value="default">Use Current Background</option>
+              <option value="custom">Upload New Background</option>
             </select>
 
             {backgroundOption === "custom" && (

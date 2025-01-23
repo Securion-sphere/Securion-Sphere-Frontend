@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import withAuth from "@/components/auth/withAuth";
 import { Module } from "@/app/interface/module";
-import { fetchData } from "@/api/axiosInstance";
+import { fetchData } from "@/api/axiosInstance"; // Assuming fetchData is already defined in axiosInstance
 
 const LearningModules = () => {
   const router = useRouter();
@@ -15,7 +15,7 @@ const LearningModules = () => {
   useEffect(() => {
     const getModules = async () => {
       try {
-        const fetchedModules = await fetchData<Module[]>("/learning-material"); // Update the endpoint to your backend API
+        const fetchedModules = await fetchData<Module[]>("/learning-material"); // Use axiosInstance to fetch data
         setModules(fetchedModules); // Set the fetched modules into state
       } catch (error) {
         console.error("Error fetching modules:", error);
@@ -50,34 +50,20 @@ const LearningModules = () => {
           >
             {/* Card Header */}
             <div
-              className={`p-6 relative flex-grow ${
-                module.imagePresignedUrl ? "bg-cover bg-center" : ""
-              }`}
-              style={
-                module.imagePresignedUrl
-                  ? { backgroundImage: `url(${module.imagePresignedUrl})` }
-                  : {}
-              }
+              className={`p-6 relative flex-grow ${module.imagePresignedUrl ? "bg-cover bg-center" : ""}`}
+              style={module.imagePresignedUrl ? { backgroundImage: `url(${module.imagePresignedUrl})` } : {}}
             >
               {module.imagePresignedUrl && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl transition-all duration-300 group-hover:bg-opacity-75" />
               )}
               <h2
-                className={`text-xl font-semibold mb-2 line-clamp-2 ${
-                  module.imagePresignedUrl
-                    ? "text-white relative z-10"
-                    : "text-gray-800"
-                }`}
+                className={`text-xl font-semibold mb-2 line-clamp-2 ${module.imagePresignedUrl ? "text-white relative z-10" : "text-gray-800"}`}
               >
                 {module.title}
               </h2>
               {/* Card Description (hidden initially) */}
               <p
-                className={`text-gray-600 mb-4 line-clamp-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
-                  module.imagePresignedUrl
-                    ? "text-white relative z-10"
-                    : "text-gray-600"
-                }`}
+                className={`text-gray-600 mb-4 line-clamp-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${module.imagePresignedUrl ? "text-white relative z-10" : "text-gray-600"}`}
               >
                 {module.description}
               </p>
