@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 import config from "@/config";
 
 const UploadPage = () => {
@@ -18,15 +18,13 @@ const UploadPage = () => {
     const selectedFile = event.target.files?.[0];
     
     if (selectedFile) {
-      // Array of accepted MIME types and file extensions for Markdown
       const acceptedMarkdownTypes = [
         "text/markdown",
         "text/x-markdown",
         "text/md",
-        "text/plain"  // Some systems may upload .md files as text/plain
+        "text/plain"
       ];
       
-      // Check file extension as backup validation
       const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
       
       if (
@@ -83,7 +81,7 @@ const UploadPage = () => {
     }
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${config.apiBaseUrl}/learning-material`,
         formData,
         {
