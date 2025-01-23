@@ -99,10 +99,10 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         formData.append("file", newFile);
       }
       if (backgroundOption === "custom" && newBackgroundImage) {
-        formData.append("backgroundImage", newBackgroundImage);
+        formData.append("image", newBackgroundImage);
       }
 
-      await axiosInstance.put(
+      await axiosInstance.patch(
         `${config.apiBaseUrl}/learning-material/${params.id}`,
         formData,
         {
