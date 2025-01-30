@@ -13,7 +13,8 @@ export interface Lab {
 export interface SolvedLab {
   studentId: number;
   labId: number;
-  date: Date;
+  dateSolved: Date;
+  lab: Lab
 }
 
 export interface AdminLab {
