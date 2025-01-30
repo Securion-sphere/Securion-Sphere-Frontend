@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import axiosInstant from "@/api/axiosInstance";
 import { UserProfile } from "@/app/interface/userProfile";
-import { Lab } from "@/app/interface/labs";
 import Image from "next/image";
 
 const UserProfilePage = () => {
+  const { id } = useParams();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchUserProfile = async () => {
       try {
-        const response = await axiosInstant.get("/user/profile");
+        const response = await axiosInstant.get(`/user/profile/${id}`);
         setUserProfile(response.data);
       } catch (err) {
         setError("Failed to load user profile");
@@ -24,7 +27,7 @@ const UserProfilePage = () => {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [id]);
 
   if (loading) return <div className="text-center py-8">Loading...</div>;
   if (error) return <div className="text-center text-red-600">{error}</div>;
@@ -51,7 +54,6 @@ const UserProfilePage = () => {
             {userProfile.firstName} {userProfile.lastName}
           </h1>
 
-          {/* Display Nickname if available */}
           {userProfile.nickName && (
             <p className="text-xl text-gray-500">
               Nickname: {userProfile.nickName}
@@ -60,7 +62,6 @@ const UserProfilePage = () => {
 
           <p className="text-lg text-gray-700">Email: {userProfile.email}</p>
 
-          {/* Extract Student ID from email */}
           <p className="text-lg text-gray-700">
             Student ID:{" "}
             {userProfile.email ? userProfile.email.split("@")[0] : "N/A"}
@@ -74,7 +75,6 @@ const UserProfilePage = () => {
             <p>
               <strong>Score:</strong> {userProfile.student.score}
             </p>
-            {/* Display Total Solved Labs */}
             <p>
               <strong>Total Solved Labs:</strong>{" "}
               {userProfile.student.solved_lab.length}
@@ -127,19 +127,11 @@ const UserProfilePage = () => {
               </tr>
             </thead>
             <tbody>
-              {userProfile.supervisor.labs.length > 0 ? (
-                userProfile.supervisor.labs.map((lab: Lab, index: number) => (
-                  <tr key={index} className="border-t border-gray-200">
-                    <td className="py-2 px-4">{lab.name}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="py-2 px-4" colSpan={1}>
-                    No labs assigned.
-                  </td>
+              {userProfile.supervisor.labs.map((lab, index) => (
+                <tr key={index} className="border-t border-gray-200">
+                  <td className="py-2 px-4">{lab.name}</td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
