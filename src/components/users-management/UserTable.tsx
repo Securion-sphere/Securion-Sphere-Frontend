@@ -1,6 +1,7 @@
 import React from "react";
 import { UserProfile } from "@/app/interface/userProfile";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface UserTableProps {
   users: UserProfile[];
@@ -13,6 +14,8 @@ const UserTable: React.FC<UserTableProps> = ({
   selectedUsers,
   onSelectUser,
 }) => {
+  const router = useRouter();
+  
   return (
     <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
       <thead className="bg-gray-200">
@@ -31,17 +34,22 @@ const UserTable: React.FC<UserTableProps> = ({
       <tbody>
         {users.map((user) => (
           <tr key={user.id} className="border-b">
-            <td className="px-4 py-2">
-              <input
-                type="checkbox"
-                checked={selectedUsers.includes(user.id)}
-                onChange={() => onSelectUser(user.id)}
-              />
+            <td className="px-4 py-2 align-middle">
+              <div className="flex items-center justify-center">
+                <input
+                  className="w-5 h-5"
+                  type="checkbox"
+                  checked={selectedUsers.includes(user.id)}
+                  onChange={() => onSelectUser(user.id)}
+                />
+              </div>
             </td>
-            <td className="px-4 py-2">{user.email.split("@")[0]}</td>
+            <td className="px-4 py-2 text-center">
+              {user.email.split("@")[0]}
+            </td>
             <td className="px-4 py-2">{user.firstName}</td>
             <td className="px-4 py-2">{user.lastName}</td>
-            <td className="px-4 py-2">
+            <td className="px-4 py-2 flex justify-center items-center">
               <Image
                 src={user.profile_img}
                 alt="Profile"
@@ -50,17 +58,26 @@ const UserTable: React.FC<UserTableProps> = ({
                 height={50}
               />
             </td>
-            <td className="px-4 py-2">{user.student?.score || 0}</td>
-            <td className="px-4 py-2">
+            <td className="px-4 py-2 text-center">
+              {user.student?.score || 0}
+            </td>
+            <td className="px-4 py-2 text-center">
               {user.student?.solved_lab.length || 0}
             </td>
-            <td className="px-4 py-2">
+            <td className="px-4 py-2 text-center">
               {user.supervisor ? "Supervisor" : "Student"}
             </td>
-            <td className="px-4 py-2">
-              <button className="text-blue-500 hover:text-blue-700">
-                Info
-              </button>
+            <td className="px-4 py-2 align-middle">
+              <div className="flex items-center justify-center">
+                <button
+                  className="text-blue-500 hover:text-blue-700"
+                  onClick={() =>
+                    router.push(`/monitor/users-management/user/${user.id}`)
+                  }
+                >
+                  Info
+                </button>
+              </div>
             </td>
           </tr>
         ))}
