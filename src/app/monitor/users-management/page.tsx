@@ -42,6 +42,14 @@ const UserManagementPage: React.FC = () => {
     setCurrentPage(1);
   };
 
+  const handleSelectUser = (id: number) => {
+    setSelectedUsers(prev => 
+      prev.includes(id) 
+        ? prev.filter(userId => userId !== id) 
+        : [...prev, id]
+    );
+  };
+
   const handleDeleteSelected = async () => {
     await axiosInstance.post("/user/delete", { userIds: selectedUsers });
     setSelectedUsers([]);
@@ -65,7 +73,7 @@ const UserManagementPage: React.FC = () => {
         <UserTable
           users={users}
           selectedUsers={selectedUsers}
-          onSelectUser={(id) => setSelectedUsers([...selectedUsers, id])}
+          onSelectUser={handleSelectUser}
         />
         <div className="mt-4">
           <Pagination
