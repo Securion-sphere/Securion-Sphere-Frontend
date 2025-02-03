@@ -1,11 +1,21 @@
 "use client";
 import config from "@/config";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import LoginForm from "@/components/auth/LoginForm";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
+  const { error, clearError } = useAuth();
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      clearError();
+    }
+  }, [error]);
+
   const handleGoogleLogin = () => {
     window.location.href = `${config.apiBaseUrl}/auth/google/login`;
   };
