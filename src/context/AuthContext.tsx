@@ -9,19 +9,28 @@ import { UserProfile } from "@/app/interface/userProfile";
 interface AuthContextType {
   user: UserProfile | null;
   logout: () => void;
+  error: string | null;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserProfile | null>(null); // Use the UserProfile interface here
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const isRefreshing = useRef(false);
   const refreshAttempts = useRef(0);
   const MAX_REFRESH_ATTEMPTS = 3;
 
-  const fetchUser = async (skipRefresh: boolean = false) => {
+  const clearError = () => setError(null);
 
+  const handleAuthError = (errorMessage: string) => {
+    setError(errorMessage);
+    router.push('/auth/login');
+  };
+
+  const fetchUser = async (skipRefresh: boolean = false) => {
     try {
       const accessToken = localStorage.getItem("AccessToken");
       if (!accessToken) {
@@ -35,9 +44,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      setUser(response.data); // This should match the structure of the UserProfile interface
-
+      setUser(response.data);
       refreshAttempts.current = 0;
+      clearError();
       
     } catch (error: any) {
       if (error.response?.status === 401 && !skipRefresh) {
@@ -56,7 +65,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const refreshToken = async (): Promise<boolean> => {
-    // Prevent concurrent refresh attempts
     if (isRefreshing.current) {
       return false;
     }
@@ -110,12 +118,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             withCredentials: true,
           }
         ).catch(error => {
-          // Silently handle logout API errors
           console.error("Logout API error:", error);
         });
       }
     } finally {
-      // Always clear local storage and state
       localStorage.removeItem("AccessToken");
       localStorage.removeItem("RefreshToken");
       setUser(null);
@@ -128,19 +134,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const query = new URLSearchParams(window.location.search);
     const accessToken = query.get('accessToken');
     const refreshToken = query.get('refreshToken');
+    const authError = query.get('error');
   
     if (accessToken && refreshToken) {
       localStorage.setItem('AccessToken', accessToken);
       localStorage.setItem('RefreshToken', refreshToken);
       router.replace("/");
       fetchUser();
+    } else if (authError === 'unauthorized') {
+      handleAuthError("Your email is not registered in the system. Please contact your supervisor.");
     } else {
       fetchUser();
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, logout }}>
+    <AuthContext.Provider value={{ user, logout, error, clearError }}>
       {children}
     </AuthContext.Provider>
   );

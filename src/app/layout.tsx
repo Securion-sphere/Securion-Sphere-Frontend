@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "@/app/context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
