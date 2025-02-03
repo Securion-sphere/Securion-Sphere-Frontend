@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 import UserTable from "@/components/users-management/UserTable";
@@ -11,6 +11,7 @@ const UserManagementPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [isBulkAddOpen, setIsBulkAddOpen] = useState(false); // State for popup
   const usersPerPage = 10;
 
   const {
@@ -21,15 +22,13 @@ const UserManagementPage: React.FC = () => {
     queryKey: ["users", currentPage, searchTerm],
     queryFn: async () => {
       const response = await axiosInstance.get(
-        `/user?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}`
+        `/user?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}`,
       );
       return response.data;
     },
   });
 
-  const {
-    data: totalUsers = 0,
-  } = useQuery({
+  const { data: totalUsers = 0 } = useQuery({
     queryKey: ["totalUsers"],
     queryFn: async () => {
       const response = await axiosInstance.get("/user/count");
@@ -43,10 +42,10 @@ const UserManagementPage: React.FC = () => {
   };
 
   const handleSelectUser = (id: number) => {
-    setSelectedUsers(prev => 
-      prev.includes(id) 
-        ? prev.filter(userId => userId !== id) 
-        : [...prev, id]
+    setSelectedUsers((prev) =>
+      prev.includes(id)
+        ? prev.filter((userId) => userId !== id)
+        : [...prev, id],
     );
   };
 
@@ -67,9 +66,12 @@ const UserManagementPage: React.FC = () => {
         <div className="mb-4">
           <SearchBar onSearch={handleSearch} />
         </div>
-        <div className="mb-4">
-          <BulkAddUsers />
-        </div>
+        <button
+          onClick={() => setIsBulkAddOpen(true)}
+          className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Bulk Add Users
+        </button>
         <UserTable
           users={users}
           selectedUsers={selectedUsers}
@@ -90,6 +92,10 @@ const UserManagementPage: React.FC = () => {
             Delete Selected
           </button>
         )}
+        <BulkAddUsers
+          isOpen={isBulkAddOpen}
+          onClose={() => setIsBulkAddOpen(false)}
+        />
       </div>
     </div>
   );
