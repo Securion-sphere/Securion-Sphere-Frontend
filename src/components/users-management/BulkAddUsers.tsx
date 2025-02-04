@@ -33,9 +33,32 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
   const [emails, setEmails] = useState("");
 
   const handleAddUsers = async () => {
-    const emailList = emails.split("\n").filter((email) => email.trim() !== "");
-    await axiosInstance.post("/users/bulk-add", { emails: emailList });
-    setEmails("");
+    try {
+      const emailList = emails
+        .split("\n")
+        .filter((email) => email.trim() !== "");
+
+      const response = await axiosInstance.post("/user/email-add", {
+        emails: emailList,
+        role: selectedRole,
+      });
+
+      if (response.data.results) {
+        const summary = response.data.results
+          .map(
+            (result: { email: string; status: string }) =>
+              `${result.email}: ${result.status}`,
+          )
+          .join("\n");
+
+        alert(`Results:\n${summary}`);
+      }
+
+      setEmails("");
+    } catch (error) {
+      console.error("Failed to add users:", error);
+      alert("Failed to add users. Please try again.");
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,16 +125,27 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
         <hr className="my-6" />
         <h3 className="text-lg font-semibold">Add Users by email</h3>
         <div className="flex flex-col">
-          <textarea
-            value={emails}
-            onChange={(e) => setEmails(e.target.value)}
-            placeholder="Enter emails separated by new lines"
-            className="border p-2 w-full"
-            rows={4}
-          />
+          <div className="flex gap-4">
+            <textarea
+              value={emails}
+              onChange={(e) => setEmails(e.target.value)}
+              placeholder="Enter emails separated by new lines"
+              className="border p-2 w-full"
+              rows={4}
+            />
+            <Select value={selectedRole} onValueChange={setSelectedRole}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                <SelectItem value="student">Student</SelectItem>
+                <SelectItem value="supervisor">Supervisor</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <button
             onClick={handleAddUsers}
-            className="bg-green-500 text-white px-4 py-2 mt-2 rounded"
+            className="bg-[#0aaefd] text-white px-4 py-2 mt-2 rounded"
           >
             Add Users
           </button>
@@ -134,20 +168,10 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
             />
           </div>
 
-          <Select value={selectedRole} onValueChange={setSelectedRole}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select role" />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              <SelectItem value="student">Student</SelectItem>
-              <SelectItem value="supervisor">Supervisor</SelectItem>
-            </SelectContent>
-          </Select>
-
           <Button
             onClick={handleUpload}
             disabled={!file || loading}
-            className="bg-green-500 hover:bg-green-600 rounded-xl"
+            className="bg-[#0aaefd] hover:bg-[#003465] rounded-xl cursor-pointer"
           >
             {loading ? "Uploading..." : "Upload"}
           </Button>
@@ -161,20 +185,27 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
 
         {result && (
           <div className="mt-4 space-y-2">
-            <div className="text-green-600">
-              Successfully added: {result.success.length} users
-            </div>
+            {result.success.length > 0 && (
+              <Alert variant="default" className="mt-4">
+                <AlertDescription>
+                  Successfully added: {result.success.length} users
+                </AlertDescription>
+              </Alert>
+            )}
+
             {result.failed.length > 0 && (
-              <div className="text-red-600">
-                <div>Failed to add:</div>
-                <ul className="list-disc pl-5">
-                  {result.failed.map((fail, index) => (
-                    <li key={index}>
-                      {fail.email} - {fail.reason}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>
+                  Failed to add the following users:
+                  <ul className="list-disc pl-5">
+                    {result.failed.map((fail, index) => (
+                      <li key={index}>
+                        {fail.email} - {fail.reason}
+                      </li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
             )}
           </div>
         )}
