@@ -20,23 +20,23 @@ const Dashboard: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <div className="container mx-auto px-4 py-6 space-y-8">
+    <div className="min-h-screen bg-gray-50">
+      <main className="p-6 space-y-6">
         {/* Statistics Cards Section */}
-          <StatisticCard
-            topic="Labs"
-            score={labSize}
-            color="white"
-            imagePath="/assets/statistics/labs.png"
-          />
-          {/* Labs Table */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <h3 className="text-xl font-semibold text-gray-800 px-6 py-4 border-b">
-              All Labs
-            </h3>
-            <LabsTable />
-          </div>
-      </div>
+        <StatisticCard
+          topic="Labs"
+          score={labSize}
+          color="white"
+          imagePath="/assets/statistics/labs.png"
+        />
+        {/* Labs Table */}
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden p-4">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            All Labs
+          </h3>
+          <LabsTable />
+        </div>
+      </main>
     </div>
   );
 };
