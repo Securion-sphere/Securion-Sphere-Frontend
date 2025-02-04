@@ -70,7 +70,7 @@ const UserManagementPage: React.FC = () => {
           onClick={() => setIsBulkAddOpen(true)}
           className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
         >
-          Bulk Add Users
+          Add Users
         </button>
         <UserTable
           users={users}
