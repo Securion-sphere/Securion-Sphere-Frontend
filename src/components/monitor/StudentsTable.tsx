@@ -37,23 +37,27 @@ const StudentsTable: React.FC = () => {
     <div className="w-full">
       <div className="rounded-md">
         <Table>
-          <TableHeader className="bg-gray-200">
+          <TableHeader className="bg-[#EBEBEB]">
             <TableRow>
-              <TableHead>Student ID</TableHead>
+              <TableHead className="text-center">Student ID</TableHead>
               <TableHead>Firstname</TableHead>
               <TableHead>Lastname</TableHead>
-              <TableHead>Solved Labs</TableHead>
-              <TableHead>Score</TableHead>
+              <TableHead className="text-center">Solved Labs</TableHead>
+              <TableHead className="text-center">Score</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {students?.map((student, index) => (
               <TableRow key={student.id}>
-                <TableCell>{student.id}</TableCell>
-                <TableCell>{student.user.firstName}</TableCell>
-                <TableCell>{student.user.lastName}</TableCell>
-                <TableCell>{student.solved_lab.length | 0}</TableCell>
-                <TableCell>{student.score | 0}</TableCell>
+                <TableCell className="px-5 text-center">{student.id}</TableCell>
+                <TableCell className="px-5">{student.user.firstName}</TableCell>
+                <TableCell className="px-5">{student.user.lastName}</TableCell>
+                <TableCell className="px-10 text-center">
+                  {student.solved_lab.length | 0}
+                </TableCell>
+                <TableCell className="px-10 text-center">
+                  {student.score | 0}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

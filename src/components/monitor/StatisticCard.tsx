@@ -13,7 +13,7 @@ interface CardProps {
   }) => {
     return (
       <div
-        className="bg-white shadow-md rounded-full p-4 text-center"
+        className="bg-white shadow-md rounded-xl p-4 text-center "
         style={{
           backgroundImage: `url(${imagePath})`,
           backgroundSize: "cover",
