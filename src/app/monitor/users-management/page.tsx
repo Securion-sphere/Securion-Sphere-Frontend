@@ -9,6 +9,7 @@ import Pagination from "@/components/users-management/Pagination";
 import { UserProfile } from "@/app/interface/userProfile";
 import AllowedUserTable from "@/components/users-management/AllowedUserTable";
 import { AllowedUser } from "@/app/interface/pre-login-user";
+import ToggleButtonGroup from "@/components/users-management/ToggleButtonGroup";
 
 const UserManagementPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,9 +85,7 @@ const UserManagementPage: React.FC = () => {
   const handleDeleteAllowedUser = async (email: string) => {
     try {
       await axiosInstance.delete(`/user/pre-login/${email}`);
-      setAllowedUsers((prev) =>
-        prev.filter((user) => user.email !== email)
-      );
+      setAllowedUsers((prev) => prev.filter((user) => user.email !== email));
     } catch (error) {
       console.error("Error deleting allowed user:", error);
     }
@@ -102,19 +101,22 @@ const UserManagementPage: React.FC = () => {
         <div className="mb-4">
           <SearchBar onSearch={handleSearch} />
         </div>
-        <button
-          onClick={() => setIsBulkAddOpen(true)}
-          className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add Users
-        </button>
-        <button
-          onClick={() => setShowAllowedUsers(!showAllowedUsers)}
-          className="mb-4 bg-gray-500 text-white px-4 py-2 rounded ml-4"
-        >
-          {showAllowedUsers ? "Show All Users" : "Show Allowed Users"}
-        </button>
-
+        <div className="flex flex-row justify-between">
+          <ToggleButtonGroup
+            options={[
+              { label: "All Users", value: false },
+              { label: "Allowed emails list", value: true },
+            ]}
+            selectedValue={showAllowedUsers}
+            onSelect={setShowAllowedUsers}
+          />
+          <button
+            onClick={() => setIsBulkAddOpen(true)}
+            className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Add allow account +
+          </button>
+        </div>
         {showAllowedUsers ? (
           <AllowedUserTable
             allowedUsers={allowedUsers}

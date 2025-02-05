@@ -4,7 +4,6 @@ import config from "@/config";
 import React, { useEffect } from "react";
 import Image from "next/image";
 import LoginForm from "@/components/auth/LoginForm";
-import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
 

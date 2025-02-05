@@ -1,7 +1,6 @@
 "use client";
 
-import axios from "axios";
-import config from "@/config";
+import axiosInstance from "@/api/axiosInstance";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { UserProfile } from "@/app/interface/userProfile";
@@ -14,31 +13,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserProfile | null>(null); // Use the UserProfile interface here
+  const [user, setUser] = useState<UserProfile | null>(null);
   const router = useRouter();
   const isRefreshing = useRef(false);
   const refreshAttempts = useRef(0);
   const MAX_REFRESH_ATTEMPTS = 3;
 
   const fetchUser = async (skipRefresh: boolean = false) => {
-
     try {
-      const accessToken = localStorage.getItem("AccessToken");
-      if (!accessToken) {
-        await logout();
-        return;
-      }
-
-      const response = await axios.get(`${config.apiBaseUrl}/user/profile`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      setUser(response.data); // This should match the structure of the UserProfile interface
-
+      const response = await axiosInstance.get("/user/profile");
+      setUser(response.data);
       refreshAttempts.current = 0;
-      
     } catch (error: any) {
       if (error.response?.status === 401 && !skipRefresh) {
         if (refreshAttempts.current < MAX_REFRESH_ATTEMPTS) {
@@ -49,47 +34,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         await logout();
       } else {
-        console.error('Failed to fetch user', error);
+        console.error("Failed to fetch user", error);
         await logout();
       }
     }
   };
 
   const refreshToken = async (): Promise<boolean> => {
-    // Prevent concurrent refresh attempts
-    if (isRefreshing.current) {
-      return false;
-    }
+    if (isRefreshing.current) return false;
 
     try {
       isRefreshing.current = true;
       refreshAttempts.current += 1;
 
-      const refreshToken = localStorage.getItem('RefreshToken');
-      if (!refreshToken) {
-        throw new Error('No refresh token found');
-      }
+      const response = await axiosInstance.post("/auth/refresh", {});
+      localStorage.setItem("AccessToken", response.data.accessToken);
+      localStorage.setItem("RefreshToken", response.data.refreshToken);
 
-      const response = await axios.post(
-        `${config.apiBaseUrl}/auth/refresh`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`,
-          },
-          withCredentials: true,
-        }
-      );
-      
-      const newAccessToken = response.data.accessToken;
-      const newRefreshToken = response.data.refreshToken;
-      
-      localStorage.setItem('AccessToken', newAccessToken);
-      localStorage.setItem('RefreshToken', newRefreshToken);
-      
       return true;
     } catch (error) {
-      console.error('Failed to refresh token', error);
+      console.error("Failed to refresh token", error);
       return false;
     } finally {
       isRefreshing.current = false;
@@ -98,40 +62,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      const accessToken = localStorage.getItem('AccessToken');
-      if (accessToken) {
-        await axios.post(
-          `${config.apiBaseUrl}/auth/logout`, 
-          {}, 
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: true,
-          }
-        ).catch(error => {
-          // Silently handle logout API errors
-          console.error("Logout API error:", error);
-        });
-      }
+      await axiosInstance.post("/auth/logout");
+    } catch (error) {
+      console.error("Logout API error:", error);
     } finally {
-      // Always clear local storage and state
       localStorage.removeItem("AccessToken");
       localStorage.removeItem("RefreshToken");
       setUser(null);
       refreshAttempts.current = 0;
-      router.push('/auth/login');
+      router.push("/auth/login");
     }
   };
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
-    const accessToken = query.get('accessToken');
-    const refreshToken = query.get('refreshToken');
-  
-    if (accessToken && refreshToken) {
-      localStorage.setItem('AccessToken', accessToken);
-      localStorage.setItem('RefreshToken', refreshToken);
+    const accessToken = query.get("accessToken");
+    const refreshToken = query.get("refreshToken");
+    const errorMessage = query.get("error");
+
+    if (errorMessage) {
+      alert("Your email is not authorized. Please contact your supervisor.");
+      router.replace("/auth/login");
+    } else if (accessToken && refreshToken) {
+      localStorage.setItem("AccessToken", accessToken);
+      localStorage.setItem("RefreshToken", refreshToken);
       router.replace("/");
       fetchUser();
     } else {
