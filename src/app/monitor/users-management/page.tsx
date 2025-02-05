@@ -7,12 +7,16 @@ import SearchBar from "@/components/users-management/SearchBar";
 import BulkAddUsers from "@/components/users-management/BulkAddUsers";
 import Pagination from "@/components/users-management/Pagination";
 import { UserProfile } from "@/app/interface/userProfile";
+import AllowedUserTable from "@/components/users-management/AllowedUserTable";
+import { AllowedUser } from "@/app/interface/pre-login-user";
 
 const UserManagementPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
-  const [isBulkAddOpen, setIsBulkAddOpen] = useState(false); // State for popup
+  const [isBulkAddOpen, setIsBulkAddOpen] = useState(false);
+  const [showAllowedUsers, setShowAllowedUsers] = useState(false);
+  const [allowedUsers, setAllowedUsers] = useState<AllowedUser[]>([]);
   const usersPerPage = 10;
 
   const {
@@ -22,13 +26,13 @@ const UserManagementPage: React.FC = () => {
   } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await axiosInstance.get("/user"); // Fetch all users at once
+      const response = await axiosInstance.get("/user");
       return response.data;
     },
   });
 
   const filteredUsers = users.filter(
-    (user : UserProfile) =>
+    (user: UserProfile) =>
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.split("@")[0].includes(searchTerm),
@@ -48,6 +52,17 @@ const UserManagementPage: React.FC = () => {
     },
   });
 
+  const fetchAllowedUsers = async () => {
+    const response = await axiosInstance.get("user/pre-login");
+    return response.data;
+  };
+
+  React.useEffect(() => {
+    if (showAllowedUsers) {
+      fetchAllowedUsers().then(setAllowedUsers);
+    }
+  }, [showAllowedUsers]);
+
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
@@ -66,6 +81,17 @@ const UserManagementPage: React.FC = () => {
     setSelectedUsers([]);
   };
 
+  const handleDeleteAllowedUser = async (email: string) => {
+    try {
+      await axiosInstance.delete(`/user/pre-login/${email}`);
+      setAllowedUsers((prev) =>
+        prev.filter((user) => user.email !== email)
+      );
+    } catch (error) {
+      console.error("Error deleting allowed user:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="container mx-auto">
@@ -82,31 +108,47 @@ const UserManagementPage: React.FC = () => {
         >
           Add Users
         </button>
-        <UserTable
-          users={paginatedUsers}
-          selectedUsers={selectedUsers}
-          onSelectUser={(id) =>
-            setSelectedUsers((prev) =>
-              prev.includes(id)
-                ? prev.filter((uid) => uid !== id)
-                : [...prev, id],
-            )
-          }
-        />
-        <div className="mt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
+        <button
+          onClick={() => setShowAllowedUsers(!showAllowedUsers)}
+          className="mb-4 bg-gray-500 text-white px-4 py-2 rounded ml-4"
+        >
+          {showAllowedUsers ? "Show All Users" : "Show Allowed Users"}
+        </button>
+
+        {showAllowedUsers ? (
+          <AllowedUserTable
+            allowedUsers={allowedUsers}
+            onDeleteUser={handleDeleteAllowedUser}
           />
-        </div>
-        {selectedUsers.length > 0 && (
-          <button
-            onClick={handleDeleteSelected}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-          >
-            Delete Selected
-          </button>
+        ) : (
+          <>
+            <UserTable
+              users={paginatedUsers}
+              selectedUsers={selectedUsers}
+              onSelectUser={(id) =>
+                setSelectedUsers((prev) =>
+                  prev.includes(id)
+                    ? prev.filter((uid) => uid !== id)
+                    : [...prev, id],
+                )
+              }
+            />
+            <div className="mt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+            {selectedUsers.length > 0 && (
+              <button
+                onClick={handleDeleteSelected}
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+              >
+                Delete Selected
+              </button>
+            )}
+          </>
         )}
         <BulkAddUsers
           isOpen={isBulkAddOpen}
