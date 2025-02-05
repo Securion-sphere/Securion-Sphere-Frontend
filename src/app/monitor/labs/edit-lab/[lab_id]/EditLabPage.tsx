@@ -13,7 +13,11 @@ const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
   const labId = params.lab_id;
 
   // Fetch lab data
-  const { data: lab, isLoading, error } = useQuery<Lab>({
+  const {
+    data: lab,
+    isLoading,
+    error,
+  } = useQuery<Lab>({
     queryKey: ["lab", labId],
     queryFn: async () => {
       const response = await axiosInstance.get(`/lab/${labId}`);
@@ -71,7 +75,9 @@ const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
     },
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -89,56 +95,75 @@ const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
   if (error) return <div>Error loading lab data</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Edit Lab</h1>
-      {lab && (
-        <div className="space-y-4">
-          <div>
-            <label className="block font-medium mb-2">Lab Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded px-4 py-2"
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-2">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded px-4 py-2"
-              rows={5}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-2">Category</label>
-            <input
-              type="text"
-              name="category"
-              value={formData.category}
-              onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded px-4 py-2"
-            />
-          </div>
-          <div className="flex space-x-4 mt-4">
-            <button
-              onClick={handleUpdate}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Update Lab
-            </button>
-            <button
-              onClick={handleDelete}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-            >
-              Delete Lab
-            </button>
+    <div className="bg-gray-100 min-h-screen">
+      {/* Page Content */}
+      <main className="flex-grow mx-auto p-6">
+        <div className="bg-white p-6 rounded-xl shadow">
+          {/* Page Title */}
+          <h1 className="text-2xl font-semibold mb-4">Edit Lab</h1>
+
+          {/* Form */}
+          <div className="space-y-4">
+            {/* Lab Name */}
+            <div>
+              <label className="block text-gray-800 font-medium mb-1">
+                Lab Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name || ""}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-gray-800 font-medium mb-1">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description || ""}
+                onChange={handleInputChange}
+                rows={5}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Category */}
+            <div>
+              <label className="block text-gray-800 font-medium mb-1">
+                Category
+              </label>
+              <input
+                type="text"
+                name="category"
+                value={formData.category || ""}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex items-center justify-end space-x-2 pt-2">
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white font-medium px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+              >
+                Delete Lab
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="bg-blue-600 text-white font-medium px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                Update Lab
+              </button>
+            </div>
           </div>
         </div>
-      )}
+      </main>
     </div>
   );
 };
