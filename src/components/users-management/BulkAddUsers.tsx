@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import axiosInstance from "@/api/axiosInstance";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { BulkUploadResponse } from "@/app/interface/bulk-upload-response";
 import {
   Select,
   SelectContent,
@@ -9,14 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface BulkUploadResponse {
-  success: string[];
-  failed: Array<{
-    email: string;
-    reason: string;
-  }>;
-}
 
 interface BulkAddUsersProps {
   isOpen: boolean;
@@ -87,7 +80,7 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
       formData.append("role", selectedRole);
 
       const response = await axiosInstance.post<BulkUploadResponse>(
-        "/users/bulk-add-csv",
+        "/user/bulk-add-csv",
         formData,
         {
           headers: {
@@ -185,25 +178,44 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
 
         {result && (
           <div className="mt-4 space-y-2">
-            {result.success.length > 0 && (
-              <Alert variant="default" className="mt-4">
-                <AlertDescription>
-                  Successfully added: {result.success.length} users
+            <Alert
+              variant={result.success ? "default" : "destructive"}
+              className="mt-4"
+            >
+              <AlertDescription>
+                Summary: {result.summary.successful} successful,{" "}
+                {result.summary.failed} failed
+              </AlertDescription>
+            </Alert>
+
+            {/* Show successful uploads */}
+            {result.results.some((r) => r.status.startsWith("Success")) && (
+              <Alert variant="default" className="bg-green-50">
+                <AlertTitle>Successful Uploads</AlertTitle>
+                <AlertDescription className="mt-2">
+                  {result.results
+                    .filter((r) => r.status.startsWith("Success"))
+                    .map((r, i) => (
+                      <div key={i} className="text-sm">
+                        {r.email}
+                      </div>
+                    ))}
                 </AlertDescription>
               </Alert>
             )}
 
-            {result.failed.length > 0 && (
-              <Alert variant="destructive" className="mt-4">
-                <AlertDescription>
-                  Failed to add the following users:
-                  <ul className="list-disc pl-5">
-                    {result.failed.map((fail, index) => (
-                      <li key={index}>
-                        {fail.email} - {fail.reason}
-                      </li>
+            {/* Show failed uploads */}
+            {result.results.some((r) => r.status.startsWith("Failed")) && (
+              <Alert variant="destructive">
+                <AlertTitle>Failed Uploads</AlertTitle>
+                <AlertDescription className="mt-2">
+                  {result.results
+                    .filter((r) => r.status.startsWith("Failed"))
+                    .map((r, i) => (
+                      <div key={i} className="text-sm">
+                        {r.email}: {r.status.replace("Failed: ", "")}
+                      </div>
                     ))}
-                  </ul>
                 </AlertDescription>
               </Alert>
             )}

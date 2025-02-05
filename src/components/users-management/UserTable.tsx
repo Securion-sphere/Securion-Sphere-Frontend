@@ -17,7 +17,7 @@ const UserTable: React.FC<UserTableProps> = ({
   const router = useRouter();
   
   return (
-    <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+    <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
       <thead className="bg-gray-200">
         <tr>
           <th className="px-4 py-2">Select</th>
