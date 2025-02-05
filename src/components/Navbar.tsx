@@ -1,7 +1,7 @@
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -115,12 +115,6 @@ export default function NavBar() {
                 className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 View Profile
-              </Link>
-              <Link
-                href="/user/edit-profile"
-                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                Edit Profile
               </Link>
               <button
                 onClick={logout}
