@@ -44,7 +44,6 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
               Student ID:{" "}
               {userProfile.email ? userProfile.email.split("@")[0] : "N/A"}
             </p>
-            <p className="text-gray-600">Year: {userProfile.student.year}</p>
           </div>
         </div>
 
