@@ -6,6 +6,7 @@ import UserTable from "@/components/users-management/UserTable";
 import SearchBar from "@/components/users-management/SearchBar";
 import BulkAddUsers from "@/components/users-management/BulkAddUsers";
 import Pagination from "@/components/users-management/Pagination";
+import { UserProfile } from "@/app/interface/userProfile";
 
 const UserManagementPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,14 +20,25 @@ const UserManagementPage: React.FC = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["users", currentPage, searchTerm],
+    queryKey: ["users"],
     queryFn: async () => {
-      const response = await axiosInstance.get(
-        `/user?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}`,
-      );
+      const response = await axiosInstance.get("/user"); // Fetch all users at once
       return response.data;
     },
   });
+
+  const filteredUsers = users.filter(
+    (user : UserProfile) =>
+      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.split("@")[0].includes(searchTerm),
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage,
+  );
 
   const { data: totalUsers = 0 } = useQuery({
     queryKey: ["totalUsers"],
@@ -52,8 +64,6 @@ const UserManagementPage: React.FC = () => {
   const handleDeleteSelected = async () => {
     await axiosInstance.post("/user/delete", { userIds: selectedUsers });
     setSelectedUsers([]);
-    // Refetch users after deletion
-    // You can use queryClient.invalidateQueries(['users']) if using React Query
   };
 
   return (
@@ -73,14 +83,20 @@ const UserManagementPage: React.FC = () => {
           Add Users
         </button>
         <UserTable
-          users={users}
+          users={paginatedUsers}
           selectedUsers={selectedUsers}
-          onSelectUser={handleSelectUser}
+          onSelectUser={(id) =>
+            setSelectedUsers((prev) =>
+              prev.includes(id)
+                ? prev.filter((uid) => uid !== id)
+                : [...prev, id],
+            )
+          }
         />
         <div className="mt-4">
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(totalUsers / usersPerPage)}
+            totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
