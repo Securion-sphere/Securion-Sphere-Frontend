@@ -116,12 +116,6 @@ export default function NavBar() {
               >
                 View Profile
               </Link>
-              <Link
-                href="/user/edit-profile"
-                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                Edit Profile
-              </Link>
               <button
                 onClick={logout}
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
