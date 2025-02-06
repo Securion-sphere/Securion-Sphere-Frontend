@@ -96,7 +96,7 @@ const UserManagementPage: React.FC = () => {
       <div className="container mx-auto">
         <h1 className="text-2xl font-bold mb-4">User Management</h1>
         <div className="mb-4">
-          <span className="text-lg">Total Students: {totalUsers}</span>
+          <span className="text-xl">Total Users: {totalUsers}</span>
         </div>
         <div className="mb-4">
           <SearchBar onSearch={handleSearch} />
