@@ -9,6 +9,7 @@ const UploadPage = () => {
   const [file, setFile] = useState<File | null>(null);
   const [moduleName, setModuleName] = useState("");
   const [moduleDescription, setModuleDescription] = useState("");
+  const [moduleCategory, setModuleCategory] = useState("");
   const [customBackground, setCustomBackground] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -64,8 +65,8 @@ const UploadPage = () => {
       return;
     }
 
-    if (!moduleName || !moduleDescription) {
-      setError("Please provide a name and description for the module.");
+    if (!moduleName || !moduleDescription || !moduleCategory) {
+      setError("Please provide a name description and category for the module.");
       return;
     }
 
@@ -74,6 +75,7 @@ const UploadPage = () => {
     const formData = new FormData();
     formData.append("title", moduleName);
     formData.append("description", moduleDescription);
+    formData.append("category", moduleCategory);
     formData.append("file", file);
 
     if (customBackground) {
@@ -150,6 +152,25 @@ const UploadPage = () => {
             onChange={(e) => setModuleDescription(e.target.value)}
             className="mt-2 p-2 w-full border border-gray-300 rounded-md"
             rows={4}
+            required
+          />
+        </div>
+
+        {/* Module Category */}
+        <div>
+          <label
+            className="block text-gray-700 font-bold text-xl"
+            htmlFor="moduleCategory"
+          >
+            Module Category
+          </label>
+          <input
+            type="text"
+            id="moduleCategory"
+            placeholder="Enter your module's Category"
+            value={moduleCategory}
+            onChange={(e) => setModuleCategory(e.target.value)}
+            className="mt-2 p-2 w-full border border-gray-300 rounded-md"
             required
           />
         </div>
