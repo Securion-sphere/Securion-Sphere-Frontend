@@ -6,18 +6,20 @@ import withAuth from "@/components/auth/withAuth";
 import { Module } from "@/app/interface/module";
 import { fetchData } from "@/api/axiosInstance";
 import ModuleCard from "@/components/learning-material/ModuleCard";
+import SearchAndFilter from "@/components/learning-material/SearchAndFilter";
 
 const LearningModules = () => {
   const router = useRouter();
   const [modules, setModules] = useState<Module[]>([]);
-  const [selectedModule, setSelectedModule] = useState<number | null>(null);
+  const [filteredModules, setFilteredModules] = useState<Module[]>([]);
 
   // Fetch modules data from API on component mount
   useEffect(() => {
     const getModules = async () => {
       try {
-        const fetchedModules = await fetchData<Module[]>("/learning-material"); // Update the endpoint to your backend API
-        setModules(fetchedModules); // Set the fetched modules into state
+        const fetchedModules = await fetchData<Module[]>("/learning-material");
+        setModules(fetchedModules);
+        setFilteredModules(fetchedModules); // Initialize filtered modules
       } catch (error) {
         console.error("Error fetching modules:", error);
       }
@@ -27,7 +29,7 @@ const LearningModules = () => {
   }, []);
 
   const handleEdit = (moduleId: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click event
+    e.stopPropagation();
     router.push(`/monitor/learning-modules/edit/${moduleId}`);
   };
 
@@ -57,10 +59,15 @@ const LearningModules = () => {
         </button>
       </div>
 
+      <SearchAndFilter 
+        modules={modules}
+        onFilterChange={setFilteredModules}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {modules.map((module) => (
+        {filteredModules.map((module) => (
           <ModuleCard
-            key={module.id} // Added key prop here
+            key={module.id}
             module={module}
             onCardClick={handleModuleClick}
             actionButton={{
@@ -70,6 +77,12 @@ const LearningModules = () => {
           />
         ))}
       </div>
+
+      {filteredModules.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No modules found matching your search criteria
+        </div>
+      )}
     </div>
   );
 };
