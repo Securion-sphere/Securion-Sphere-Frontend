@@ -14,7 +14,6 @@ const navItems: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/labs", label: "Labs" },
   { href: "/learning-modules", label: "Learning Modules" },
-  { href: "#", label: "Contact" },
 ];
 
 export default function NavBar() {

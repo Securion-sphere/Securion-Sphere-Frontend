@@ -2,6 +2,7 @@ export interface Module {
     id: number;
     title: string;
     description: string;
+    category: string;
     fileName: string;
     fileType: 'pdf' | 'md';
     filePresignedUrl: string;
