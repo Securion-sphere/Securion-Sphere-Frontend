@@ -18,6 +18,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [currentFile, setCurrentFile] = useState<string>("");
+  const [category, setCategory] = useState<string>("")
   const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [backgroundOption, setBackgroundOption] = useState("default");
   const [newBackgroundImage, setNewBackgroundImage] = useState<File | null>(
@@ -36,6 +37,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
         setLearning_module(module_data);
         setTitle(module_data.title);
         setDescription(module_data.description);
+        setCategory(module_data.category);
         setCurrentFile(module_data.filePresignedUrl);
         setBackgroundImage(module_data.imagePresignedUrl);
       } catch (error) {
@@ -95,6 +97,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
+      formData.append("category", category);
       if (newFile) {
         formData.append("file", newFile);
       }
@@ -216,6 +219,24 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
             rows={4}
+            required
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label
+            className="block text-gray-700 mb-2 font-bold text-xl"
+            htmlFor="category"
+          >
+            Module Category
+          </label>
+          <input
+            type="text"
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
             required
           />
         </div>
