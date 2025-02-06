@@ -41,68 +41,71 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
             )}
             <p className="text-gray-600">Email: {userProfile.email}</p>
             <p className="text-gray-600">
-              Student ID:{" "}
-              {userProfile.email ? userProfile.email.split("@")[0] : "N/A"}
+              Student ID: {userProfile.email ? userProfile.email.split("@")[0] : "N/A"}
             </p>
           </div>
         </div>
 
         {/* Statistics Section */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatisticCard
-            topic="Labs Solved"
-            score={userProfile.student.solved_lab.length}
-            color="white"
-            imagePath="/assets/statistics/students.jpg"
-          />
-          <StatisticCard
-            topic="Points"
-            score={userProfile.student.score}
-            color="white"
-            imagePath="/assets/statistics/labs.png"
-          />
-          <StatisticCard
-            topic="Assigned Labs"
-            score={
-              userProfile.supervisor ? userProfile.supervisor.labs.length : 0
-            }
-            color="white"
-            imagePath="/assets/statistics/labs.png"
-          />
+          {userProfile.student && (
+            <>
+              <StatisticCard
+                topic="Labs Solved"
+                score={userProfile.student.solved_lab.length}
+                color="white"
+                imagePath="/assets/statistics/students.jpg"
+              />
+              <StatisticCard
+                topic="Points"
+                score={userProfile.student.score}
+                color="white"
+                imagePath="/assets/statistics/labs.png"
+              />
+            </>
+          )}
+          {userProfile.supervisor && (
+            <StatisticCard
+              topic="Assigned Labs"
+              score={userProfile.supervisor.labs.length}
+              color="white"
+              imagePath="/assets/statistics/labs.png"
+            />
+          )}
         </div>
 
         {/* Solved Labs Table */}
-        <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
-          <h2 className="bg-[#003465] text-white px-4 py-2 text-lg font-semibold">
-            Solved Labs
-          </h2>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="text-left px-4 py-2">Lab Name</th>
-                <th className="text-left px-4 py-2">Date Solved</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userProfile.student.solved_lab.length > 0 ? (
-                userProfile.student.solved_lab.map((solvedLab, index) => (
-                  <tr key={index} className="border-t border-gray-200">
-                    <td className="py-2 px-4">{solvedLab.lab.name}</td>
-                    <td className="py-2 px-4">
-                      {new Date(solvedLab.dateSolved).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="py-4 px-4" colSpan={2}>
-                    No labs solved yet.
-                  </td>
+        {userProfile.student && (
+          <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
+            <h2 className="bg-[#003465] text-white px-4 py-2 text-lg font-semibold">
+              Solved Labs
+            </h2>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-100 border-b border-gray-200">
+                  <th className="text-left px-4 py-2">Lab Name</th>
+                  <th className="text-left px-4 py-2">Date Solved</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {userProfile.student.solved_lab.length > 0 ? (
+                  userProfile.student.solved_lab.map((solvedLab, index) => (
+                    <tr key={index} className="border-t border-gray-200">
+                      <td className="py-2 px-4">{solvedLab.lab.name}</td>
+                      <td className="py-2 px-4">
+                        {new Date(solvedLab.dateSolved).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td className="py-4 px-4" colSpan={2}>No labs solved yet.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Supervisor Assigned Labs */}
         {userProfile.supervisor && (

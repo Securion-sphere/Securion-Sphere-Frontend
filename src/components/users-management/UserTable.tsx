@@ -70,7 +70,7 @@ const UserTable: React.FC<UserTableProps> = ({
             <td className="px-4 py-2 align-middle">
               <div className="flex items-center justify-center">
                 <button
-                  className="text-blue-500 hover:text-blue-700"
+                  className="py-2 px-3 rounded-xl text-white bg-blue-500 hover:bg-blue-700"
                   onClick={() =>
                     router.push(`/monitor/users-management/user/${user.id}`)
                   }
