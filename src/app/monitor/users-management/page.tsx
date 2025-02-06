@@ -13,6 +13,7 @@ import ToggleButtonGroup from "@/components/users-management/ToggleButtonGroup";
 
 const UserManagementPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [allowedUsersCurrentPage, setAllowedUsersCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [isBulkAddOpen, setIsBulkAddOpen] = useState(false);
@@ -32,17 +33,38 @@ const UserManagementPage: React.FC = () => {
     },
   });
 
-  const filteredUsers = users.filter(
-    (user: UserProfile) =>
-      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.split("@")[0].includes(searchTerm),
+  const filteredUsers = users.filter((user: UserProfile) => {
+    const searchTermLower = searchTerm.toLowerCase();
+
+    const basicSearch =
+      user.firstName.toLowerCase().includes(searchTermLower) ||
+      user.lastName.toLowerCase().includes(searchTermLower) ||
+      user.email.split("@")[0].includes(searchTermLower);
+
+    const roleSearch =
+      (searchTermLower === "student" && user.student) ||
+      (searchTermLower === "supervisor" && user.supervisor);
+
+    return basicSearch || roleSearch;
+  });
+
+  const filterAllowedUsers = allowedUsers.filter(
+    (user: AllowedUser) =>
+      user.email.toLowerCase().includes(searchTerm) ||
+      user.role.toLowerCase().includes(searchTerm),
   );
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const totalAllowedPages = Math.ceil(filterAllowedUsers.length / usersPerPage);
+
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * usersPerPage,
     currentPage * usersPerPage,
+  );
+
+  const paginatedAllowedUsers = filterAllowedUsers.slice(
+    (allowedUsersCurrentPage - 1) * usersPerPage,
+    allowedUsersCurrentPage * usersPerPage,
   );
 
   const { data: totalUsers = 0 } = useQuery({
@@ -67,6 +89,7 @@ const UserManagementPage: React.FC = () => {
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
+    setAllowedUsersCurrentPage(1); // Reset both pagination states on search
   };
 
   const handleSelectUser = (id: number) => {
@@ -91,6 +114,15 @@ const UserManagementPage: React.FC = () => {
     }
   };
 
+  // Handle page changes for both tables
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleAllowedUsersPageChange = (page: number) => {
+    setAllowedUsersCurrentPage(page);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="container mx-auto">
@@ -108,7 +140,12 @@ const UserManagementPage: React.FC = () => {
               { label: "Allowed emails list", value: true },
             ]}
             selectedValue={showAllowedUsers}
-            onSelect={setShowAllowedUsers}
+            onSelect={(value) => {
+              setShowAllowedUsers(value);
+              // Reset pagination when switching views
+              setCurrentPage(1);
+              setAllowedUsersCurrentPage(1);
+            }}
           />
           <button
             onClick={() => setIsBulkAddOpen(true)}
@@ -118,10 +155,19 @@ const UserManagementPage: React.FC = () => {
           </button>
         </div>
         {showAllowedUsers ? (
-          <AllowedUserTable
-            allowedUsers={allowedUsers}
-            onDeleteUser={handleDeleteAllowedUser}
-          />
+          <>
+            <AllowedUserTable
+              allowedUsers={paginatedAllowedUsers}
+              onDeleteUser={handleDeleteAllowedUser}
+            />
+            <div className="mt-4">
+              <Pagination
+                currentPage={allowedUsersCurrentPage}
+                totalPages={totalAllowedPages}
+                onPageChange={handleAllowedUsersPageChange}
+              />
+            </div>
+          </>
         ) : (
           <>
             <UserTable
@@ -139,7 +185,7 @@ const UserManagementPage: React.FC = () => {
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                onPageChange={handlePageChange}
               />
             </div>
             {selectedUsers.length > 0 && (
