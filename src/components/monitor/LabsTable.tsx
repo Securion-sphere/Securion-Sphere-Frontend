@@ -25,15 +25,6 @@ const LabsTable: React.FC = () => {
     queryFn: async (): Promise<Lab[]> => {
       const response = await axiosInstance.get("/lab");
       return response.data;
-
-      // Mock data for now
-      // return new Array(5).fill({
-      //   name: "Web Application for SQL Injection",
-      //   category: "Injection",
-      //   creatorName: "Mr. Injection",
-      //   solved: 12,
-      //   rating: 4.8,
-      // });
     },
   });
 
@@ -45,13 +36,14 @@ const LabsTable: React.FC = () => {
             <TableRow>
               <TableHead>Lab&apos;s Name</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead>Creator</TableHead>
               <TableHead className="text-center">Points</TableHead>
               <TableHead className="text-center">Solved</TableHead>
+              {/* Add a new TableHead for the Edit column */}
+              <TableHead className="text-center">Edit</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {labs?.map((lab, index) => (
+            {labs?.map((lab) => (
               <TableRow key={lab.id}>
                 <TableCell className="px-5">
                   <Link
@@ -62,9 +54,17 @@ const LabsTable: React.FC = () => {
                   </Link>
                 </TableCell>
                 <TableCell className="px-5">{lab.category}</TableCell>
-                <TableCell className="px-5">{lab.creatorName}</TableCell>
                 <TableCell className="px-10 text-center">{lab.point}</TableCell>
                 <TableCell className="px-10 text-center">{lab.solved}</TableCell>
+                {/* Add the Edit button */}
+                <TableCell className="px-10 text-center">
+                  <Link
+                    href={`/monitor/labs/edit-lab/${lab.id}`}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600"
+                  >
+                    Edit
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

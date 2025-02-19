@@ -15,7 +15,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     <div className="flex">
       <input
         type="text"
-        placeholder="Search by name or student ID"
+        placeholder="Search"
         value={term}
         onChange={(e) => setTerm(e.target.value)}
         className="border p-2 rounded-l w-full"
