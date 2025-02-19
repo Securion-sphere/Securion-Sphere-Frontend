@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 import UserTable from "@/components/users-management/UserTable";
-import SearchBar from "@/components/users-management/SearchBar";
+import SearchBar from "@/components/ui/SearchBar";
 import BulkAddUsers from "@/components/users-management/BulkAddUsers";
 import Pagination from "@/components/users-management/Pagination";
 import { UserProfile } from "@/app/interface/userProfile";
@@ -89,7 +89,7 @@ const UserManagementPage: React.FC = () => {
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
-    setAllowedUsersCurrentPage(1); // Reset both pagination states on search
+    setAllowedUsersCurrentPage(1);
   };
 
   const handleSelectUser = (id: number) => {

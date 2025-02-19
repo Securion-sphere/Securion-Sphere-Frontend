@@ -1,54 +1,88 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axiosInstance from "@/api/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
+import { useRouter } from "next/navigation";
 
 const CreateLabPage = () => {
+  const router = useRouter();
   const [labName, setLabName] = useState<string>("");
   const [labDescription, setLabDescription] = useState<string>("");
   const [labPoint, setLabPoint] = useState<number>(0);
-  const [assignee, setAssignee] = useState<string>("");
-  const [availableFrom, setAvailableFrom] = useState<string>("");
-  const [closeOn, setCloseOn] = useState<string>("");
+  const [labCategory, setLabCategory] = useState<string>("");
+  const [imageName, setImageName] = useState<string | null>(null);
+  const [imageId, setImageId] = useState<number>(0);
+  const [images, setImages] = useState<{ id: number; image_name: string }[]>(
+    [],
+  );
+
+  // Fetch available images on component mount
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await axiosInstance.get("/lab-image");
+        setImages(response.data);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+        alert("Failed to load images.");
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/^0+/, "");
     setLabPoint(value === "" ? 0 : parseInt(value, 10));
   };
 
-  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
       !labName ||
       !labDescription ||
-      !assignee ||
-      !availableFrom ||
-      !closeOn
+      !labPoint ||
+      !labCategory ||
+      !imageName
     ) {
       alert("Please fill in all required fields.");
       return;
     }
 
     const labData = {
-      labName,
-      labDescription,
-      labPoint,
-      assignee,
-      availableFrom,
-      closeOn,
+      name: labName,
+      description: labDescription,
+      point: labPoint,
+      category: labCategory,
+      labImageId: imageId,
+      isReady: true,
     };
 
-    console.log("Lab data submitted:", labData);
-    alert("Lab created successfully!");
+    try {
+      const response = await axiosInstance.post("/lab", labData);
+      console.log("Lab created successfully:", response.data);
+      alert("Lab created successfully!");
 
-    // Reset form
-    setLabName("");
-    setLabDescription("");
-    setLabPoint(0);
-    setAssignee("");
-    setAvailableFrom("");
-    setCloseOn("");
+      // Reset form fields after successful submission
+      setLabName("");
+      setLabDescription("");
+      setLabPoint(0);
+      setLabCategory("");
+      setImageName(null);
+    } catch (error) {
+      console.error("Error creating lab:", error);
+      alert("Failed to create lab.");
+    }
+  };
+
+  const handleManageImages = () => {
+    router.push("create-lab/image-management");
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLabCategory(e.target.value);
   };
 
   return (
@@ -123,136 +157,74 @@ const CreateLabPage = () => {
               />
             </div>
 
-            {/* Assignee */}
+            {/* Type of attack */}
             <div>
-              <label
-                className="block text-gray-700 text-xl font-bold"
-                htmlFor="assignee"
-              >
-                Assignee <span className="text-red-500">*</span>
+              <label className="block text-xl font-bold mb-1">
+                Type of attack <span className="text-red-500">*</span>
               </label>
-              <select className="w-full border border-gray-300 rounded-md p-2">
-                <option>
-                  Which your student&apos;s group are you going to assign?
-                </option>
+              <select
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={labCategory}
+                onChange={handleCategoryChange}
+              >
+                <option>Choose a type of attack to generate</option>
+                <option>Broken Access Control</option>
+                <option>OS Command Injection</option>
+                <option>XSS Injection</option>
+                <option>SQL Injection</option>
+                <option>SSTI</option>
+                <option>Path traversal & File Inclusion</option>
+                <option>Authentication</option>
+                <option>File upload</option>
+                <option>Miscellaneous</option>
               </select>
             </div>
 
-            {/* Date Range */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Available From */}
-              <div>
-                <label
-                  className="block text-gray-700 text-xl font-bold"
-                  htmlFor="availableFrom"
-                >
-                  Available From
-                </label>
-                <input
-                  type="date"
-                  id="availableFrom"
-                  value={availableFrom}
-                  onChange={(e) => setAvailableFrom(e.target.value)}
-                  className="mt-2 p-2 w-full border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-
-              {/* Close on */}
-              <div>
-                <label
-                  className="block text-gray-700 text-xl font-bold"
-                  htmlFor="closeOn"
-                >
-                  Close on
-                </label>
-                <input
-                  type="date"
-                  id="closeOn"
-                  value={closeOn}
-                  onChange={(e) => setCloseOn(e.target.value)}
-                  className="mt-2 p-2 w-full border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Lab's Template */}
+            {/* Lab's image */}
             <div className="mt-8 pt-6">
               <h2 className="text-2xl font-bold mb-2 text-center">
-                Choose your lab’s template
+                Choose your lab’s image
               </h2>
               <p className="text-xl text-gray-600 mb-4 text-center">
-                Choose the template of your choice to generate the playground.
+                Choose the image of your choice to generate the playground.
               </p>
               <div className="grid grid-row-2 gap-4">
                 <div>
                   <label className="block text-xl font-bold mb-1">
-                    Type of attack <span className="text-red-500">*</span>
+                    Image <span className="text-red-500">*</span>
                   </label>
-                  <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>Choose a type of attack to generate</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xl font-bold mb-1">
-                    Template <span className="text-red-500">*</span>
-                  </label>
-                  <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>Choose a template</option>
+                  <select
+                    className="w-full border border-gray-300 rounded-md p-2"
+                    value={imageName || ""}
+                    onChange={(e) => {
+                      const selectedImage = images.find(
+                        (image) => image.image_name === e.target.value,
+                      );
+                      if (selectedImage) {
+                        setImageName(selectedImage.image_name);
+                        setImageId(selectedImage.id);
+                      }
+                    }}
+                    disabled={images.length === 0}
+                  >
+                    <option value="">Select an image</option>
+                    {images.map((image) => (
+                      <option key={image.id} value={image.image_name}>
+                        {image.image_name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
 
-              {/* File Upload */}
-              <div className="mt-6">
-                <label className="block text-xl font-bold mb-2">
-                  Upload .tar docker image file
-                </label>
-                <input
-                  type="file"
-                  accept=".tar"
-                  className="block w-full border border-gray-300 rounded-md p-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
-                />
-              </div>
-            </div>
-
-            {/* Advanced Setting */}
-            <div className="mt-8 pt-6">
-              <h2 className="text-2xl font-bold mb-2 text-center">
-                Advance Setting (Optional)
-              </h2>
-              <p className="text-xl text-gray-600 mb-4 text-center">
-                Customize your challenge’s environment by yourself.
-              </p>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xl font-bold mb-1">
-                    Category
-                  </label>
-                  <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>
-                      Choose a web application category to generate your
-                      template
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xl font-bold mb-1">
-                    Language
-                  </label>
-                  <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>
-                      Specify a programming language for your challenge
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xl font-bold mb-1">DBMS</label>
-                  <select className="w-full border border-gray-300 rounded-md p-2">
-                    <option>Specify a dbms for your challenge</option>
-                  </select>
-                </div>
+              {/* Button to go to image management page */}
+              <div className="mt-8 text-center justify-self-start">
+                <button
+                  onClick={handleManageImages}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-2xl hover:bg-blue-700"
+                >
+                  Manage Images
+                </button>
               </div>
             </div>
 
