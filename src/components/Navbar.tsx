@@ -108,13 +108,14 @@ export default function NavBar() {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md">
+            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-xl border">
               <Link
                 href="/user"
                 className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 View Profile
               </Link>
+              <hr/>
               <button
                 onClick={logout}
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
