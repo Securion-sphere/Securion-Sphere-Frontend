@@ -40,7 +40,6 @@ export default function NavBar() {
               height={5}
               className="mx-auto mb-4"
             />
-            <span className="sr-only">Securion Sphere</span>
           </Link>
           <div className="grid gap-2 py-6">
             {navItems.map((item) => (
@@ -65,7 +64,17 @@ export default function NavBar() {
           height={50}
           className="mx-auto my-auto"
         />
-        <span className="sr-only">Securion Sphere</span>
+      </Link>
+
+      <Link href="/" className="hidden lg:block">
+        <div>
+          <div className="text-blue-500 text-xl font-semibold tracking-wide">
+            Securion<span className="text-blue-700">Sphere</span>
+          </div>
+          <span className="text-[10px] text-blue-500">
+            PENETRATION TESTING LEARNING PLATFORM
+          </span>
+        </div>
       </Link>
 
       {/* Navigation Links */}
@@ -115,7 +124,7 @@ export default function NavBar() {
               >
                 View Profile
               </Link>
-              <hr/>
+              <hr />
               <button
                 onClick={logout}
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"

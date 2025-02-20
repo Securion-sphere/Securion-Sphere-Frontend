@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 
 interface LabsProps {
   labs: Lab[];
@@ -19,8 +20,11 @@ interface LabsProps {
 
 const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
   const [labs, setLabs] = useState<Lab[]>([]);
+  const [filteredLabs, setFilteredLabs] = useState<Lab[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedLab, setSelectedLab] = useState<Lab | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const getLabs = useCallback(async () => {
     try {
@@ -42,6 +46,7 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
       });
 
       setLabs(updatedLabs);
+      setFilteredLabs(updatedLabs);
       if (updatedLabs.length > 0) {
         setSelectedLab(updatedLabs[0]);
       }
@@ -61,6 +66,22 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
     onLabSelect(lab);
   };
 
+  // Filter labs based on search term and category
+  useEffect(() => {
+    const filtered = labs.filter((lab) => {
+      const matchesSearch = lab.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory ? lab.category === selectedCategory : true;
+      return matchesSearch && matchesCategory;
+    });
+    setFilteredLabs(filtered);
+  }, [searchTerm, selectedCategory, labs]);
+
+  // Get unique categories from the labs
+  const categories = React.useMemo(() => {
+    const uniqueCategories = new Set(labs.map((lab) => lab.category));
+    return Array.from(uniqueCategories);
+  }, [labs]);
+
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="w-full">
@@ -73,6 +94,32 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
           style={{ width: "100%", height: "auto" }}
         />
       </div>
+
+      {/* Search and Filter */}
+      <div className="p-4">
+        <div className="flex gap-4">
+          <Input
+            type="text"
+            placeholder="Search by lab name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1"
+          />
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-48 p-2 border rounded-md"
+          >
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <div className="border-t border-gray-200 max-h-full overflow-y-auto">
         <Table className="w-full border border-gray-200">
           <TableHeader className="bg-gray-100">
@@ -101,7 +148,7 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
                     </TableCell>
                   </TableRow>
                 ))
-              : labs.map((lab, index) => (
+              : filteredLabs.map((lab, index) => (
                   <TableRow
                     key={index}
                     className="cursor-pointer hover:bg-gray-50 transition"
