@@ -70,7 +70,7 @@ const ModuleViewer = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <div className="mb-8">
+      <div className="mb-8 mt-10">
         <h1 className="text-2xl font-bold text-gray-700">{module.title}</h1>
         <p className="text-gray-600 mt-2">{module.description}</p>
       </div>
