@@ -85,7 +85,7 @@ export default function NavBar() {
           <Link
             key={item.label}
             href={item.href}
-            className="group inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-100 focus:outline-none dark:hover:bg-gray-800"
+            className="group inline-flex h-9 items-center rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-100 focus:outline-none dark:hover:bg-gray-800"
             prefetch={false}
           >
             {item.label}
@@ -106,7 +106,7 @@ export default function NavBar() {
         <div className="relative">
           <button
             onClick={toggleDropdown}
-            className="flex items-center space-x-2 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="flex items-center space-x-2 rounded-xl p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Image
               src={user?.profile_img || "/assets/icons/default_profile.png"}
