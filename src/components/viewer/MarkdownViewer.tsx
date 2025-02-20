@@ -48,15 +48,27 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   const extractHeaders = (markdown: string) => {
     const headers: Header[] = [];
     const lines = markdown.split("\n");
+    const idCounts: { [key: string]: number } = {};
+
     lines.forEach((line) => {
       const headerMatch = line.match(/^(#{1,6})\s+(.*)/);
       if (headerMatch) {
         const level = headerMatch[1].length;
         const text = headerMatch[2];
-        const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        let id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+        // Handle duplicate IDs
+        if (idCounts[id] !== undefined) {
+          idCounts[id]++;
+          id = `${id}-${idCounts[id]}`;
+        } else {
+          idCounts[id] = 0;
+        }
+
         headers.push({ id, text, level });
       }
     });
+
     setHeaders(headers);
   };
 
@@ -71,15 +83,17 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
         onClick={toggleSidebar}
         className="fixed top-24 left-4 z-50 p-2 text-white bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
       >
-        {isSidebarVisible ? <X size={24} color="gray" /> : <Menu size={24} color="gray" />}
+        {isSidebarVisible ? (
+          <X size={24} color="gray" />
+        ) : (
+          <Menu size={24} color="gray" />
+        )}
       </button>
 
       {isSidebarVisible && <MarkdownSidebar headers={headers} />}
 
       {/* Main Content */}
-      <div
-        className="prose prose-slate max-w-none dark:prose-invert p-6 ml-0 transition-al"
-      >
+      <div className="prose prose-slate max-w-none dark:prose-invert p-6 ml-0 transition-al">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
