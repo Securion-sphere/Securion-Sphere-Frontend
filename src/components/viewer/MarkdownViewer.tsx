@@ -81,7 +81,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
       {/* Toggle Button */}
       <button
         onClick={toggleSidebar}
-        className="fixed top-24 left-4 z-50 p-2 text-white bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+        className="fixed top-24 left-4 z-50 p-2 text-white rounded-xl transition-colors"
       >
         {isSidebarVisible ? (
           <X size={24} color="gray" />
@@ -90,7 +90,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
         )}
       </button>
 
-      {isSidebarVisible && <MarkdownSidebar headers={headers} />}
+      <MarkdownSidebar headers={headers} isVisible={isSidebarVisible} />
 
       {/* Main Content */}
       <div className="prose prose-slate max-w-none dark:prose-invert p-6 ml-0 transition-al">
