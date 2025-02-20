@@ -2,7 +2,7 @@ import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 type NavItem = {
@@ -19,10 +19,27 @@ const navItems: NavItem[] = [
 export default function NavBar() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const downloadOpenVPN = () => {};
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <header className="sticky top-0 z-50 flex h-20 w-full items-center px-4 md:px-6 bg-white shadow-md">
@@ -103,7 +120,7 @@ export default function NavBar() {
         )}
 
         {/* Profile Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={toggleDropdown}
             className="flex items-center space-x-2 rounded-xl p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
