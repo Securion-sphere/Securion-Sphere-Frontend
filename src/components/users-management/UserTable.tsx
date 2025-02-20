@@ -51,7 +51,7 @@ const UserTable: React.FC<UserTableProps> = ({
             <td className="px-4 py-2">{user.lastName}</td>
             <td className="px-4 py-2 flex justify-center items-center">
               <Image
-                src={user.profile_img}
+                src={user.profileImg}
                 alt="Profile"
                 className="w-10 h-10 rounded-full"
                 width={50}
@@ -65,7 +65,7 @@ const UserTable: React.FC<UserTableProps> = ({
               {user.student?.solved_lab.length || 0}
             </td>
             <td className="px-4 py-2 text-center">
-              {user.supervisor ? "Supervisor" : "Student"}
+              {user.role === "supervisor" ? "Supervisor" : "Student"}
             </td>
             <td className="px-4 py-2 align-middle">
               <div className="flex items-center justify-center">
