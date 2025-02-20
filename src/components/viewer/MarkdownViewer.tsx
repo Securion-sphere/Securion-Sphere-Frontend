@@ -8,6 +8,7 @@ import {
 import { nord } from "react-syntax-highlighter/dist/esm/styles/prism";
 import MarkdownSidebar from "@/components/learning-material/MarkDownSidebar";
 import { Header } from "@/app/interface/markdown";
+import { Menu, X } from "lucide-react";
 
 interface MarkdownViewerProps {
   fileUrl: string;
@@ -17,6 +18,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   const [content, setContent] = useState<string>("");
   const [headers, setHeaders] = useState<Header[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -39,6 +41,10 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
     fetchContent();
   }, [fileUrl]);
 
+  const toggleSidebar = () => {
+    setIsSidebarVisible((prev) => !prev);
+  };
+
   const extractHeaders = (markdown: string) => {
     const headers: Header[] = [];
     const lines = markdown.split("\n");
@@ -59,9 +65,21 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   }
 
   return (
-    <div className="flex">
-      <MarkdownSidebar headers={headers} />
-      <div className="prose prose-slate max-w-none dark:prose-invert flex-grow p-6">
+    <div className="relative min-h-screen">
+      {/* Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-24 left-4 z-50 p-2 text-white bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+      >
+        {isSidebarVisible ? <X size={24} color="gray" /> : <Menu size={24} color="gray" />}
+      </button>
+
+      {isSidebarVisible && <MarkdownSidebar headers={headers} />}
+
+      {/* Main Content */}
+      <div
+        className="prose prose-slate max-w-none dark:prose-invert p-6 ml-0 transition-al"
+      >
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
