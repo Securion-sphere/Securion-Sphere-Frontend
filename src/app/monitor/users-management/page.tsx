@@ -42,8 +42,8 @@ const UserManagementPage: React.FC = () => {
       user.email.split("@")[0].includes(searchTermLower);
 
     const roleSearch =
-      (searchTermLower === "student" && user.student) ||
-      (searchTermLower === "supervisor" && user.supervisor);
+      (searchTermLower === "student" && user.role === "student") ||
+      (searchTermLower === "supervisor" && user.role === "supervisor");
 
     return basicSearch || roleSearch;
   });

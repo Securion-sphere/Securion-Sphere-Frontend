@@ -6,11 +6,11 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   nickName: string | null;
-  profile_img: string;
+  profileImg: string;
   email: string;
   hashedRefreshToken: string;
+  role: "student" | "supervisor";
   student: Student;
-  supervisor?: supervisor;
 }
 
 interface supervisor {

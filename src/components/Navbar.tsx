@@ -2,7 +2,7 @@ import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 type NavItem = {
@@ -19,10 +19,27 @@ const navItems: NavItem[] = [
 export default function NavBar() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const downloadOpenVPN = () => {};
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <header className="sticky top-0 z-50 flex h-20 w-full items-center px-4 md:px-6 bg-white shadow-md">
@@ -85,7 +102,7 @@ export default function NavBar() {
           <Link
             key={item.label}
             href={item.href}
-            className="group inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-100 focus:outline-none dark:hover:bg-gray-800"
+            className="group inline-flex h-9 items-center rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-100 focus:outline-none dark:hover:bg-gray-800"
             prefetch={false}
           >
             {item.label}
@@ -93,7 +110,7 @@ export default function NavBar() {
         ))}
 
         {/* Admin Panel Button (only visible to users with a supervisor) */}
-        {user?.supervisor && (
+        {user?.role === "supervisor" && (
           <Link
             href="/monitor/dashboard"
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 focus:outline-none"
@@ -103,13 +120,13 @@ export default function NavBar() {
         )}
 
         {/* Profile Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={toggleDropdown}
-            className="flex items-center space-x-2 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="flex items-center space-x-2 rounded-xl p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Image
-              src={user?.profile_img || "/assets/icons/default_profile.png"}
+              src={user?.profileImg || "/assets/icons/default_profile.png"}
               alt="Profile"
               className="h-8 w-8 rounded-full"
               width={280}
