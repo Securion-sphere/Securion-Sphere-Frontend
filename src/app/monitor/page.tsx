@@ -9,7 +9,7 @@ const MonitorPage = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!user?.supervisor) {
+    if (!(user?.role === "supervisor")) {
       router.push("/");
     } else if (window.location.pathname === "/monitor") {
       router.push("/monitor/dashboard");

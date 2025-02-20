@@ -10,7 +10,7 @@ import { Plus } from "lucide-react";
 
 interface ImageProp {
   id: number;
-  image_name: string;
+  imageName: string;
 }
 
 const ImageUploadModal = ({ onUploadSuccess }: { onUploadSuccess: (newImage: ImageProp) => void }) => {
@@ -113,7 +113,7 @@ const ImageManagementPage = () => {
   const handleSearch = (term: string) => {
     setFilteredImages(
       images.filter((image) =>
-        image.image_name.toLowerCase().includes(term.toLowerCase())
+        image.imageName.toLowerCase().includes(term.toLowerCase())
       )
     );
   };
@@ -176,7 +176,7 @@ const ImageManagementPage = () => {
                 filteredImages.map((image) => (
                   <tr key={image.id}>
                     <td className="px-6 py-4 text-md text-gray-900">
-                      {image.image_name}
+                      {image.imageName}
                     </td>
                     <td className="px-6 py-4 text-md">
                       <Button

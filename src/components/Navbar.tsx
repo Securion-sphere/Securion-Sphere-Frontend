@@ -110,7 +110,7 @@ export default function NavBar() {
         ))}
 
         {/* Admin Panel Button (only visible to users with a supervisor) */}
-        {user?.supervisor && (
+        {user?.role === "supervisor" && (
           <Link
             href="/monitor/dashboard"
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 focus:outline-none"
@@ -126,7 +126,7 @@ export default function NavBar() {
             className="flex items-center space-x-2 rounded-xl p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Image
-              src={user?.profile_img || "/assets/icons/default_profile.png"}
+              src={user?.profileImg || "/assets/icons/default_profile.png"}
               alt="Profile"
               className="h-8 w-8 rounded-full"
               width={280}
