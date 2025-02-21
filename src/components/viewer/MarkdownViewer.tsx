@@ -74,7 +74,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   };
 
   if (error) {
-    return <div className="text-red-500 p-4 bg-red-50 rounded-md">{error}</div>;
+    return <div className="text-red-500 p-4 bg-red-50 rounded-xl">{error}</div>;
   }
 
   return (
@@ -150,7 +150,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
                   style={nord}
                   language={language}
                   PreTag="div"
-                  className="rounded-md my-4"
+                  className="rounded-xl my-4"
                   showLineNumbers
                   {...(props as SyntaxHighlighterProps)} // Typecasting the props
                 >

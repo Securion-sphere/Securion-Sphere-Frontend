@@ -35,7 +35,7 @@ const StudentsTable: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="rounded-md">
+      <div className="rounded-xl">
         <Table>
           <TableHeader className="bg-[#EBEBEB]">
             <TableRow>
@@ -49,7 +49,9 @@ const StudentsTable: React.FC = () => {
           <TableBody>
             {students?.map((student, index) => (
               <TableRow key={student.user_id}>
-                <TableCell className="px-5 text-center">{student.user_id}</TableCell>
+                <TableCell className="px-5 text-center">
+                  {student.user_id}
+                </TableCell>
                 <TableCell className="px-5">{student.user.firstName}</TableCell>
                 <TableCell className="px-5">{student.user.lastName}</TableCell>
                 <TableCell className="px-10 text-center">
