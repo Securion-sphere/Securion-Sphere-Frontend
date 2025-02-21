@@ -129,6 +129,7 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
               <TableHead className="text-left px-4 py-2">Lab&apos;s Name</TableHead>
               <TableHead className="text-left px-4 py-2">Category</TableHead>
               <TableHead className="text-center px-4 py-2">Solved</TableHead>
+              <TableHead className="text-center px-4 py-2">Submitted</TableHead>
               <TableHead className="text-center px-4 py-2">Points</TableHead>
             </TableRow>
           </TableHeader>
@@ -148,6 +149,9 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
                     <TableCell className="text-center">
                       <Skeleton className="w-[50px] h-[20px] rounded-full" />
                     </TableCell>
+                    <TableCell className="text-center">
+                      <Skeleton className="w-[50px] h-[20px] rounded-full" />
+                    </TableCell>
                   </TableRow>
                 ))
               : filteredLabs.map((lab, index) => (
@@ -160,11 +164,14 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
                       {lab.name}
                     </TableCell>
                     <TableCell className="px-4 py-2">{lab.category}</TableCell>
+                    <TableCell className="text-center px-4 py-2 text-blue-500">
+                      {lab.solvedBy.length}
+                    </TableCell>
                     <TableCell className="text-center px-4 py-2">
-                      {markAsSolved(lab) ? ( // BUG POTENTIAL
-                        <span className="text-green-500">✓</span>
+                      {markAsSolved(lab) ? (
+                        <span className="text-green-500 font-bold text-xl">✓</span>
                       ) : (
-                        <span className="text-gray-500">-</span>
+                        <span className="text-red-500 font-bold text-xl">x</span>
                       )}
                     </TableCell>
                     <TableCell className="text-center px-4 py-2 text-blue-500">
