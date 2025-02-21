@@ -4,7 +4,13 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import SearchBar from "@/components/ui/SearchBar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
@@ -13,7 +19,11 @@ interface ImageProp {
   imageName: string;
 }
 
-const ImageUploadModal = ({ onUploadSuccess }: { onUploadSuccess: (newImage: ImageProp) => void }) => {
+const ImageUploadModal = ({
+  onUploadSuccess,
+}: {
+  onUploadSuccess: (newImage: ImageProp) => void;
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageName, setImageName] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -71,12 +81,14 @@ const ImageUploadModal = ({ onUploadSuccess }: { onUploadSuccess: (newImage: Ima
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Select .tar File</label>
+          <label className="block text-sm font-medium mb-1">
+            Select .tar File
+          </label>
           <input
             type="file"
             accept=".tar"
             onChange={handleFileChange}
-            className="w-full border border-gray-300 rounded-lg p-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+            className="w-full border border-gray-300 rounded-lg p-2 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
           />
         </div>
         <Button
@@ -113,8 +125,8 @@ const ImageManagementPage = () => {
   const handleSearch = (term: string) => {
     setFilteredImages(
       images.filter((image) =>
-        image.imageName.toLowerCase().includes(term.toLowerCase())
-      )
+        image.imageName.toLowerCase().includes(term.toLowerCase()),
+      ),
     );
   };
 
@@ -124,7 +136,9 @@ const ImageManagementPage = () => {
   };
 
   const handleDelete = async (id: number) => {
-    const confirmDelete = confirm("Are you sure you want to delete this image?");
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this image?",
+    );
     if (!confirmDelete) return;
 
     try {
@@ -191,7 +205,10 @@ const ImageManagementPage = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={2} className="px-6 py-4 text-center text-gray-500">
+                  <td
+                    colSpan={2}
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
                     No images found
                   </td>
                 </tr>

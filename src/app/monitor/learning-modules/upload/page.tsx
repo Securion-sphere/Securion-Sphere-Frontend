@@ -17,19 +17,21 @@ const UploadPage = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
-    
+
     if (selectedFile) {
       const acceptedMarkdownTypes = [
         "text/markdown",
         "text/x-markdown",
         "text/md",
-        "text/plain"
+        "text/plain",
       ];
-      
-      const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
-      
+
+      const isMarkdownExtension = selectedFile.name
+        .toLowerCase()
+        .endsWith(".md");
+
       if (
-        selectedFile.type === "application/pdf" || 
+        selectedFile.type === "application/pdf" ||
         acceptedMarkdownTypes.includes(selectedFile.type) ||
         isMarkdownExtension
       ) {
@@ -66,7 +68,9 @@ const UploadPage = () => {
     }
 
     if (!moduleName || !moduleDescription || !moduleCategory) {
-      setError("Please provide a name description and category for the module.");
+      setError(
+        "Please provide a name description and category for the module.",
+      );
       return;
     }
 
@@ -132,7 +136,7 @@ const UploadPage = () => {
             placeholder="Enter your module's name"
             value={moduleName}
             onChange={(e) => setModuleName(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+            className="mt-2 p-2 w-full border border-gray-300 rounded-xl"
             required
           />
         </div>
@@ -150,7 +154,7 @@ const UploadPage = () => {
             placeholder="Describe about this module"
             value={moduleDescription}
             onChange={(e) => setModuleDescription(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+            className="mt-2 p-2 w-full border border-gray-300 rounded-xl"
             rows={4}
             required
           />
@@ -170,7 +174,7 @@ const UploadPage = () => {
             placeholder="Enter your module's Category"
             value={moduleCategory}
             onChange={(e) => setModuleCategory(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+            className="mt-2 p-2 w-full border border-gray-300 rounded-xl"
             required
           />
         </div>

@@ -18,7 +18,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   const [content, setContent] = useState<string>("");
   const [headers, setHeaders] = useState<Header[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -32,6 +32,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
         const text = await response.text();
         setContent(text);
         extractHeaders(text);
+        setIsSidebarVisible(true);
       } catch (err) {
         setError("Failed to load markdown content");
         console.error(err);
@@ -73,7 +74,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   };
 
   if (error) {
-    return <div className="text-red-500 p-4 bg-red-50 rounded-md">{error}</div>;
+    return <div className="text-red-500 p-4 bg-red-50 rounded-xl">{error}</div>;
   }
 
   return (
@@ -149,7 +150,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
                   style={nord}
                   language={language}
                   PreTag="div"
-                  className="rounded-md my-4"
+                  className="rounded-xl my-4"
                   showLineNumbers
                   {...(props as SyntaxHighlighterProps)} // Typecasting the props
                 >

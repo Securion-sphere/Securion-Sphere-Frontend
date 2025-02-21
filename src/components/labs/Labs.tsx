@@ -34,15 +34,15 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
       const labsData: Lab[] = labResponse.data;
       const userProfileResponse = await axiosInstance.get("/user/profile");
       const userProfile: UserProfile = userProfileResponse.data;
-      
+
       let solvedLabs: SolvedLab[] = [];
       if (userProfile.student) {
         solvedLabs = userProfile.student.solvedLab;
       }
-      
+
       const updatedLabs = labsData.map((lab: Lab) => {
         const isSolved = solvedLabs.some(
-          (solvedLab: SolvedLab) => solvedLab.labId === lab.id
+          (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
         );
         return { ...lab, solved: isSolved };
       });
@@ -71,8 +71,12 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
   // Filter labs based on search term and category
   useEffect(() => {
     const filtered = labs.filter((lab) => {
-      const matchesSearch = lab.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory ? lab.category === selectedCategory : true;
+      const matchesSearch = lab.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory
+        ? lab.category === selectedCategory
+        : true;
       return matchesSearch && matchesCategory;
     });
     setFilteredLabs(filtered);
@@ -110,7 +114,7 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-48 p-2 border rounded-md"
+            className="w-48 p-2 border rounded-xl"
           >
             <option value="">All Categories</option>
             {categories.map((category) => (
@@ -126,7 +130,9 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
         <Table className="w-full border border-gray-200">
           <TableHeader className="bg-gray-100">
             <TableRow>
-              <TableHead className="text-left px-4 py-2">Lab&apos;s Name</TableHead>
+              <TableHead className="text-left px-4 py-2">
+                Lab&apos;s Name
+              </TableHead>
               <TableHead className="text-left px-4 py-2">Category</TableHead>
               <TableHead className="text-center px-4 py-2">Solved</TableHead>
               <TableHead className="text-center px-4 py-2">Submitted</TableHead>
@@ -169,9 +175,13 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
                     </TableCell>
                     <TableCell className="text-center px-4 py-2">
                       {markAsSolved(lab) ? (
-                        <span className="text-green-500 font-bold text-xl">✓</span>
+                        <span className="text-green-500 font-bold text-xl">
+                          ✓
+                        </span>
                       ) : (
-                        <span className="text-red-500 font-bold text-xl">x</span>
+                        <span className="text-red-500 font-bold text-xl">
+                          x
+                        </span>
                       )}
                     </TableCell>
                     <TableCell className="text-center px-4 py-2 text-blue-500">

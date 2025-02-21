@@ -11,10 +11,7 @@ interface LabDetailProps {
   markAsSolved: (lab: Lab) => boolean;
 }
 
-const LabDetail: React.FC<LabDetailProps> = ({
-  selectedLab,
-  markAsSolved,
-}) => {
+const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   const [flag, setFlag] = useState("");
   const [buttonStage, setButtonStage] = useState<string>("Spawn");
   const [isFlagCorrect, setIsFlagCorrect] = useState<boolean>(false);
@@ -148,7 +145,7 @@ const LabDetail: React.FC<LabDetailProps> = ({
           <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <div
-                className={`w-full flex gap-5 border-2 rounded-md ${
+                className={`w-full flex gap-5 border-2 rounded-xl ${
                   hasSubmitted
                     ? !isFlagCorrect
                       ? "border-red-500"
@@ -158,13 +155,13 @@ const LabDetail: React.FC<LabDetailProps> = ({
               >
                 <input
                   type="text"
-                  className="p-3 shadow-sm w-full sm:text-sm bg-gray-50 rounded-md"
+                  className="p-3 shadow-sm w-full sm:text-sm bg-gray-50 rounded-xl"
                   placeholder="Please submit your flag"
                   value={flag}
                   onChange={(e) => setFlag(e.target.value)}
                 />
                 <button
-                  className="flex items-center px-4 py-2 text-white rounded-md"
+                  className="flex items-center px-4 py-2 text-white rounded-xl"
                   onClick={handleSubmitFlag}
                 >
                   <Image
