@@ -62,7 +62,7 @@ const UserTable: React.FC<UserTableProps> = ({
               {user.student?.score || 0}
             </td>
             <td className="px-4 py-2 text-center">
-              {user.student?.solved_lab.length || 0}
+              {user.student?.solvedLab.length || 0}
             </td>
             <td className="px-4 py-2 text-center">
               {user.role === "supervisor" ? "Supervisor" : "Student"}

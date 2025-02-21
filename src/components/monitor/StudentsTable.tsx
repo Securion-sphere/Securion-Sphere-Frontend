@@ -53,7 +53,7 @@ const StudentsTable: React.FC = () => {
                 <TableCell className="px-5">{student.user.firstName}</TableCell>
                 <TableCell className="px-5">{student.user.lastName}</TableCell>
                 <TableCell className="px-10 text-center">
-                  {student.solved_lab.length | 0}
+                  {student.solvedLab.length | 0}
                 </TableCell>
                 <TableCell className="px-10 text-center">
                   {student.score | 0}

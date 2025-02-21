@@ -4,6 +4,6 @@ import { UserProfile } from "./userProfile";
 export interface Student {
   id: number;
   user: UserProfile;
-  solved_lab: SolvedLab[];
+  solvedLab: SolvedLab[];
   score: number;
 }
