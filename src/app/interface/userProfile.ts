@@ -1,5 +1,4 @@
-import { Lab } from "./labs";
-import { Student } from "./student";
+import { LabsRecord } from "./labs";
 
 export interface UserProfile {
   id: number;
@@ -8,12 +7,6 @@ export interface UserProfile {
   nickName: string | null;
   profileImg: string;
   email: string;
-  hashedRefreshToken: string;
   role: "student" | "supervisor";
-  student: Student;
-}
-
-interface supervisor {
-  id: number;
-  labs: Lab[];
+  student: LabsRecord;
 }

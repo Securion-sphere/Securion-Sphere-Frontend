@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import { useRouter } from "next/navigation";
+import CategorySelect from "@/components/monitor/CategorySelect";
 
 const CreateLabPage = () => {
   const router = useRouter();
@@ -158,27 +159,7 @@ const CreateLabPage = () => {
             </div>
 
             {/* Type of attack */}
-            <div>
-              <label className="block text-xl font-bold mb-1">
-                Type of attack <span className="text-red-500">*</span>
-              </label>
-              <select
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={labCategory}
-                onChange={handleCategoryChange}
-              >
-                <option>Choose a type of attack to generate</option>
-                <option>Broken Access Control</option>
-                <option>OS Command Injection</option>
-                <option>XSS Injection</option>
-                <option>SQL Injection</option>
-                <option>SSTI</option>
-                <option>Path traversal & File Inclusion</option>
-                <option>Authentication</option>
-                <option>File upload</option>
-                <option>Miscellaneous</option>
-              </select>
-            </div>
+            <CategorySelect name="category" value={labCategory} onChange={handleCategoryChange} />
 
             {/* Lab's image */}
             <div className="mt-8 pt-6">

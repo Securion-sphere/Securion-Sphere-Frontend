@@ -85,7 +85,7 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
                     <tr key={index} className="border-t border-gray-200">
                       <td className="py-2 px-4">{solvedLab.lab.name}</td>
                       <td className="py-2 px-4">
-                        {new Date(solvedLab.dateSolved).toLocaleDateString()}
+                        {new Date(solvedLab.solvedAt).toLocaleDateString()}
                       </td>
                     </tr>
                   ))

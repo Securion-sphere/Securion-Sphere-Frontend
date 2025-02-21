@@ -55,7 +55,7 @@ const LabsTable: React.FC = () => {
                 </TableCell>
                 <TableCell className="px-5">{lab.category}</TableCell>
                 <TableCell className="px-10 text-center">{lab.point}</TableCell>
-                <TableCell className="px-10 text-center">{lab.solved}</TableCell>
+                <TableCell className="px-10 text-center">{lab.solvedBy.length}</TableCell>
                 {/* Add the Edit button */}
                 <TableCell className="px-10 text-center">
                   <Link
