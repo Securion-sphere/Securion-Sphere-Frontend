@@ -104,8 +104,14 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="space-y-4 p-8 border rounded-2xl bg-white w-full max-w-2xl relative">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="mt-20 space-y-6 p-8 border rounded-xl bg-white w-full max-w-2xl relative shadow-lg max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -116,21 +122,23 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
 
         <h2 className="text-2xl font-semibold">Add Users</h2>
         <hr className="my-6" />
-        <h3 className="text-lg font-semibold">Add Users by email</h3>
-        <div className="flex flex-col">
+
+        {/* Add Users by Email */}
+        <h3 className="text-lg font-semibold">Add Users by Email</h3>
+        <div className="flex flex-col gap-4">
           <div className="flex gap-4">
             <textarea
               value={emails}
               onChange={(e) => setEmails(e.target.value)}
               placeholder="Enter emails separated by new lines"
-              className="border p-2 w-full"
+              className="border p-2 w-full rounded-xl"
               rows={4}
             />
             <Select value={selectedRole} onValueChange={setSelectedRole}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] rounded-xl">
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
-              <SelectContent className="bg-white">
+              <SelectContent className="bg-white rounded-xl">
                 <SelectItem value="student">Student</SelectItem>
                 <SelectItem value="supervisor">Supervisor</SelectItem>
               </SelectContent>
@@ -138,61 +146,75 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
           </div>
           <button
             onClick={handleAddUsers}
-            className="bg-[#0aaefd] text-white px-4 py-2 mt-2 rounded"
+            className="bg-[#0aaefd] text-white px-4 py-2 mt-2 rounded-xl hover:bg-[#0078d7] transition"
           >
             Add Users
           </button>
         </div>
-        <hr className="my-6" />
-        <h3 className="text-lg font-semibold">Add Users with .csv file</h3>
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <input
-              type="file"
-              onChange={handleFileChange}
-              accept=".csv"
-              ref={fileInputRef}
-              className="block w-full text-sm text-slate-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-violet-50 file:text-violet-700
-                hover:file:bg-violet-100"
-            />
-          </div>
 
+        <hr className="my-6" />
+
+        {/* Add Users via CSV */}
+        <h3 className="text-lg font-semibold">Add Users with .csv file</h3>
+        <div className="flex gap-4 items-center">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept=".csv"
+            ref={fileInputRef}
+            className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
           <Button
             onClick={handleUpload}
             disabled={!file || loading}
-            className="bg-[#0aaefd] hover:bg-[#003465] rounded-xl cursor-pointer"
+            className="bg-[#0aaefd] hover:bg-[#003465] rounded-xl cursor-pointer text-white px-4 py-2 transition"
           >
             {loading ? "Uploading..." : "Upload"}
           </Button>
         </div>
 
+        {/* Error Message */}
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-xl">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
+        {/* Upload Results */}
         {result && (
-          <div className="mt-4 space-y-2">
-            <Alert
-              variant={result.success ? "default" : "destructive"}
-              className="mt-4"
-            >
-              <AlertDescription>
-                Summary: {result.summary.successful} successful,{" "}
-                {result.summary.failed} failed
-              </AlertDescription>
-            </Alert>
+          <div className="mt-6 space-y-4">
+            {/* Summary Section */}
+            <div className="flex gap-4">
+              <Alert
+                variant="default"
+                className="rounded-xl bg-green-50 border-green-500 text-green-700 flex-1"
+              >
+                <AlertTitle>Successful</AlertTitle>
+                <AlertDescription>
+                  {result.summary.successful} users added successfully.
+                </AlertDescription>
+              </Alert>
+              <Alert
+                variant="destructive"
+                className="rounded-xl bg-red-50 border-red-500 text-red-700 flex-1"
+              >
+                <AlertTitle>Failed</AlertTitle>
+                <AlertDescription>
+                  {result.summary.failed} users failed to add.
+                </AlertDescription>
+              </Alert>
+            </div>
 
-            {/* Show successful uploads */}
+            {/* Successful Uploads */}
             {result.results.some((r) => r.status.startsWith("Success")) && (
-              <Alert variant="default" className="bg-green-50">
-                <AlertTitle>Successful Uploads</AlertTitle>
-                <AlertDescription className="mt-2">
+              <Alert
+                variant="default"
+                className="bg-green-50 rounded-xl border border-green-200"
+              >
+                <AlertTitle className="text-green-700">
+                  Successful Uploads
+                </AlertTitle>
+                <AlertDescription className="mt-2 text-green-600 space-y-1 max-h-40 overflow-y-auto">
                   {result.results
                     .filter((r) => r.status.startsWith("Success"))
                     .map((r, i) => (
@@ -204,11 +226,14 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ isOpen, onClose }) => {
               </Alert>
             )}
 
-            {/* Show failed uploads */}
+            {/* Failed Uploads */}
             {result.results.some((r) => r.status.startsWith("Failed")) && (
-              <Alert variant="destructive">
-                <AlertTitle>Failed Uploads</AlertTitle>
-                <AlertDescription className="mt-2">
+              <Alert
+                variant="destructive"
+                className="rounded-xl border border-red-200"
+              >
+                <AlertTitle className="text-red-700">Failed Uploads</AlertTitle>
+                <AlertDescription className="mt-2 text-red-600 space-y-1 max-h-40 overflow-y-auto">
                   {result.results
                     .filter((r) => r.status.startsWith("Failed"))
                     .map((r, i) => (
