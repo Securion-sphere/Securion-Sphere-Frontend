@@ -8,10 +8,13 @@ import { LabDocker } from "@/app/interface/labDocker";
 
 interface LabDetailProps {
   selectedLab: Lab;
-  markAsSolved: (lab: Lab) => void;
+  markAsSolved: (lab: Lab) => boolean;
 }
 
-const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
+const LabDetail: React.FC<LabDetailProps> = ({
+  selectedLab,
+  markAsSolved,
+}) => {
   const [flag, setFlag] = useState("");
   const [buttonStage, setButtonStage] = useState<string>("Spawn");
   const [isFlagCorrect, setIsFlagCorrect] = useState<boolean>(false);
@@ -19,7 +22,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
   const [labDockerData, setLabDockerData] = useState<LabDocker | null>(null);
 
   useEffect(() => {
-    if (selectedLab.solved) {
+    if (markAsSolved(selectedLab)) {
       setButtonStage("Pwned");
     } else {
       setButtonStage("Spawn");
