@@ -5,6 +5,7 @@ import axiosInstance from "@/api/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import { useRouter } from "next/navigation";
 import CategorySelect from "@/components/monitor/CategorySelect";
+import { ImageProp } from "@/app/interface/labs";
 
 const CreateLabPage = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const CreateLabPage = () => {
   const [labCategory, setLabCategory] = useState<string>("");
   const [imageName, setImageName] = useState<string | null>(null);
   const [imageId, setImageId] = useState<number>(0);
-  const [images, setImages] = useState<{ id: number; image_name: string }[]>(
+  const [images, setImages] = useState<ImageProp[]>(
     [],
   );
 
@@ -45,8 +46,7 @@ const CreateLabPage = () => {
       !labName ||
       !labDescription ||
       !labPoint ||
-      !labCategory ||
-      !imageName
+      !labCategory
     ) {
       alert("Please fill in all required fields.");
       return;
@@ -56,8 +56,6 @@ const CreateLabPage = () => {
       name: labName,
       description: labDescription,
       point: labPoint,
-      category: labCategory,
-      labImageId: imageId,
       isReady: true,
     };
 
@@ -183,10 +181,10 @@ const CreateLabPage = () => {
                     value={imageName || ""}
                     onChange={(e) => {
                       const selectedImage = images.find(
-                        (image) => image.image_name === e.target.value,
+                        (image) => image.imageName === e.target.value,
                       );
                       if (selectedImage) {
-                        setImageName(selectedImage.image_name);
+                        setImageName(selectedImage.imageName);
                         setImageId(selectedImage.id);
                       }
                     }}
@@ -194,8 +192,8 @@ const CreateLabPage = () => {
                   >
                     <option value="">Select an image</option>
                     {images.map((image) => (
-                      <option key={image.id} value={image.image_name}>
-                        {image.image_name}
+                      <option key={image.id} value={image.imageName}>
+                        {image.imageName}
                       </option>
                     ))}
                   </select>

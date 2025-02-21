@@ -13,11 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { ImageProp } from "@/app/interface/labs";
 
-interface ImageProp {
-  id: number;
-  imageName: string;
-}
+
 
 const ImageUploadModal = ({
   onUploadSuccess,
