@@ -38,6 +38,11 @@ export interface SolvedBy {
   solvedAt: Date;
 }
 
+export interface ImageProp {
+  id: number;
+  imageName: string;
+}
+
 export const labs: Lab[] = [
   {
     id: 1,
