@@ -92,18 +92,18 @@ const UserManagementPage: React.FC = () => {
     setAllowedUsersCurrentPage(1);
   };
 
-  const handleSelectUser = (id: number) => {
-    setSelectedUsers((prev) =>
-      prev.includes(id)
-        ? prev.filter((userId) => userId !== id)
-        : [...prev, id],
-    );
-  };
+  // const handleSelectUser = (id: number) => {
+  //   setSelectedUsers((prev) =>
+  //     prev.includes(id)
+  //       ? prev.filter((userId) => userId !== id)
+  //       : [...prev, id],
+  //   );
+  // };
 
-  const handleDeleteSelected = async () => {
-    await axiosInstance.post("/user/delete", { userIds: selectedUsers });
-    setSelectedUsers([]);
-  };
+  // const handleDeleteSelected = async () => {
+  //   await axiosInstance.post("/user/delete", { userIds: selectedUsers });
+  //   setSelectedUsers([]);
+  // };
 
   const handleDeleteAllowedUser = async (email: string) => {
     try {
@@ -188,14 +188,14 @@ const UserManagementPage: React.FC = () => {
                 onPageChange={handlePageChange}
               />
             </div>
-            {selectedUsers.length > 0 && (
+            {/* {selectedUsers.length > 0 && (
               <button
                 onClick={handleDeleteSelected}
                 className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
               >
                 Delete Selected
               </button>
-            )}
+            )} */}
           </>
         )}
         <BulkAddUsers

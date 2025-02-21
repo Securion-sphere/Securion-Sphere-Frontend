@@ -1,5 +1,4 @@
 import { UserProfile } from "@/app/interface/userProfile";
-import { Lab } from "@/app/interface/labs";
 import Image from "next/image";
 import StatisticCard from "@/components/monitor/StatisticCard";
 
@@ -76,7 +75,8 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
               <thead>
                 <tr className="bg-gray-100 border-b border-gray-200">
                   <th className="text-left px-4 py-2">Lab Name</th>
-                  <th className="text-left px-4 py-2">Date Solved</th>
+                  <th className="text-left px-4 py-2">Point</th>
+                  {/* <th className="text-left px-4 py-2">Date Solved</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -84,9 +84,10 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
                   userProfile.student.solvedLab.map((solvedLab, index) => (
                     <tr key={index} className="border-t border-gray-200">
                       <td className="py-2 px-4">{solvedLab.lab.name}</td>
-                      <td className="py-2 px-4">
+                      <td className="py-2 px-4">{solvedLab.lab.point}</td>
+                      {/* <td className="py-2 px-4">
                         {new Date(solvedLab.solvedAt).toLocaleDateString()}
-                      </td>
+                      </td> */}
                     </tr>
                   ))
                 ) : (
