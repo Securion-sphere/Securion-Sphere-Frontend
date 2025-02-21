@@ -1,37 +1,40 @@
-import { Student } from "./student";
-
 export interface Lab {
   id: number;
   name: string;
   description: string;
   category: string;
-  creatorName: string;
-  solved: boolean;
+  solvedBy: SolvedBy[];
   point: number;
+}
+export interface LabsRecord {
+  score: number;
+  solvedLab: SolvedLab[];
 }
 
 export interface SolvedLab {
   studentId: number;
   labId: number;
-  dateSolved: Date;
-  lab: Lab
+  solvedAt: Date;
+  lab: Lab;
 }
 
-export interface AdminLab {
+export interface Lab {
   id: number;
   name: string;
-  description: string;
   category: string;
-  creatorName: string;
   point: number;
-  solvedBy?: SolvedBy[];
 }
-
-interface SolvedBy {
-  studentId: number;
-  labId: number;
-  dateSolved: string;
-  student: Student;
+export interface SolvedByUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  nickName: string | null;
+  email: string;
+  profileImg: string;
+}
+export interface SolvedBy {
+  user: SolvedByUser;
+  solvedAt: Date;
 }
 
 export const labs: Lab[] = [
@@ -40,8 +43,7 @@ export const labs: Lab[] = [
     name: "Web Application for SQL Injection",
     description: "Test",
     category: "Injection",
-    creatorName: "Mr. Injection",
-    solved: true,
+    solvedBy: [],
     point: 100,
   },
 ];

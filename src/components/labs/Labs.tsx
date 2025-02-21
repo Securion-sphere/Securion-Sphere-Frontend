@@ -12,13 +12,15 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
+import { UserProfile } from "@/app/interface/userProfile";
 
 interface LabsProps {
   labs: Lab[];
+  markAsSolved: (lab: Lab) => boolean;
   onLabSelect: (lab: Lab) => void;
 }
 
-const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
+const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
   const [labs, setLabs] = useState<Lab[]>([]);
   const [filteredLabs, setFilteredLabs] = useState<Lab[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,13 +31,13 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
   const getLabs = useCallback(async () => {
     try {
       const labResponse = await axiosInstance.get("/lab");
-      const labsData = labResponse.data;
+      const labsData: Lab[] = labResponse.data;
       const userProfileResponse = await axiosInstance.get("/user/profile");
-      const userProfile = userProfileResponse.data;
+      const userProfile: UserProfile = userProfileResponse.data;
       
-      let solvedLabs = [];
+      let solvedLabs: SolvedLab[] = [];
       if (userProfile.student) {
-        solvedLabs = userProfile.student.solved_lab;
+        solvedLabs = userProfile.student.solvedLab;
       }
       
       const updatedLabs = labsData.map((lab: Lab) => {
@@ -159,7 +161,7 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
                     </TableCell>
                     <TableCell className="px-4 py-2">{lab.category}</TableCell>
                     <TableCell className="text-center px-4 py-2">
-                      {lab.solved ? (
+                      {markAsSolved(lab) ? ( // BUG POTENTIAL
                         <span className="text-green-500">✓</span>
                       ) : (
                         <span className="text-gray-500">-</span>

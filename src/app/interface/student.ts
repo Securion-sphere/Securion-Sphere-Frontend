@@ -1,9 +1,22 @@
-import { SolvedLab } from "./labs";
-import { UserProfile } from "./userProfile";
-
 export interface Student {
+  user_id: number;
+  user: UserProfileSummary;
+  solvedLab: StudentSolvedLab[];
+  totalScore: number;
+}
+
+interface UserProfileSummary {
   id: number;
-  user: UserProfile;
-  solved_lab: SolvedLab[];
-  score: number;
+  firstName: string;
+  lastName: string;
+  nickName: string | null;
+}
+
+interface StudentSolvedLab {
+  solvedAt: Date;
+  lab: {
+    id: number;
+    name: string;
+    point: number;
+  };
 }
