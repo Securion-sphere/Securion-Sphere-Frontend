@@ -160,7 +160,7 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
                     </TableCell>
                     <TableCell className="px-4 py-2">{lab.category}</TableCell>
                     <TableCell className="text-center px-4 py-2">
-                      {lab.solved ? (
+                      {lab.solvedBy ? ( // BUG POTENTIAL
                         <span className="text-green-500">✓</span>
                       ) : (
                         <span className="text-gray-500">-</span>

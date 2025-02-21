@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import { Lab } from "@/app/interface/labs";
+import CategorySelect from "@/components/monitor/CategorySelect";
 
 const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
   const router = useRouter();
@@ -40,6 +41,7 @@ const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
         name: lab.name,
         description: lab.description,
         category: lab.category,
+        point: lab.point,
       });
     }
   }, [lab]);
@@ -76,9 +78,12 @@ const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleUpdate = () => {
@@ -133,15 +138,26 @@ const EditLabPage = ({ params }: { params: { lab_id: number } }) => {
             </div>
 
             {/* Category */}
+            <CategorySelect
+              name="category"
+              value={formData.category || ""}
+              onChange={handleInputChange}
+            />
+
+            {/* Point */}
             <div>
               <label className="block text-gray-800 font-medium mb-1">
-                Category
+                Point
               </label>
               <input
-                type="text"
-                name="category"
-                value={formData.category || ""}
-                onChange={handleInputChange}
+                type="number"
+                name="point"
+                value={formData.point || ""}
+                onChange={(event) => {
+                  const value = Math.max(0, Number(event.target.value));
+                  setFormData((prev) => ({ ...prev, point: value }));
+                }}
+                min="1"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

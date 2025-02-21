@@ -48,15 +48,15 @@ const StudentsTable: React.FC = () => {
           </TableHeader>
           <TableBody>
             {students?.map((student, index) => (
-              <TableRow key={student.id}>
-                <TableCell className="px-5 text-center">{student.id}</TableCell>
+              <TableRow key={student.user_id}>
+                <TableCell className="px-5 text-center">{student.user_id}</TableCell>
                 <TableCell className="px-5">{student.user.firstName}</TableCell>
                 <TableCell className="px-5">{student.user.lastName}</TableCell>
                 <TableCell className="px-10 text-center">
                   {student.solvedLab.length | 0}
                 </TableCell>
                 <TableCell className="px-10 text-center">
-                  {student.score | 0}
+                  {student.totalScore | 0}
                 </TableCell>
               </TableRow>
             ))}
