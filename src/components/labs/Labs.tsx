@@ -40,12 +40,14 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
         solvedLabs = userProfile.student.solvedLab;
       }
 
-      const updatedLabs = labsData.map((lab: Lab) => {
-        const isSolved = solvedLabs.some(
-          (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
-        );
-        return { ...lab, solved: isSolved };
-      });
+      const updatedLabs = labsData
+        .filter((lab: Lab) => lab.isReady)
+        .map((lab: Lab) => {
+          const isSolved = solvedLabs.some(
+            (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
+          );
+          return { ...lab, solved: isSolved };
+        });
 
       setLabs(updatedLabs);
       setFilteredLabs(updatedLabs);

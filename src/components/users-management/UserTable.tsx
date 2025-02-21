@@ -20,7 +20,6 @@ const UserTable: React.FC<UserTableProps> = ({
     <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
       <thead className="bg-gray-200">
         <tr>
-          <th className="px-4 py-2">Select</th>
           <th className="px-4 py-2">Student ID</th>
           <th className="px-4 py-2">First Name</th>
           <th className="px-4 py-2">Last Name</th>
@@ -34,16 +33,6 @@ const UserTable: React.FC<UserTableProps> = ({
       <tbody>
         {users.map((user) => (
           <tr key={user.id} className="border-b">
-            <td className="px-4 py-2 align-middle">
-              <div className="flex items-center justify-center">
-                <input
-                  className="w-5 h-5"
-                  type="checkbox"
-                  checked={selectedUsers.includes(user.id)}
-                  onChange={() => onSelectUser(user.id)}
-                />
-              </div>
-            </td>
             <td className="px-4 py-2 text-center">
               {user.email.split("@")[0]}
             </td>
