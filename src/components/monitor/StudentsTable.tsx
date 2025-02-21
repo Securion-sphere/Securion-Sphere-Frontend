@@ -11,27 +11,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Student } from "@/app/interface/student";
+import { UserProfile } from "@/app/interface/userProfile";
 
 const StudentsTable: React.FC = () => {
   const {
-    data: students,
+    data: users,
     isLoading,
     error,
-  } = useQuery<Student[]>({
+  } = useQuery<UserProfile[]>({
     queryKey: ["students"],
-    queryFn: async (): Promise<Student[]> => {
-      const response = await axiosInstance.get("/student");
+    queryFn: async (): Promise<UserProfile[]> => {
+      const response = await axiosInstance.get("/user");
       return response.data;
-      // return new Array(5).fill({
-      //   studentid: "6401XXXX",
-      //   firstname: "Arthur",
-      //   lastname: "Excalibur",
-      //   solvedlabs: 8,
-      //   score: 1200,
-      // });
     },
   });
+
+  // Filter only students and sort by score in descending order
+  const students = (users?.filter((user) => user.role === "student") || []).sort(
+    (a, b) => (b.student?.score ?? 0) - (a.student?.score ?? 0)
+  );
 
   return (
     <div className="w-full">
@@ -47,21 +45,29 @@ const StudentsTable: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students?.map((student, index) => (
-              <TableRow key={student.user_id}>
-                <TableCell className="px-5 text-center">
-                  {student.user_id}
-                </TableCell>
-                <TableCell className="px-5">{student.user.firstName}</TableCell>
-                <TableCell className="px-5">{student.user.lastName}</TableCell>
-                <TableCell className="px-10 text-center">
-                  {student.solvedLab.length | 0}
-                </TableCell>
-                <TableCell className="px-10 text-center">
-                  {student.totalScore | 0}
+            {students.length > 0 ? (
+              students.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell className="px-5 text-center">
+                    {student.email.split("@")[0]}
+                  </TableCell>
+                  <TableCell className="px-5">{student.firstName}</TableCell>
+                  <TableCell className="px-5">{student.lastName}</TableCell>
+                  <TableCell className="px-10 text-center">
+                    {student.student?.solvedLab?.length ?? 0}
+                  </TableCell>
+                  <TableCell className="px-10 text-center">
+                    {student.student?.score ?? 0}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  No students found.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
