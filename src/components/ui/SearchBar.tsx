@@ -8,10 +8,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [term, setTerm] = useState("");
 
   const handleSearch = () => {
-    if (term.trim() !== "") {
-      onSearch(term);
-    }
+    onSearch(term.trim());
   };
+  
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
