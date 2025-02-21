@@ -112,7 +112,7 @@ const CreateLabPage = () => {
                 placeholder="Enter your lab's name"
                 value={labName}
                 onChange={(e) => setLabName(e.target.value)}
-                className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-2 p-2 w-full border border-gray-300 rounded-xl"
                 required
               />
             </div>
@@ -130,7 +130,7 @@ const CreateLabPage = () => {
                 value={labDescription}
                 placeholder="Describe about your lab"
                 onChange={(e) => setLabDescription(e.target.value)}
-                className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-2 p-2 w-full border border-gray-300 rounded-xl"
                 rows={4}
                 required
               />
@@ -153,13 +153,17 @@ const CreateLabPage = () => {
                 value={labPoint || ""}
                 onChange={handlePointChange}
                 min="0"
-                className="mt-2 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-2 p-2 w-full border border-gray-300 rounded-xl"
                 required
               />
             </div>
 
             {/* Type of attack */}
-            <CategorySelect name="category" value={labCategory} onChange={handleCategoryChange} />
+            <CategorySelect
+              name="category"
+              value={labCategory}
+              onChange={handleCategoryChange}
+            />
 
             {/* Lab's image */}
             <div className="mt-8 pt-6">
@@ -175,7 +179,7 @@ const CreateLabPage = () => {
                     Image <span className="text-red-500">*</span>
                   </label>
                   <select
-                    className="w-full border border-gray-300 rounded-md p-2"
+                    className="w-full border border-gray-300 rounded-xl p-2"
                     value={imageName || ""}
                     onChange={(e) => {
                       const selectedImage = images.find(

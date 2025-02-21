@@ -45,7 +45,7 @@ const LabsTable: React.FC = () => {
   const filteredLabs = labs?.filter(
     (lab) =>
       lab.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedCategory === "" || lab.category === selectedCategory)
+      (selectedCategory === "" || lab.category === selectedCategory),
   );
 
   // Mutation for updating the isReady status
@@ -57,7 +57,7 @@ const LabsTable: React.FC = () => {
       await queryClient.cancelQueries({ queryKey: ["labs"] });
       const previousLabs = queryClient.getQueryData<Lab[]>(["labs"]);
       queryClient.setQueryData<Lab[]>(["labs"], (oldLabs) =>
-        oldLabs?.map((lab) => (lab.id === id ? { ...lab, isReady } : lab))
+        oldLabs?.map((lab) => (lab.id === id ? { ...lab, isReady } : lab)),
       );
       return { previousLabs };
     },
@@ -100,7 +100,7 @@ const LabsTable: React.FC = () => {
       )}
 
       {/* Table */}
-      <div className="rounded-md">
+      <div className="rounded-xl">
         <Table>
           <TableHeader className="bg-[#EBEBEB]">
             <TableRow>
@@ -125,7 +125,9 @@ const LabsTable: React.FC = () => {
                 </TableCell>
                 <TableCell className="px-5">{lab.category}</TableCell>
                 <TableCell className="px-10 text-center">{lab.point}</TableCell>
-                <TableCell className="px-10 text-center">{lab.solvedBy.length}</TableCell>
+                <TableCell className="px-10 text-center">
+                  {lab.solvedBy.length}
+                </TableCell>
                 <TableCell className="px-10 text-center">
                   <Switch
                     checked={lab.isReady}
