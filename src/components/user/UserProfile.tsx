@@ -52,7 +52,7 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
             <>
               <StatisticCard
                 topic="Labs Solved"
-                score={userProfile.student.solved_lab.length}
+                score={userProfile.student.solvedLab.length}
                 color="white"
                 imagePath="/assets/statistics/students.jpg"
               />
@@ -80,12 +80,12 @@ const UserProfileContent = ({ userProfile }: UserProfileContentProps) => {
                 </tr>
               </thead>
               <tbody>
-                {userProfile.student.solved_lab.length > 0 ? (
-                  userProfile.student.solved_lab.map((solvedLab, index) => (
+                {userProfile.student.solvedLab.length > 0 ? (
+                  userProfile.student.solvedLab.map((solvedLab, index) => (
                     <tr key={index} className="border-t border-gray-200">
                       <td className="py-2 px-4">{solvedLab.lab.name}</td>
                       <td className="py-2 px-4">
-                        {new Date(solvedLab.dateSolved).toLocaleDateString()}
+                        {new Date(solvedLab.solvedAt).toLocaleDateString()}
                       </td>
                     </tr>
                   ))
