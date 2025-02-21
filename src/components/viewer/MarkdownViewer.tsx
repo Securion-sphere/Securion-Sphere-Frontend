@@ -18,7 +18,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
   const [content, setContent] = useState<string>("");
   const [headers, setHeaders] = useState<Header[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -32,6 +32,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ fileUrl }) => {
         const text = await response.text();
         setContent(text);
         extractHeaders(text);
+        setIsSidebarVisible(true);
       } catch (err) {
         setError("Failed to load markdown content");
         console.error(err);
