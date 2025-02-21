@@ -18,7 +18,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [currentFile, setCurrentFile] = useState<string>("");
-  const [category, setCategory] = useState<string>("")
+  const [category, setCategory] = useState<string>("");
   const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [backgroundOption, setBackgroundOption] = useState("default");
   const [newBackgroundImage, setNewBackgroundImage] = useState<File | null>(
@@ -53,19 +53,21 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
-    
+
     if (selectedFile) {
       const acceptedMarkdownTypes = [
         "text/markdown",
         "text/x-markdown",
         "text/md",
-        "text/plain"  // Some systems may upload .md files as text/plain
+        "text/plain", // Some systems may upload .md files as text/plain
       ];
-      
-      const isMarkdownExtension = selectedFile.name.toLowerCase().endsWith('.md');
-      
+
+      const isMarkdownExtension = selectedFile.name
+        .toLowerCase()
+        .endsWith(".md");
+
       if (
-        selectedFile.type === "application/pdf" || 
+        selectedFile.type === "application/pdf" ||
         acceptedMarkdownTypes.includes(selectedFile.type) ||
         isMarkdownExtension
       ) {
@@ -200,7 +202,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-xl"
             required
           />
         </div>
@@ -217,7 +219,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-xl"
             rows={4}
             required
           />
@@ -236,7 +238,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-xl"
             required
           />
         </div>
@@ -250,7 +252,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             <select
               value={backgroundOption}
               onChange={(e) => setBackgroundOption(e.target.value)}
-              className="p-2 border border-gray-300 rounded-md"
+              className="p-2 border border-gray-300 rounded-xl"
             >
               <option value="default">Use Current Background</option>
               <option value="custom">Upload New Background</option>
@@ -269,7 +271,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
 
         {/* Current File */}
         {currentFile && (
-          <div className="p-4 bg-gray-50 rounded-md">
+          <div className="p-4 bg-gray-50 rounded-xl">
             <p className="font-medium">Current File:</p>
             <a
               href={currentFile}
@@ -331,13 +333,13 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
             <div className="flex space-x-4">
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
               >
                 Delete
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-500 text-white rounded-xl hover:bg-gray-600"
               >
                 Cancel
               </button>

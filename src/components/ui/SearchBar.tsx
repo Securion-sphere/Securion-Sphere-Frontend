@@ -8,7 +8,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [term, setTerm] = useState("");
 
   const handleSearch = () => {
-    onSearch(term);
+    onSearch(term.trim());
+  };
+  
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -18,6 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         placeholder="Search"
         value={term}
         onChange={(e) => setTerm(e.target.value)}
+        onKeyDown={handleKeyDown}
         className="border p-2 rounded-l w-full"
       />
       <button

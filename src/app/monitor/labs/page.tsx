@@ -6,7 +6,7 @@ import axiosInstance from "@/api/axiosInstance";
 import StatisticCard from "@/components/monitor/StatisticCard";
 import LabsTable from "@/components/monitor/LabsTable";
 
-const Dashboard: React.FC = () => {
+const LabDashboard: React.FC = () => {
   const {
     data: labSize = 0,
     isLoading: isLabsLoading,
@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
         />
         {/* Labs Table */}
         <div className="bg-white shadow-lg rounded-xl overflow-hidden p-4">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+          <h3 className="text-xl font-semibold text-gray-800">
             All Labs
           </h3>
           <LabsTable />
@@ -41,4 +41,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default withAuth(Dashboard);
+export default withAuth(LabDashboard);

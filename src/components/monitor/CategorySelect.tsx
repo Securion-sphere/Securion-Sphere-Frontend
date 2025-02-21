@@ -6,7 +6,11 @@ interface CategorySelectProps {
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const CategorySelect: React.FC<CategorySelectProps> = ({ name, value, onChange }) => {
+const CategorySelect: React.FC<CategorySelectProps> = ({
+  name,
+  value,
+  onChange,
+}) => {
   return (
     <div>
       <label className="block text-gray-800 font-medium mb-1">
@@ -14,7 +18,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ name, value, onChange }
       </label>
       <select
         name={name}
-        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={value}
         onChange={onChange}
       >
@@ -24,7 +28,9 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ name, value, onChange }
         <option value="XSS Injection">XSS Injection</option>
         <option value="SQL Injection">SQL Injection</option>
         <option value="SSTI">SSTI</option>
-        <option value="Path traversal & File Inclusion">Path traversal & File Inclusion</option>
+        <option value="Path traversal & File Inclusion">
+          Path traversal & File Inclusion
+        </option>
         <option value="Authentication">Authentication</option>
         <option value="File upload">File upload</option>
         <option value="Miscellaneous">Miscellaneous</option>
