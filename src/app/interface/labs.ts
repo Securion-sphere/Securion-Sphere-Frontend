@@ -5,6 +5,7 @@ export interface Lab {
   category: string;
   solvedBy: SolvedBy[];
   point: number;
+  isReady: boolean;
 }
 export interface LabsRecord {
   score: number;
@@ -45,5 +46,6 @@ export const labs: Lab[] = [
     category: "Injection",
     solvedBy: [],
     point: 100,
+    isReady: true,
   },
 ];
