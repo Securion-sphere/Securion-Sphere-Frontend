@@ -1,23 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LabDetail from "../../components/labs/LabDetail";
 import Labs from "../../components/labs/Labs";
 import { Lab, labs } from "../interface/labs";
 import withAuth from "../../components/auth/withAuth";
+import { UserProfile } from "../interface/userProfile";
+import axiosInstance from "@/api/axiosInstance";
 
 const LabsPage: React.FC = () => {
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);
   const [isLabDetailVisible, setLabDetailVisible] = useState<boolean>(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-  // Function to toggle the visibility of the left panel
+  useEffect(() => {
+    const getUserProfile = async () => {
+      try {
+        const { data } = await axiosInstance.get<UserProfile>("/user/profile");
+        setUserProfile(data);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    getUserProfile();
+  }, []);
+
+  // Function to check if the current user has solved the selected lab
+  const hasUserSolvedLab = (lab: Lab) => {
+    return lab.solvedBy.some((entry) => entry.user.id === userProfile?.id);
+  };
   const toggleLabDetail = () => {
     setLabDetailVisible(!isLabDetailVisible);
-  };
-
-  const markLabAsSolved = (lab: Lab) => {
-    lab.solved = true;
-    setSelectedLab({ ...lab });
   };
 
   return (
@@ -28,7 +42,7 @@ const LabsPage: React.FC = () => {
           <div className="flex-1 basis-full lg:basis-1/3 lg:block">
             <LabDetail
               selectedLab={selectedLab}
-              markAsSolved={markLabAsSolved}
+              markAsSolved={hasUserSolvedLab}
             />
           </div>
         )}
@@ -40,6 +54,7 @@ const LabsPage: React.FC = () => {
         >
           <Labs
             labs={labs}
+            markAsSolved={hasUserSolvedLab}
             onLabSelect={(lab) => {
               setSelectedLab(lab);
               if (!isLabDetailVisible) toggleLabDetail(); // Ensure panel visibility is updated

@@ -16,10 +16,11 @@ import { UserProfile } from "@/app/interface/userProfile";
 
 interface LabsProps {
   labs: Lab[];
+  markAsSolved: (lab: Lab) => boolean;
   onLabSelect: (lab: Lab) => void;
 }
 
-const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
+const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
   const [labs, setLabs] = useState<Lab[]>([]);
   const [filteredLabs, setFilteredLabs] = useState<Lab[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -160,7 +161,7 @@ const Labs: React.FC<LabsProps> = ({ onLabSelect }) => {
                     </TableCell>
                     <TableCell className="px-4 py-2">{lab.category}</TableCell>
                     <TableCell className="text-center px-4 py-2">
-                      {lab.solvedBy ? ( // BUG POTENTIAL
+                      {markAsSolved(lab) ? ( // BUG POTENTIAL
                         <span className="text-green-500">✓</span>
                       ) : (
                         <span className="text-gray-500">-</span>
