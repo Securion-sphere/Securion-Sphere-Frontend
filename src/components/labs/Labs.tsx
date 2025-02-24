@@ -41,7 +41,6 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
       }
 
       const updatedLabs = labsData
-        .filter((lab: Lab) => lab.isReady)
         .map((lab: Lab) => {
           const isSolved = solvedLabs.some(
             (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
