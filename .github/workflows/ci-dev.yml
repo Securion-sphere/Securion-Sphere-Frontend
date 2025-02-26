@@ -1,28 +1,33 @@
-name: CI for Development
+name: Run Lint and Build
 
 on:
-  push:
-    branches: ["dev"]
   pull_request:
-    branches: ["dev"]
+    branches: ["main", "dev"]
+  push:
+    branches: ["main", "dev", "feat/*", "test/*", "fix/*", "chore/*"]
 
 jobs:
-  build-and-test:
-    name: Build
+  build-and-lint:
+    name: Lint and Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      - name: Enable pnpm corepack
-        run: corepack enable pnpm
+      - name: Prepare pnpm from package.json
+        run: corepack prepare --activate
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Run Lint NextJS application
         run: pnpm lint
