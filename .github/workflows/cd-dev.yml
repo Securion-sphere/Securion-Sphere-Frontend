@@ -6,7 +6,7 @@ env:
 on:
   workflow_dispatch: null
   workflow_run:
-    workflows: ["Run Lint and Build"]
+    workflows: ["Lint and Build"]
     branches: ["dev"]
     types:
       - completed
