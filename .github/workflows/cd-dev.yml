@@ -4,9 +4,8 @@ env:
   NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
 on:
-  workflow_dispatch: null
   workflow_run:
-    workflows: ["Lint and Build"]
+    workflows: ["Run Lint and Build"]
     branches: ["dev"]
     types:
       - completed
