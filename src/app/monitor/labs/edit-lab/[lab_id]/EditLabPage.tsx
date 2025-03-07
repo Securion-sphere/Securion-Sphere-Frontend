@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import { Lab } from "@/app/interface/labs";
 import CategorySelect from "@/components/monitor/CategorySelect";

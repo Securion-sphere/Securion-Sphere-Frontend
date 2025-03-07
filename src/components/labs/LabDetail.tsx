@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DockerButton from "./DockerButton";
 import { Lab } from "@/app/interface/labs";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { UserProfile } from "@/app/interface/userProfile";
 import { LabDocker } from "@/app/interface/labDocker";
 
@@ -26,7 +26,7 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
       setIsFlagCorrect(false);
       setHasSubmitted(false);
     }
-  }, [selectedLab]);
+  }, [markAsSolved, selectedLab]);
 
   const handleSpawn = async () => {
     try {

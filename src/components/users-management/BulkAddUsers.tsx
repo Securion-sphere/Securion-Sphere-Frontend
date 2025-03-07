@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { BulkUploadResponse } from "@/app/interface/bulk-upload-response";

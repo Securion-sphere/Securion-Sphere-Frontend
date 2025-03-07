@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 import UserTable from "@/components/users-management/UserTable";
 import SearchBar from "@/components/ui/SearchBar";

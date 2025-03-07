@@ -1,4 +1,10 @@
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -53,17 +59,18 @@ export default function NavBar() {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left">
-          <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
+        <SheetContent side="left" className="bg-white">
+          <SheetHeader>
+            <SheetTitle></SheetTitle>
+          </SheetHeader>
+
+          <div className="grid gap-2 py-6">
             <Image
               src={"/securion-sphere_icon.svg"}
               alt="Securion Sphere"
-              width={5}
-              height={5}
-              className="mx-auto mb-4"
+              width={50}
+              height={50}
             />
-          </Link>
-          <div className="grid gap-2 py-6">
             {navItems.map((item) => (
               <Link
                 key={item.label}

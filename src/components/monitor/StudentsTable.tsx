@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import withAuth from "@/components/auth/withAuth";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   Table,
   TableBody,
@@ -27,9 +27,9 @@ const StudentsTable: React.FC = () => {
   });
 
   // Filter only students and sort by score in descending order
-  const students = (users?.filter((user) => user.role === "student") || []).sort(
-    (a, b) => (b.student?.score ?? 0) - (a.student?.score ?? 0)
-  );
+  const students = (
+    users?.filter((user) => user.role === "student") || []
+  ).sort((a, b) => (b.student?.score ?? 0) - (a.student?.score ?? 0));
 
   return (
     <div className="w-full">

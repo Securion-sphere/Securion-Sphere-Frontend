@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axiosInstant from "@/api/axiosInstance";
+import axiosInstant from "@/utils/axiosInstance";
 import { UserProfile } from "@/app/interface/userProfile";
 import UserProfileContent from "@/components/user/UserProfile";
 
@@ -27,7 +27,8 @@ const UserProfilePage = () => {
 
   if (loading) return <div className="text-center py-8">Loading...</div>;
   if (error) return <div className="text-center text-red-600">{error}</div>;
-  if (!userProfile) return <div className="text-center">No user profile found.</div>;
+  if (!userProfile)
+    return <div className="text-center">No user profile found.</div>;
 
   return <UserProfileContent userProfile={userProfile} />;
 };

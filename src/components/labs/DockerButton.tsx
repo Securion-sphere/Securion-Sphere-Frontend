@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
 import { Lab } from "@/app/interface/labs";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 
 interface DockerButtonProps {
   lab: Lab;

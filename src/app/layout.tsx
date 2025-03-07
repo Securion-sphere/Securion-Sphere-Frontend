@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import { Inter } from "next/font/google";
-import { useEffect, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
@@ -22,11 +21,6 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const isMonitorPage = pathname.startsWith("/monitor");
-
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import withAuth from "@/components/auth/withAuth";
 import { Module } from "@/app/interface/module";
-import { fetchData } from "@/api/axiosInstance";
+import { fetchData } from "@/utils/axiosInstance";
 import ModuleCard from "@/components/learning-material/ModuleCard";
 import SearchAndFilter from "@/components/learning-material/SearchAndFilter";
 
