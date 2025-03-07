@@ -88,7 +88,7 @@ const UploadPage = () => {
 
     try {
       const response = await axiosInstance.post(
-        `${config.apiBaseUrl}/learning-material`,
+        `${process.env.NEXT_PUBLIC_API_URL}/learning-material`,
         formData,
         {
           headers: {

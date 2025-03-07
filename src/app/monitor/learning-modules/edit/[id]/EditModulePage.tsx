@@ -31,7 +31,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
     const fetchModuleData = async () => {
       try {
         const response = await fetchData<Module>(
-          `${config.apiBaseUrl}/learning-material/${params.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/learning-material/${params.id}`,
         );
         const module_data = response;
         setLearning_module(module_data);
@@ -108,7 +108,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
       }
 
       await axiosInstance.patch(
-        `${config.apiBaseUrl}/learning-material/${params.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/learning-material/${params.id}`,
         formData,
         {
           headers: {
@@ -128,7 +128,7 @@ const EditModulePage = ({ params }: { params: { id: number } }) => {
   const handleDelete = async () => {
     try {
       await axiosInstance.delete(
-        `${config.apiBaseUrl}/learning-material/${params.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/learning-material/${params.id}`,
       );
       router.push("/monitor/learning-modules");
     } catch (err) {

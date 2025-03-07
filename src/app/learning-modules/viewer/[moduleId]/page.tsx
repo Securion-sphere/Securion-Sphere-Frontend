@@ -41,7 +41,7 @@ const ModuleViewer = () => {
       setLoading(true);
       try {
         const response = await axiosInstance.get(
-          `${config.apiBaseUrl}/learning-material/${params.moduleId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/learning-material/${params.moduleId}`,
         );
         setModule(response.data);
       } catch (err: any) {
