@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlay, CircleStop, CircleCheck } from "lucide-react";
 import { Lab } from "@/app/interface/labs";
-import axiosInstance from "@/api/axiosInstance";
 
 interface DockerButtonProps {
   lab: Lab;
   labDockerData: any; // Add prop for passing the docker data
+  setLabDockerData: React.Dispatch<React.SetStateAction<any>>;
   onSpawn: () => void;
-  onPlaying: () => void;
   onPwned: () => void;
+  onStop: () => void;
   currentStage: string;
   setStage: (stage: string) => void;
 }
 
 const DockerButton: React.FC<DockerButtonProps> = ({
-  lab,
   labDockerData,
   onSpawn,
-  onPlaying,
+  onStop,
   onPwned,
   currentStage,
   setStage,
@@ -25,11 +24,10 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   const [stage, setLocalStage] = useState<string>(currentStage);
   const [copied, setCopied] = useState<boolean>(false);
 
-  // If labDockerData is provided, use it; else fallback to default values
-  const selectedLabDocker = labDockerData || {
-    id: 1,
-    ip: "localhost",
-    port: 80,
+  let selectedLabDocker = labDockerData || {
+    id: 0,
+    ip: "--",
+    port: 0,
   };
 
   useEffect(() => {
@@ -39,15 +37,8 @@ const DockerButton: React.FC<DockerButtonProps> = ({
   const handleStopClick = async () => {
     setLocalStage("Spawn");
     setStage("Spawn");
-    try {
-      await axiosInstance.get("/user/profile").then(async (userProfile) => {
-        await axiosInstance.delete("/actived-lab", {
-          data: { userId: userProfile.data.id },
-        });
-      });
-    } catch (err) {
-      console.log("Error: Cannot destroy instance");
-    }
+    // Clear lab data here when stopping
+    onStop();
   };
 
   const handleCopyIpPort = () => {
@@ -65,7 +56,6 @@ const DockerButton: React.FC<DockerButtonProps> = ({
         onSpawn();
         break;
       case "Playing":
-        onPlaying();
         break;
       case "Pwned":
         onPwned();

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import SearchBar from "@/components/ui/SearchBar";
 import {
@@ -14,8 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ImageProp } from "@/app/interface/labs";
-
-
 
 const ImageUploadModal = ({
   onUploadSuccess,

@@ -6,7 +6,7 @@ import Labs from "../../components/labs/Labs";
 import { Lab, labs } from "../interface/labs";
 import withAuth from "../../components/auth/withAuth";
 import { UserProfile } from "../interface/userProfile";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 
 const LabsPage: React.FC = () => {
   const [selectedLab, setSelectedLab] = useState<Lab>(labs[0]);

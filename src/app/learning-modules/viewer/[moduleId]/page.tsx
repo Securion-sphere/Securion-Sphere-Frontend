@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import withAuth from "@/components/auth/withAuth";
-import axiosInstance from "@/api/axiosInstance"; // Assuming axiosInstance is already set up
-import config from '@/config';
+import axiosInstance from "@/utils/axiosInstance"; // Assuming axiosInstance is already set up
+import config from "@/config";
 
 // Dynamically import PDF viewer to avoid SSR issues
 const PDFViewer = dynamic(() => import("@/components/viewer/PDFViewer"), {
@@ -18,14 +18,17 @@ const PDFViewer = dynamic(() => import("@/components/viewer/PDFViewer"), {
 });
 
 // Dynamically import Markdown viewer
-const MarkdownViewer = dynamic(() => import("@/components/viewer/MarkdownViewer"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-96 flex items-center justify-center">
-      Loading Markdown viewer...
-    </div>
-  ),
-});
+const MarkdownViewer = dynamic(
+  () => import("@/components/viewer/MarkdownViewer"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-96 flex items-center justify-center">
+        Loading Markdown viewer...
+      </div>
+    ),
+  },
+);
 
 const ModuleViewer = () => {
   const params = useParams();
@@ -38,7 +41,7 @@ const ModuleViewer = () => {
       setLoading(true);
       try {
         const response = await axiosInstance.get(
-          `${config.apiBaseUrl}/learning-material/${params.moduleId}`
+          `${config.apiBaseUrl}/learning-material/${params.moduleId}`,
         );
         setModule(response.data);
       } catch (err: any) {

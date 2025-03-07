@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Lab, SolvedLab } from "@/app/interface/labs";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   Table,
   TableBody,
@@ -40,13 +40,12 @@ const Labs: React.FC<LabsProps> = ({ markAsSolved, onLabSelect }) => {
         solvedLabs = userProfile.student.solvedLab;
       }
 
-      const updatedLabs = labsData
-        .map((lab: Lab) => {
-          const isSolved = solvedLabs.some(
-            (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
-          );
-          return { ...lab, solved: isSolved };
-        });
+      const updatedLabs = labsData.map((lab: Lab) => {
+        const isSolved = solvedLabs.some(
+          (solvedLab: SolvedLab) => solvedLab.labId === lab.id,
+        );
+        return { ...lab, solved: isSolved };
+      });
 
       setLabs(updatedLabs);
       setFilteredLabs(updatedLabs);

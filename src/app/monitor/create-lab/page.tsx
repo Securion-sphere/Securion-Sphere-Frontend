@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import withAuth from "@/components/auth/withAuth";
 import { useRouter } from "next/navigation";
 import CategorySelect from "@/components/monitor/CategorySelect";
@@ -15,9 +15,7 @@ const CreateLabPage = () => {
   const [labCategory, setLabCategory] = useState<string>("");
   const [imageName, setImageName] = useState<string | null>(null);
   const [imageId, setImageId] = useState<number>(0);
-  const [images, setImages] = useState<ImageProp[]>(
-    [],
-  );
+  const [images, setImages] = useState<ImageProp[]>([]);
 
   // Fetch available images on component mount
   useEffect(() => {
@@ -42,12 +40,7 @@ const CreateLabPage = () => {
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      !labName ||
-      !labDescription ||
-      !labPoint ||
-      !labCategory
-    ) {
+    if (!labName || !labDescription || !labPoint || !labCategory) {
       alert("Please fill in all required fields.");
       return;
     }

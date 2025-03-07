@@ -2,7 +2,7 @@
 import React from "react";
 import withAuth from "@/components/auth/withAuth";
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import StatisticCard from "@/components/monitor/StatisticCard";
 import LabsTable from "@/components/monitor/LabsTable";
 import StudentsTable from "@/components/monitor/StudentsTable";

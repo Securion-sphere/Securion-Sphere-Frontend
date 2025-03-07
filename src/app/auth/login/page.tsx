@@ -1,12 +1,11 @@
 "use client";
 import config from "@/config";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import LoginForm from "@/components/auth/LoginForm";
 
 const LoginPage = () => {
-
   const handleGoogleLogin = () => {
     window.location.href = `${config.apiBaseUrl}/auth/google/login`;
   };
@@ -24,7 +23,6 @@ const LoginPage = () => {
           />
         </div>
       </div>
-
       {/* Right Panel (Login Form) */}
       <div
         className="flex-1 flex justify-center items-center bg-cover bg-center"

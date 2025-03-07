@@ -1,9 +1,16 @@
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import axiosInstance from "@/utils/axiosInstance";
 
 type NavItem = {
   href: string;
@@ -23,7 +30,33 @@ export default function NavBar() {
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
-  const downloadOpenVPN = () => {};
+  const downloadOpenVPN = async () => {
+    try {
+      // Step 1: Fetch data from OpenVPN API route with the response type set to 'blob'
+      const response = await axiosInstance.get("/user/openvpn", {
+        responseType: "blob", // This ensures that the response is handled as a blob
+      });
+
+      // Step 2: Check for successful response
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch OpenVPN data.");
+      }
+
+      // Step 3: Get the blob from the response data
+      const blob = response.data;
+
+      // Step 4: Create a link to trigger the download
+      const downloadLink = document.createElement("a");
+      downloadLink.href = URL.createObjectURL(blob); // Create a URL for the blob
+      downloadLink.download = `${user?.firstName}.ovpn`; // Set a default file name
+      downloadLink.click(); // Trigger the download
+
+      // Optionally, revoke the object URL after download
+      URL.revokeObjectURL(downloadLink.href);
+    } catch (error) {
+      console.error("Error downloading OpenVPN data:", error);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -53,17 +86,18 @@ export default function NavBar() {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left">
-          <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
+        <SheetContent side="left" className="bg-white">
+          <SheetHeader>
+            <SheetTitle></SheetTitle>
+          </SheetHeader>
+
+          <div className="grid gap-2 py-6">
             <Image
               src={"/securion-sphere_icon.svg"}
               alt="Securion Sphere"
-              width={5}
-              height={5}
-              className="mx-auto mb-4"
+              width={50}
+              height={50}
             />
-          </Link>
-          <div className="grid gap-2 py-6">
             {navItems.map((item) => (
               <Link
                 key={item.label}

@@ -111,7 +111,7 @@ const HomePage = () => {
       <section className="container mx-auto py-16 px-4">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Video Section */}
-          <div className="w-full lg:w-1/2">
+          {/* <div className="w-full lg:w-1/2">
             <video className="w-full rounded-xl shadow-md" controls>
               <source
                 src="/assets/videos/learning_intro.mp4"
@@ -119,7 +119,7 @@ const HomePage = () => {
               />
               Your browser does not support the video tag.
             </video>
-          </div>
+          </div> */}
 
           {/* Text Content */}
           <div className="bg-gray-100 p-6 rounded-xl shadow-md w-full lg:w-1/2">

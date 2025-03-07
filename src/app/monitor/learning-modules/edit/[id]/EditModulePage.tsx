@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from "@/utils/axiosInstance";
 import { Module } from "@/app/interface/module";
-import { fetchData } from "@/api/axiosInstance";
+import { fetchData } from "@/utils/axiosInstance";
 import config from "@/config";
 
 const EditModulePage = ({ params }: { params: { id: number } }) => {
