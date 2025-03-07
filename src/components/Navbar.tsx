@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import axiosInstance from "@/utils/axiosInstance";
 
 type NavItem = {
   href: string;
@@ -29,7 +30,33 @@ export default function NavBar() {
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
-  const downloadOpenVPN = () => {};
+  const downloadOpenVPN = async () => {
+    try {
+      // Step 1: Fetch data from OpenVPN API route with the response type set to 'blob'
+      const response = await axiosInstance.get("/user/openvpn", {
+        responseType: "blob", // This ensures that the response is handled as a blob
+      });
+
+      // Step 2: Check for successful response
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch OpenVPN data.");
+      }
+
+      // Step 3: Get the blob from the response data
+      const blob = response.data;
+
+      // Step 4: Create a link to trigger the download
+      const downloadLink = document.createElement("a");
+      downloadLink.href = URL.createObjectURL(blob); // Create a URL for the blob
+      downloadLink.download = `${user?.firstName}.ovpn`; // Set a default file name
+      downloadLink.click(); // Trigger the download
+
+      // Optionally, revoke the object URL after download
+      URL.revokeObjectURL(downloadLink.href);
+    } catch (error) {
+      console.error("Error downloading OpenVPN data:", error);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

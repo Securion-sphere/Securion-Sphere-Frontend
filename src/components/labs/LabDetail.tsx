@@ -30,54 +30,23 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
 
   const handleSpawn = async () => {
     try {
-      await axiosInstance
-        .get("/user/profile")
-        .then(async (userProfile) => {
-          await axiosInstance
-            .get("/actived-lab/get-instance")
-            .then(async (userLabResponse) => {
-              console.log("UserLab: ", userLabResponse);
-              const userLab: LabDocker = userLabResponse.data;
-              if (userLab) {
-                await axiosInstance
-                  .delete("/actived-lab", {
-                    data: { userId: userProfile.data.id },
-                  })
-                  .catch(() => {
-                    console.error("Error cannot delete actived lab");
-                  });
-              }
-
-              const spawnLabResponse = await axiosInstance.post(
-                "/actived-lab",
-                {
-                  labId: selectedLab.id,
-                  userId: userProfile.data.id,
-                },
-              );
-              let spawnLab: LabDocker = spawnLabResponse.data;
-
-              setLabDockerData(spawnLab);
-            })
-            .catch(async (err) => {
-              console.error("Error fetching lab instance");
-              const spawnLabResponse = await axiosInstance.post(
-                "/actived-lab",
-                {
-                  labId: selectedLab.id,
-                  userId: userProfile.data.id,
-                },
-              );
-              let spawnLab: LabDocker = spawnLabResponse.data;
-
-              setLabDockerData(spawnLab);
-            });
-        })
-        .catch(() => {
-          console.error("Error fetching user profile");
-        });
+      // Fetch and spawn lab instance as usual
+      const spawnLabResponse = await axiosInstance.post("/actived-lab", {
+        labId: selectedLab.id,
+      });
+      const spawnLab: LabDocker = spawnLabResponse.data;
+      setLabDockerData(spawnLab);
     } catch (err) {
-      console.error("Error spawning lab:", err);
+      console.error("An error occurred while handling the lab spawn:", err);
+    }
+  };
+
+  const handleStop = async () => {
+    try {
+      await axiosInstance.delete("/actived-lab");
+      setLabDockerData(null); // Clear the labDockerData when stopping
+    } catch (err) {
+      console.log("Error: Cannot destroy instance");
     }
   };
 
@@ -85,33 +54,23 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
     setHasSubmitted(true);
 
     try {
-      const userResponse = await axiosInstance.get("/user/profile");
-      const userProfile: UserProfile = userResponse.data;
+      const flagResponse = await axiosInstance.post(
+        "/actived-lab/submit-flag",
+        {
+          flag: flag,
+        },
+      );
 
-      if (userProfile.id) {
-        const flagResponse = await axiosInstance.post(
-          "/actived-lab/submit-flag",
-          {
-            userId: userProfile.id,
-            flag: flag,
-          },
-        );
-
-        if (flagResponse.data.msg == "Flag is correct") {
-          setIsFlagCorrect(true);
-          setButtonStage("Pwned");
-          await axiosInstance
-            .delete("/actived-lab", {
-              data: { userId: userProfile.id },
-            })
-            .catch(() => {
-              console.error("Error cannot delete actived lab");
-            });
-          markAsSolved(selectedLab); // Notify parent component that the lab is solved
-        } else {
-          setIsFlagCorrect(false);
-          alert("Incorrect flag, try again!");
-        }
+      if (flagResponse.data.msg === "Flag is correct") {
+        setIsFlagCorrect(true);
+        setButtonStage("Pwned");
+        await axiosInstance.delete("/actived-lab").catch(() => {
+          console.error("Error cannot delete active lab");
+        });
+        markAsSolved(selectedLab);
+      } else {
+        setIsFlagCorrect(false);
+        alert("Incorrect flag, try again!");
       }
     } catch (err) {
       console.error("Error submitting flag:", err);
@@ -133,9 +92,10 @@ const LabDetail: React.FC<LabDetailProps> = ({ selectedLab, markAsSolved }) => {
         <DockerButton
           lab={selectedLab}
           labDockerData={labDockerData}
+          setLabDockerData={setLabDockerData} // Pass setter to DockerButton
           setStage={setButtonStage}
           onSpawn={handleSpawn}
-          onPlaying={() => {}}
+          onStop={handleStop}
           onPwned={() => {}}
           currentStage={buttonStage}
         />
