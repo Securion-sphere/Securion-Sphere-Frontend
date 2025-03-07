@@ -1,4 +1,4 @@
-name: Deploy dev to Self-Hosted
+name: Deploy prod to Self-Hosted
 
 on:
   workflow_run:
