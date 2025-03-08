@@ -3,6 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    container_name: securion-frontend
+    image: securion-frontend
     working_dir: /app
     restart: unless-stopped
     ports:
