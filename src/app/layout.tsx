@@ -35,7 +35,7 @@ export default function RootLayout({
             name="description"
             content="Securion Sphere - Penetration Testing Learning Platform"
           />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/securion-sphere-icon.svg" />
           <title>Securion Sphere</title>
         </head>
         <body

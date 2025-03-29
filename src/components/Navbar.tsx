@@ -93,7 +93,7 @@ export default function NavBar() {
 
           <div className="grid gap-2 py-6">
             <Image
-              src={"/securion-sphere_icon.svg"}
+              src={"/securion-sphere-icon.svg"}
               alt="Securion Sphere"
               width={50}
               height={50}
@@ -114,7 +114,7 @@ export default function NavBar() {
 
       <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
         <Image
-          src={"/securion-sphere_icon.svg"}
+          src={"/securion-sphere-icon.svg"}
           alt="Securion Sphere"
           width={50}
           height={50}

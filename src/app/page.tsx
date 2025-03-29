@@ -159,7 +159,7 @@ const HomePage = () => {
           <div className="flex flex-row bg-white py-2 px-4 rounded-xl w-fit">
             <Link href="/" className="mr-6 hidden lg:flex" prefetch={false}>
               <Image
-                src={"/securion-sphere_icon.svg"}
+                src={"/securion-sphere-icon.svg"}
                 alt="Securion Sphere"
                 width={50}
                 height={50}
