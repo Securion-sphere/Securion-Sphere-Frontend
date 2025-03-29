@@ -25,7 +25,7 @@ const onTokenRefreshed = (token: string) => {
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 10000,
+  timeout: 10 * 60 * 1000,
 });
 
 axiosInstance.interceptors.request.use(
