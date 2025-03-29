@@ -49,7 +49,8 @@ const CreateLabPage = () => {
       name: labName,
       description: labDescription,
       point: labPoint,
-      isReady: true,
+      category: labCategory,
+      labImageId: imageId,
     };
 
     try {
